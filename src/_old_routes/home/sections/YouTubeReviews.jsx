@@ -1,157 +1,159 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getYoutubeReviews } from '../homeHttpRequest.js';
 import EmptyPage from '../../../components/EmptyPage.jsx';
 
 const ReviewsContainer = styled.section`
-  margin-bottom: 80px;
-  padding: 0;
+  margin-bottom: 40px;
+  padding: 10px 0 20px 0;
   background-color: #ffffff;
+  overflow: hidden;
+  perspective: 1200px;
   
   @media (max-width: 768px) {
-    margin-bottom: 50px;
-    padding: 0;
-  }
-  
-  @media (max-width: 480px) {
-    margin-bottom: 50px;
-    padding: 0;
+    margin-bottom: 20px;
+    padding: 10px 0 10px 0;
   }
 `;
 
 const ContentWrapper = styled.div`
-  // max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   
   @media (max-width: 768px) {
     padding: 0 16px;
   }
-  
-  @media (max-width: 480px) {
-    padding: 0 12px;
-  }
 `;
 
 const SectionHeader = styled.div`
-  text-align: left;
-  
-  @media (max-width: 768px) {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    margin-bottom: 16px;
-  }
+  text-align: center;
+  margin-bottom: 20px;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 36px;
   font-weight: 700;
-  margin-bottom: 15px;
   color: #1a1a1a;
-  text-align: center;
   
   @media (max-width: 768px) {
     font-size: 28px;
-    margin-bottom: 12px;
   }
+`;
+
+const CarouselWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 460px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
   
-  @media (max-width: 480px) {
-    font-size: 24px;
-    margin-bottom: 10px;
+  @media (max-width: 768px) {
+    height: 360px;
+  }
+`;
+
+const NavButton = styled.button`
+  background: white;
+  border: 1px solid #eaeaea;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 110; /* Must be higher than any card's zIndex */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #333;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #f8f9fa;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &.left {
+    left: -40px;
+  }
+
+  &.right {
+    right: -40px;
+  }
+
+  @media (max-width: 1200px) {
+    &.left { left: -10px; }
+    &.right { right: -10px; }
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    &.left { left: -5px; }
+    &.right { right: -5px; }
   }
 `;
 
 const ReviewsGrid = styled.div`
-  display: flex;
-  gap: 30px;
-  overflow-x: auto;
-  padding: 20px;
-  scroll-behavior: smooth;
+  position: relative;
   width: 100%;
-  
-  /* Calculate width dynamically based on card count */
-  max-width: ${props => {
-    const cardCount = Math.min(props.$cardCount, 4); // Max 4 cards visible
-    const cardWidth = 280;
-    const gapWidth = 30;
-    const gaps = cardCount - 1;
-    return `calc(${cardCount} * ${cardWidth}px + ${gaps} * ${gapWidth}px)`;
-  }};
-  margin: 0 auto;
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  
-  /* Ensure cards don't shrink */
-  & > * {
-    flex-shrink: 0;
-  }
-  
-  @media (max-width: 768px) {
-    gap: 20px;
-    padding: 15px;
-    max-width: ${props => {
-    const cardCount = Math.min(props.$cardCount, 4); // Max 4 cards visible
-    const cardWidth = 260;
-    const gapWidth = 20;
-    const gaps = cardCount - 1;
-    return `calc(${cardCount} * ${cardWidth}px + ${gaps} * ${gapWidth}px)`;
-  }};
-  }
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
 `;
 
 const ReviewCardWrapper = styled.div`
+  position: absolute;
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0px 1.6px 6px 0px #00000029;
-
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 320px;
-  width: 270px;
+  height: 380px;
+  width: 320px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   cursor: pointer;
   
+  /* Smooth transitions for all properties */
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+              box-shadow 0.3s ease;
+              
+  transform: translate3d(${props => props.$tx}px, 0, ${props => props.$tz}px) 
+             rotateY(${props => props.$ry}deg) 
+             scale(${props => props.$scale});
+  z-index: ${props => props.$zIndex};
+  opacity: ${props => props.$opacity};
+  pointer-events: ${props => props.$isActive ? 'auto' : 'none'};
+
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  @media (max-width: 1400px) {
-    width: 270px;
-  }
-  
-  @media (max-width: 1200px) {
-    width: 270px;
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2);
   }
   
   @media (max-width: 768px) {
-    width: 260px;
-    height: 300px;
-  }
-  
-  @media (max-width: 480px) {
     width: 240px;
-    height: 280px;
+    height: 300px;
   }
 `;
 
 const ReviewImage = styled.div`
   width: 100%;
-  height: 180px;
-  // overflow: hidden;
+  height: 200px;
   position: relative;
 
   img {
@@ -202,30 +204,10 @@ const ReviewImage = styled.div`
   }
   
   @media (max-width: 768px) {
-    height: 160px;
-    
-    .play-icon {
-      width: 45px;
-      height: 45px;
-    }
-    
-    .place-badge {
-      font-size: 10px;
-      padding: 3px 6px;
-    }
-  }
-  
-  @media (max-width: 480px) {
     height: 140px;
-    
     .play-icon {
       width: 40px;
       height: 40px;
-    }
-    
-    .place-badge {
-      font-size: 9px;
-      padding: 2px 5px;
     }
   }
 `;
@@ -238,10 +220,6 @@ const ReviewContent = styled.div`
   overflow: hidden;
   
   @media (max-width: 768px) {
-    padding: 14px;
-  }
-  
-  @media (max-width: 480px) {
     padding: 12px;
   }
 `;
@@ -275,8 +253,8 @@ const ReviewDescription = styled.p`
   text-overflow: ellipsis !important;
   
   @media (max-width: 768px) {
-    font-size: 13px;
-    -webkit-line-clamp: 2 !important;
+    font-size: 12px;
+    -webkit-line-clamp: 3 !important;
   }
 `;
 
@@ -332,12 +310,8 @@ const ResponsiveIframe = styled.iframe`
   background: #000;
 `;
 
-const ReviewCard = ({ review, onClick }) => {
+const ReviewCard = ({ review, tx, tz, ry, scale, zIndex, opacity, isActive, onClick }) => {
   const [imageError, setImageError] = useState(false);
-
-  const handleCardClick = () => {
-    if (onClick) onClick(review);
-  };
 
   const handleImageError = () => {
     setImageError(true);
@@ -346,7 +320,16 @@ const ReviewCard = ({ review, onClick }) => {
   const defaultYouTubeImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23f9f9f9'/%3E%3Cpath d='M130 70l60 40-60 40V70z' fill='%23ff0000'/%3E%3C/svg%3E";
 
   return (
-    <ReviewCardWrapper onClick={handleCardClick}>
+    <ReviewCardWrapper 
+      $tx={tx} 
+      $tz={tz} 
+      $ry={ry} 
+      $scale={scale} 
+      $zIndex={zIndex} 
+      $opacity={opacity}
+      $isActive={isActive}
+      onClick={onClick}
+    >
       <ReviewImage>
         <div className="place-badge universal-fs-h2">{review.place}</div>
         <div className="play-icon">
@@ -383,7 +366,6 @@ const LoadingSpinner = styled.div`
 `;
 
 const extractYouTubeId = (url) => {
-  // Handles standard and share URLs
   const regExp = /^.*(?:youtu.be\/|v=|\/v\/|embed\/|shorts\/|watch\?v=|watch\?.+&v=)([^#&?\n]+).*/;
   const match = url.match(regExp);
   return match?.[1] ? match[1] : null;
@@ -394,6 +376,21 @@ const YouTubeReviews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -403,6 +400,7 @@ const YouTubeReviews = () => {
 
         if (response?.status === 'OK' && response?.data) {
           setReviews(response?.data);
+          setActiveIndex(Math.floor(response.data.length / 2));
         } else {
           setError(response?.message ?? 'Failed to fetch reviews');
         }
@@ -416,8 +414,20 @@ const YouTubeReviews = () => {
     fetchReviews();
   }, []);
 
-  const handleCardClick = (review) => {
-    setSelectedReview(review);
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % reviews.length);
+  };
+
+  const handleCardClick = (index, review) => {
+    if (index === activeIndex) {
+      setSelectedReview(review);
+    } else {
+      setActiveIndex(index);
+    }
   };
 
   const handleCloseModal = () => {
@@ -444,7 +454,6 @@ const YouTubeReviews = () => {
     );
   }
 
-  // Try-catch for rendering reviews (in case of malformed data)
   try {
     return (
       <ReviewsContainer>
@@ -455,15 +464,56 @@ const YouTubeReviews = () => {
             </SectionTitle>
           </SectionHeader>
 
-          <ReviewsGrid $cardCount={reviews.length}>
-            {reviews.map((review, index) => (
-              <ReviewCard
-                key={review.reviewId || index}
-                review={review}
-                onClick={handleCardClick}
-              />
-            ))}
-          </ReviewsGrid>
+          <CarouselWrapper>
+            <NavButton className="left" onClick={handlePrev} aria-label="Previous">
+              <ChevronLeft size={24} />
+            </NavButton>
+            
+            <ReviewsGrid>
+              {reviews.map((review, index) => {
+                // Calculate looping offset
+                let offset = index - activeIndex;
+                const half = Math.floor(reviews.length / 2);
+                
+                if (offset > half) offset -= reviews.length;
+                if (offset < -half) offset += reviews.length;
+                
+                const absOffset = Math.abs(offset);
+                const isMobile = windowWidth <= 768;
+                
+                // 3D positioning coordinates
+                const baseSpacing = isMobile ? 100 : 310;
+                const tx = offset * baseSpacing;
+                const tz = absOffset * -160;
+                const ry = offset * -20;
+                const scale = 1 - absOffset * 0.15;
+                const zIndex = 100 - absOffset;
+                
+                // Hide cards that are too far in the background
+                const opacity = absOffset > 2 ? 0 : (absOffset === 2 ? 0.4 : 1);
+                const isActive = offset === 0;
+
+                return (
+                  <ReviewCard
+                    key={review.reviewId || index}
+                    review={review}
+                    tx={tx}
+                    tz={tz}
+                    ry={ry}
+                    scale={scale}
+                    zIndex={zIndex}
+                    opacity={opacity}
+                    isActive={isActive}
+                    onClick={() => handleCardClick(index, review)}
+                  />
+                );
+              })}
+            </ReviewsGrid>
+            
+            <NavButton className="right" onClick={handleNext} aria-label="Next">
+              <ChevronRight size={24} />
+            </NavButton>
+          </CarouselWrapper>
         </ContentWrapper>
         {selectedReview && (
           <VideoModalOverlay onClick={handleCloseModal}>
@@ -495,5 +545,6 @@ const YouTubeReviews = () => {
   }
 };
 
-export default YouTubeReviews; 
+export default YouTubeReviews;
+ 
 
