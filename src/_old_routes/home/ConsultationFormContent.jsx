@@ -348,10 +348,42 @@ const RibbonWrapper = styled.div`
   position: absolute;
     top: 0px;
     right: 8px;
-    display: flex
-;
+    display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const OTPInputGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0;
+  
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
+`;
+
+const OTPInput = styled.input`
+  width: 45px;
+  height: 48px;
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: var(--universal-font);
+  transition: border-color 0.2s;
+  
+  &:focus {
+    border-color: #D50F25;
+    outline: none;
+  }
+  
+  @media (max-width: 480px) {
+    width: 38px;
+    height: 42px;
+    font-size: 18px;
+  }
 `;
 
 // Array of background images for rotation
@@ -377,7 +409,7 @@ const countries = [
 const ConsultationFormContent = ({ onSuccess }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [otpMode, setOtpMode] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState(new Array(6).fill(''));
   const [consultationPayload, setConsultationPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
@@ -420,6 +452,26 @@ const ConsultationFormContent = ({ onSuccess }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleOtpChange = (element, index) => {
+    if (isNaN(element.value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = element.value;
+    setOtp(newOtp);
+
+    // Focus next input automatically
+    if (element.nextSibling && element.value) {
+      element.nextSibling.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === 'Backspace') {
+      if (!otp[index] && e.target.previousSibling) {
+        e.target.previousSibling.focus();
+      }
+    }
+  };
+
   // OTP functions
   const handleSendOTP = async () => {
     // Prevent multiple API calls
@@ -454,9 +506,9 @@ const ConsultationFormContent = ({ onSuccess }) => {
       return;
     }
     
-    const otpInput = document.querySelector('input[name="otp"]');
-    const isOtpValid = inputValidation(otpInput);
-    if (!isOtpValid) {
+    const otpValue = otp.join("");
+    if (otpValue.length < 6) {
+      showFailureToast('Please enter the complete 6-digit verification code', 4000);
       return;
     }
 
@@ -465,7 +517,7 @@ const ConsultationFormContent = ({ onSuccess }) => {
     try {
       const verifyPayload = {
         phone: form.phone,
-        otp: otp
+        otp: otpValue
       };
       
       await verifyOTP(verifyPayload);
@@ -478,7 +530,7 @@ const ConsultationFormContent = ({ onSuccess }) => {
           // If API call is successful, proceed
           resetFormState();
           setOtpMode(false);
-          setOtp('');
+          setOtp(new Array(6).fill(''));
           setConsultationPayload(null);
           // Call the onSuccess callback if provided
           if (onSuccess) {
@@ -637,19 +689,21 @@ const ConsultationFormContent = ({ onSuccess }) => {
           ) : (
             <form onSubmit={handleOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24 }}>
               <span style={{ textAlign: "left", color: "#8692A6" }} className="universal-fs-h3 universal-font">We've sent a verification code to your registered mobile number and email.</span>
-              <div>
-                <Input
-                  name="otp"
-                  type="text"
-                  placeholder="Enter verification code*"
-                  value={otp}
-                  onChange={e => setOtp(e.target.value)}
-                  maxLength={6}
-                  style={{ width: '100%' }}
-                  className="universal-fs-h3 universal-font"
-                  autoFocus
-                />
-              </div>
+              <OTPInputGroup>
+                {otp.map((data, index) => (
+                  <OTPInput
+                    key={index}
+                    type="text"
+                    name="otp"
+                    maxLength="1"
+                    value={data}
+                    onChange={e => handleOtpChange(e.target, index)}
+                    onKeyDown={e => handleOtpKeyDown(e, index)}
+                    onFocus={e => e.target.select()}
+                    autoFocus={index === 0}
+                  />
+                ))}
+              </OTPInputGroup>
               <SubmitButton type="submit" disabled={isOtpLoading}>
                 {isOtpLoading ? (
                   <Loader 

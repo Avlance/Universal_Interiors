@@ -42,14 +42,13 @@ class ApiService {
         try {
           errorData = await response.json();
         } catch (e) {
-          throw new Error('API request failed');
+          throw new Error(`API request failed with status ${response.status}`);
         }
-        throw errorData?.message || 'API request failed';
+        throw new Error(errorData?.message || `API request failed with status ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
-      console.error('API request failed:', error);
       throw error;
     }
   }
