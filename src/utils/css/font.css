@@ -1,0 +1,184 @@
+@font-face {
+  font-family: "Universal";
+  src: url("/assets/fonts/Gilroy-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Universal-Medium";
+  src: url("/assets/fonts/Gilroy-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Universal-SemiBold";
+  src: url("/assets/fonts/Gilroy-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Universal-Bold";
+  src: url("/assets/fonts/Gilroy-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Universal-ExtraBold";
+  src: url("/assets/fonts/Gilroy-ExtraBold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+:root {
+  --universal-font: "Universal";
+  --universal-font-medium: "Universal-Medium";
+  --universal-font-semibold: "Universal-SemiBold";
+  --universal-font-bold: "Universal-Bold";
+  --universal-font-extra-bold: "Universal-ExtraBold";
+
+  
+
+  /* Desktop font sizes */
+  --universal-fs-h1: 10px;
+  --universal-fs-h2: 12px;
+  --universal-fs-h3: 14px;
+  --universal-fs-h4: 16px;
+  --universal-fs-h5: 18px;
+  --universal-fs-h6: 20px;
+  --universal-fs-h7: 22px;
+  --universal-fs-h8: 24px;
+  --universal-fs-h9: 26px;
+  --universal-fs-h10: 28px;
+  --universal-fs-h11: 30px;
+  --universal-fs-h12: 32px;
+  --universal-fs-h13: 48px;
+  --universal-fs-h14: 11px;
+  --universal-fs-h15: 13px;
+  --universal-fs-h16: 36px;
+}
+
+/* Mobile font sizes */
+@media (max-width: 768px) {
+  :root {
+    --universal-fs-h1: 9px;
+    --universal-fs-h2: 11px;
+    --universal-fs-h3: 13px;
+    --universal-fs-h4: 15px;
+    --universal-fs-h5: 17px;
+    --universal-fs-h6: 19px;
+    --universal-fs-h7: 21px;
+    --universal-fs-h8: 23px;
+    --universal-fs-h9: 25px;
+    --universal-fs-h10: 27px;
+    --universal-fs-h11: 29px;
+    --universal-fs-h12: 31px;
+    --universal-fs-h13: 42px;
+    --universal-fs-h14: 10px;
+    --universal-fs-h15: 12px;
+    --universal-fs-h16: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --universal-fs-h1: 8px;
+    --universal-fs-h2: 10px;
+    --universal-fs-h3: 12px;
+    --universal-fs-h4: 14px;
+    --universal-fs-h5: 16px;
+    --universal-fs-h6: 18px;
+    --universal-fs-h7: 20px;
+    --universal-fs-h8: 22px;
+    --universal-fs-h9: 24px;
+    --universal-fs-h10: 26px;
+    --universal-fs-h11: 28px;
+    --universal-fs-h12: 30px;
+    --universal-fs-h13: 36px;
+    --universal-fs-h14: 9px;
+    --universal-fs-h15: 11px;
+    --universal-fs-h16: 24px;
+  }
+}
+
+.universal-font-medium {
+  font-family: var(--universal-font-medium) !important;
+}
+
+.universal-font-semibold {
+  font-family: var(--universal-font-semibold) !important;
+}
+
+.universal-font-bold {
+  font-family: var(--universal-font-bold) !important;
+}
+
+.universal-font-extra-bold {
+  font-family: var(--universal-font-extra-bold) !important;
+}
+
+.universal-fs-h1 {
+  font-size: var(--universal-fs-h1) !important;
+}
+
+.universal-fs-h2 {
+  font-size: var(--universal-fs-h2) !important;
+}
+
+.universal-fs-h3 {
+  font-size: var(--universal-fs-h3) !important;
+}
+
+.universal-fs-h4 {
+  font-size: var(--universal-fs-h4) !important;
+}
+
+.universal-fs-h5 {
+  font-size: var(--universal-fs-h5) !important;
+}
+
+.universal-fs-h6 {
+  font-size: var(--universal-fs-h6) !important;
+}
+
+.universal-fs-h7 {
+  font-size: var(--universal-fs-h7) !important;
+}
+
+.universal-fs-h8 {
+  font-size: var(--universal-fs-h8) !important;
+}
+
+.universal-fs-h9 {
+  font-size: var(--universal-fs-h9) !important;
+}
+
+.universal-fs-h10 {
+  font-size: var(--universal-fs-h10) !important;
+}
+
+.universal-fs-h11 {
+  font-size: var(--universal-fs-h11) !important;
+}
+
+.universal-fs-h12 {
+  font-size: var(--universal-fs-h12) !important;
+}
+
+.universal-fs-h13 {
+  font-size: var(--universal-fs-h13) !important;
+}
+
+.universal-fs-h14 {
+  font-size: var(--universal-fs-h14) !important;
+}
+
+.universal-fs-h15 {
+  font-size: var(--universal-fs-h15) !important;
+}
+
+.universal-fs-h16 {
+  font-size: var(--universal-fs-h16) !important;
+}

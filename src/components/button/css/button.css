@@ -1,0 +1,27 @@
+.primary-button {
+  font-size: var(--universal-fs-h3) !important;
+  font-family: var(--universal-font-medium) !important;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 1024px) {
+  .primary-button {
+    font-size: var(--universal-fs-h3) !important;
+    font-family: var(--universal-font-medium) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .primary-button {
+    font-size: var(--universal-fs-h4) !important;
+    font-family: var(--universal-font-medium) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .primary-button {
+    font-size: var(--universal-fs-h3) !important;
+    font-family: var(--universal-font-medium) !important;
+  }
+}
+
