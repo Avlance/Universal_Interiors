@@ -456,65 +456,68 @@ const YouTubeReviews = () => {
 
   try {
     return (
-      <ReviewsContainer>
-        <ContentWrapper>
-          <SectionHeader>
-            <SectionTitle className='universal-fs-h8 universal-font-bold'>
-              Checkout some of our <span style={{ color: "#5485EE" }}>customer reviews</span>
-            </SectionTitle>
-          </SectionHeader>
+      <>
+        <ReviewsContainer>
+          <ContentWrapper>
+            <SectionHeader>
+              <SectionTitle className='universal-fs-h8 universal-font-bold'>
+                Checkout some of our <span style={{ color: "#5485EE" }}>customer reviews</span>
+              </SectionTitle>
+            </SectionHeader>
 
-          <CarouselWrapper>
-            <NavButton className="left" onClick={handlePrev} aria-label="Previous">
-              <ChevronLeft size={24} />
-            </NavButton>
-            
-            <ReviewsGrid>
-              {reviews.map((review, index) => {
-                // Calculate looping offset
-                let offset = index - activeIndex;
-                const half = Math.floor(reviews.length / 2);
-                
-                if (offset > half) offset -= reviews.length;
-                if (offset < -half) offset += reviews.length;
-                
-                const absOffset = Math.abs(offset);
-                const isMobile = windowWidth <= 768;
-                
-                // 3D positioning coordinates
-                const baseSpacing = isMobile ? 100 : 310;
-                const tx = offset * baseSpacing;
-                const tz = absOffset * -160;
-                const ry = offset * -20;
-                const scale = 1 - absOffset * 0.15;
-                const zIndex = 100 - absOffset;
-                
-                // Hide cards that are too far in the background
-                const opacity = absOffset > 2 ? 0 : (absOffset === 2 ? 0.4 : 1);
-                const isActive = offset === 0;
+            <CarouselWrapper>
+              <NavButton className="left" onClick={handlePrev} aria-label="Previous">
+                <ChevronLeft size={24} />
+              </NavButton>
+              
+              <ReviewsGrid>
+                {reviews.map((review, index) => {
+                  // Calculate looping offset
+                  let offset = index - activeIndex;
+                  const half = Math.floor(reviews.length / 2);
+                  
+                  if (offset > half) offset -= reviews.length;
+                  if (offset < -half) offset += reviews.length;
+                  
+                  const absOffset = Math.abs(offset);
+                  const isMobile = windowWidth <= 768;
+                  
+                  // 3D positioning coordinates
+                  const baseSpacing = isMobile ? 100 : 310;
+                  const tx = offset * baseSpacing;
+                  const tz = absOffset * -160;
+                  const ry = offset * -20;
+                  const scale = 1 - absOffset * 0.15;
+                  const zIndex = 100 - absOffset;
+                  
+                  // Hide cards that are too far in the background
+                  const opacity = absOffset > 2 ? 0 : (absOffset === 2 ? 0.4 : 1);
+                  const isActive = offset === 0;
 
-                return (
-                  <ReviewCard
-                    key={review.reviewId || index}
-                    review={review}
-                    tx={tx}
-                    tz={tz}
-                    ry={ry}
-                    scale={scale}
-                    zIndex={zIndex}
-                    opacity={opacity}
-                    isActive={isActive}
-                    onClick={() => handleCardClick(index, review)}
-                  />
-                );
-              })}
-            </ReviewsGrid>
-            
-            <NavButton className="right" onClick={handleNext} aria-label="Next">
-              <ChevronRight size={24} />
-            </NavButton>
-          </CarouselWrapper>
-        </ContentWrapper>
+                  return (
+                    <ReviewCard
+                      key={review.reviewId || index}
+                      review={review}
+                      tx={tx}
+                      tz={tz}
+                      ry={ry}
+                      scale={scale}
+                      zIndex={zIndex}
+                      opacity={opacity}
+                      isActive={isActive}
+                      onClick={() => handleCardClick(index, review)}
+                    />
+                  );
+                })}
+              </ReviewsGrid>
+              
+              <NavButton className="right" onClick={handleNext} aria-label="Next">
+                <ChevronRight size={24} />
+              </NavButton>
+            </CarouselWrapper>
+          </ContentWrapper>
+        </ReviewsContainer>
+        
         {selectedReview && (
           <VideoModalOverlay onClick={handleCloseModal}>
             <VideoModalContent onClick={e => e.stopPropagation()}>
@@ -532,7 +535,7 @@ const YouTubeReviews = () => {
             </VideoModalContent>
           </VideoModalOverlay>
         )}
-      </ReviewsContainer>
+      </>
     );
   } catch (err) {
     return (

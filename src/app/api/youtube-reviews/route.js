@@ -1,4 +1,3 @@
-import { getDb } from '@/lib/mongodb';
 import { apiOk, apiError } from '@/lib/api-response';
 
 export const runtime = 'nodejs';
@@ -121,24 +120,6 @@ export async function GET() {
     }
   }
 
-  // Fallback to DB or Hardcoded data if API is disabled or fails
-  try {
-    const db = await getDb();
-    const reviews = await db.collection('youtube_reviews').find({}).toArray();
-
-    if (reviews && reviews.length > 0) {
-      const formatted = reviews.map(r => ({
-        youtubeLink: r.youtubeLink || `https://youtu.be/${r.videoId}`,
-        reviewerName: r.reviewerName || r.title,
-        reviewDescription: r.reviewDescription || '',
-        place: r.place || '',
-        thumbnail: r.thumbnail || (r.videoId ? `https://img.youtube.com/vi/${r.videoId}/hqdefault.jpg` : '')
-      }));
-      return apiOk(formatted, "YouTube customer reviews fetched successfully");
-    }
-  } catch (err) {
-    console.error('Error fetching YouTube reviews from DB fallback:', err);
-  }
-
+  // Fallback to hardcoded data if API is disabled or fails
   return apiOk(FALLBACK_YOUTUBE_DATA, "YouTube customer reviews fetched successfully (Mock Fallback)");
 }
