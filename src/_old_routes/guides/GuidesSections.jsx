@@ -938,8 +938,8 @@ const layoutCards = [
   {
     title: "L-Shaped",
     description: "Ideal for small to medium homes",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/l-shaped.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/l-shaped-kitchen-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664261/azure_migrated/guides/kitchen-guide/l-shaped.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664262/azure_migrated/guides/kitchen-guide/l-shaped-kitchen-frame.webp",
       details: {
         title: "What is an L-Shaped Kitchen Layout?",
         description: `An L-shaped kitchen is a layout where cabinets and countertops are arranged along two adjoining walls that form a 90-degree angle — resembling the shape of the letter "L". This design is popular in both compact and open-plan homes, as it offers an efficient and visually clean workspace by utilizing corner space and leaving one wall or side open.`,
@@ -992,8 +992,8 @@ const layoutCards = [
     {
       title: "U-Shaped",
       description: "Perfect for storage-heavy needs",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped-kitchen-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664263/azure_migrated/guides/kitchen-guide/u-shaped.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664264/azure_migrated/guides/kitchen-guide/u-shaped-kitchen-frame.webp",
       details: {
         title: "What is a U-Shaped Kitchen Layout?",
         description:
@@ -1043,8 +1043,8 @@ const layoutCards = [
     {
       title: "Parallel",
       description: "Best for narrow kitchen spaces",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/parallel.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/parallel-kitchen-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664266/azure_migrated/guides/kitchen-guide/parallel.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664267/azure_migrated/guides/kitchen-guide/parallel-kitchen-frame.webp",
       details: {
         title: "What is a Parallel Kitchen Layout?",
         description:
@@ -1094,8 +1094,8 @@ const layoutCards = [
     {
       title: "Island Kitchen",
       description: "Luxury layout with open space",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/island.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/island-kitchen-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664268/azure_migrated/guides/kitchen-guide/island.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664269/azure_migrated/guides/kitchen-guide/island-kitchen-frame.webp",
       details: {
         title: "What is an Island Kitchen Layout?",
         description:
@@ -1145,8 +1145,8 @@ const layoutCards = [
     {
       title: "Straight Kitchen",
       description: "Compact and efficient",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/straight.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/stright-kitchen-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664270/azure_migrated/guides/kitchen-guide/straight.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664271/azure_migrated/guides/kitchen-guide/stright-kitchen-frame.webp",
       details: {
         title: "What is a Straight Kitchen Layout?",
         description:
@@ -1231,8 +1231,8 @@ const WardrobelayoutCards = [
     {
       title: "Sliding Wardrobe",
       description: "Ideal for compact rooms with limited space.",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/sliding.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/sliding-door-wardrobe-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664272/azure_migrated/guides/wardrobe-guide/sliding.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664273/azure_migrated/guides/wardrobe-guide/sliding-door-wardrobe-frame.webp",
       details: {
         title: "What is a Sliding Door Wardrobe?",
         description:
@@ -1278,8 +1278,8 @@ const WardrobelayoutCards = [
     {
       title: "Hinged Door Wardrobe",
       description: "Classic and versatile, fits most bedroom styles.",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/hinged.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/hinged-door-wardrobe-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664275/azure_migrated/guides/wardrobe-guide/hinged.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664280/azure_migrated/guides/wardrobe-guide/hinged-door-wardrobe-frame.webp",
       details: {
         title: "What is a Hinged Door Wardrobe?",
         description:
@@ -1325,8 +1325,8 @@ const WardrobelayoutCards = [
     {
       title: "Walk-in Wardrobe",
       description: "Perfect for large spaces with luxury storage needs.",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/walk-in.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/walkin-wardrobe-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664281/azure_migrated/guides/wardrobe-guide/walk-in.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664282/azure_migrated/guides/wardrobe-guide/walkin-wardrobe-frame.webp",
       details: {
         title: "What is a Walk-in Wardrobe?",
         description:
@@ -1372,8 +1372,8 @@ const WardrobelayoutCards = [
     {
       title: "L-Shaped Wardrobe",
       description: "Great for corner utilization and maximizing storage.",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/l-shaped-wardrobe.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/l-shaped-wardrobe-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664284/azure_migrated/guides/wardrobe-guide/l-shaped-wardrobe.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664285/azure_migrated/guides/wardrobe-guide/l-shaped-wardrobe-frame.webp",
       details: {
         title: "What is an L-Shaped Wardrobe?",
         description:
@@ -1419,8 +1419,8 @@ const WardrobelayoutCards = [
     {
       title: "Built-in Wardrobe",
       description: "Custom-fit wardrobe that blends into your wall.",
-      image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/built-in.webp",
-      popupImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/builtin-wardrobe-frame.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664286/azure_migrated/guides/wardrobe-guide/built-in.webp",
+      popupImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664287/azure_migrated/guides/wardrobe-guide/builtin-wardrobe-frame.webp",
       details: {
         title: "What is a Built-in Wardrobe?",
         description:
@@ -1583,7 +1583,7 @@ const GuidesSections = () => {
               </Button>
             </ContentBox>
             <HeroImage
-              src={"https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/color-isometric-concept-kitchen.webp"}
+              src={"https://res.cloudinary.com/sevfdaro/image/upload/v1782664288/azure_migrated/guides/kitchen-guide/color-isometric-concept-kitchen.webp"}
               alt="Modular Kitchen"
             />
           </SectionWrapper>
@@ -2090,7 +2090,7 @@ const GuidesSections = () => {
                   })}
                 </ChecklistContent>
 
-                <ChecklistImage $image="https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/kitchen-rectangle.webp" />
+                <ChecklistImage $image="https://res.cloudinary.com/sevfdaro/image/upload/v1782664260/azure_migrated/guides/kitchen-guide/kitchen-rectangle.webp" />
               </ChecklistContainer>
             </ChecklistWrapper>
           </ChecklistSection>
@@ -2160,7 +2160,7 @@ const GuidesSections = () => {
               </Button>
             </ContentBox>
             <HeroImage
-              src={"https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/bedroom-isometric.webp"}
+              src={"https://res.cloudinary.com/sevfdaro/image/upload/v1782664290/azure_migrated/guides/wardrobe-guide/bedroom-isometric.webp"}
               alt="Wardrobe Design"
             />
           </SectionWrapper>
@@ -2663,7 +2663,7 @@ const GuidesSections = () => {
                   })}
                 </ChecklistContent>
 
-                <ChecklistImage $image="https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/wardrobe-rectangle.webp" />
+                <ChecklistImage $image="https://res.cloudinary.com/sevfdaro/image/upload/v1782664292/azure_migrated/guides/wardrobe-guide/wardrobe-rectangle.webp" />
               </ChecklistContainer>
             </ChecklistWrapper>
           </ChecklistSection>

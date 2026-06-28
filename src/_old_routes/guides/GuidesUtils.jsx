@@ -48,7 +48,7 @@ export const transformCategories = (apiData) => {
       title: item.name,
       description: `${item.count || "50"}+ Designs Available`,
       link: `/guides/${category.category}/${item.subCategory}`,
-      image: `/images/home/design-ideas/living-room-${index + 1}.webp`,
+      image: `https://res.cloudinary.com/sevfdaro/image/upload/v1/local_assets_migrated/home/design-ideas/living-room-${index + 1}.webp`,
       fill: index % 2 === 0 ? "#D50F25" : "#5485EE",
       subCategory: item.subCategory, // Add subCategory field for reference
       count: item.count,

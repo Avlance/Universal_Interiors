@@ -237,22 +237,22 @@ const VideoPlaceholderWrapper = styled.div`
 
 const videoData = [
   {
-    image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-card-1.webp",
-    hoverImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-Minimize-1.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664296/azure_migrated/home-page/tour/360-card-1.webp",
+    hoverImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664299/azure_migrated/home-page/tour/360-Minimize-1.webp",
     title: "Urban Heights",
     description: "A modern residential apartment complex with sleek interiors, neutral tones, open layouts, and smart space-saving solutions designed for urban living.",
     altText: "Factory Tour 1"
   },
   {
-    image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-card-2.webp",
-    hoverImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-Minimize-2.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664302/azure_migrated/home-page/tour/360-card-2.webp",
+    hoverImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664303/azure_migrated/home-page/tour/360-Minimize-2.webp",
     title: "The Heritage Villa",
     description: "A luxury independent home that blends traditional craftsmanship with an ...More",
     altText: "Factory Tour 2"
   },
   {
-    image: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-card-3.webp",
-    hoverImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/home-page/tour/360-Minimize-3.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664307/azure_migrated/home-page/tour/360-card-3.webp",
+    hoverImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664308/azure_migrated/home-page/tour/360-Minimize-3.webp",
     title: "Serenity Retreat",
     description: "Interiors inspired by nature, with earthy textures, soft lighting, indoor green...More",
     altText: "Factory Tour 3"

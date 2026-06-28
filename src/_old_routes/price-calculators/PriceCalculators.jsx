@@ -1290,7 +1290,7 @@ const KitchenSizeStep = ({
 
             <ChecklistImage
               $image={
-                "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/kitchen-rectangle.webp"
+                "https://res.cloudinary.com/sevfdaro/image/upload/v1782664260/azure_migrated/guides/kitchen-guide/kitchen-rectangle.webp"
               }
               alt="Kitchen Rectangle"
             />
@@ -1338,10 +1338,10 @@ const PriceCalculators = () => {
       name: "L-Shaped",
       description: "Ideal for small to medium homes",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/l-shaped.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664261/azure_migrated/guides/kitchen-guide/l-shaped.webp",
       dimensions: {
         image:
-          "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/l-shaped-kitchen-frame-blue.webp",
+          "https://res.cloudinary.com/sevfdaro/image/upload/v1782664309/azure_migrated/guides/kitchen-guide/l-shaped-kitchen-frame-blue.webp",
         description:
           "A space-saving layout that tucks neatly into corners, forming an L with two adjacent walls. Ideal for open-plan designs and efficient workflows.",
       },
@@ -1351,10 +1351,10 @@ const PriceCalculators = () => {
       name: "U-Shaped",
       description: "Ideal for small to medium homes",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664263/azure_migrated/guides/kitchen-guide/u-shaped.webp",
       dimensions: {
         image:
-          "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped-kitchen-frame-blue.webp",
+          "https://res.cloudinary.com/sevfdaro/image/upload/v1782664310/azure_migrated/guides/kitchen-guide/u-shaped-kitchen-frame-blue.webp",
         description:
           "Features cabinetry on three sides for maximum storage and counter space. Perfect for large families and avid home cooks.",
       },
@@ -1364,10 +1364,10 @@ const PriceCalculators = () => {
       name: "Parallel",
       description: "Best for narrow kitchen spaces",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/parallel.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664266/azure_migrated/guides/kitchen-guide/parallel.webp",
       dimensions: {
         image:
-          "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/island-kitchen-frame-blue.webp",
+          "https://res.cloudinary.com/sevfdaro/image/upload/v1782664311/azure_migrated/guides/kitchen-guide/island-kitchen-frame-blue.webp",
         description:
           "Two facing countertops create a streamlined cooking corridor. Efficient and ergonomic, ideal for compact to medium-sized spaces.",
       },
@@ -1377,10 +1377,10 @@ const PriceCalculators = () => {
       name: "Island Kitchen",
       description: "Luxury layout with open space",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/island.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664268/azure_migrated/guides/kitchen-guide/island.webp",
       dimensions: {
         image:
-          "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/prallel-kitchen-frame-blue.webp",
+          "https://res.cloudinary.com/sevfdaro/image/upload/v1782664311/azure_migrated/guides/kitchen-guide/prallel-kitchen-frame-blue.webp",
         description:
           "Combines a central island with surrounding counters for added workspace and seating. Best suited for spacious, open kitchens.",
       },
@@ -1390,10 +1390,10 @@ const PriceCalculators = () => {
       name: "Straight Kitchen",
       description: "Compact and efficient",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/straight.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664270/azure_migrated/guides/kitchen-guide/straight.webp",
       dimensions: {
         image:
-          "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/straight-kitchen-frame-blue.webp",
+          "https://res.cloudinary.com/sevfdaro/image/upload/v1782664312/azure_migrated/guides/kitchen-guide/straight-kitchen-frame-blue.webp",
         description:
           "A single-wall kitchen layout that keeps everything within arm's reach. Great for studio apartments and minimalist homes.",
       },

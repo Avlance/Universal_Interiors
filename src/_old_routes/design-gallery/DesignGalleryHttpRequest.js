@@ -22,8 +22,8 @@ export async function getDesignGallery() {
           name: "Kitchen Designs",
           category: "kitchen-designs",
           categoryItems: [
-            { name: "Modular Kitchen", count: 20, subCategory: "modular-kitchen", previewImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/kitchen-rectangle.webp" },
-            { name: "Custom Kitchen", count: 12, subCategory: "custom-kitchen", previewImage: "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/kitchen-rectangle.webp" }
+            { name: "Modular Kitchen", count: 20, subCategory: "modular-kitchen", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664260/azure_migrated/guides/kitchen-guide/kitchen-rectangle.webp" },
+            { name: "Custom Kitchen", count: 12, subCategory: "custom-kitchen", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782664260/azure_migrated/guides/kitchen-guide/kitchen-rectangle.webp" }
           ]
         }
       ]

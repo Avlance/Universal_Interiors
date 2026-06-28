@@ -269,25 +269,25 @@ const CustomizeModal = ({ onClose, onProceed }) => {
       id: "l-shaped",
       label: "L-Shaped",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/l-shaped-kitchen-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664262/azure_migrated/guides/kitchen-guide/l-shaped-kitchen-frame.webp",
     },
     {
       id: "u-shaped",
       label: "U-Shaped",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped-kitchen-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664264/azure_migrated/guides/kitchen-guide/u-shaped-kitchen-frame.webp",
     },
     {
       id: "parallel",
       label: "Parallel",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/parallel-kitchen-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664267/azure_migrated/guides/kitchen-guide/parallel-kitchen-frame.webp",
     },
     {
       id: "straight",
       label: "Straight",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/stright-kitchen-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664271/azure_migrated/guides/kitchen-guide/stright-kitchen-frame.webp",
     },
   ];
 
@@ -300,25 +300,25 @@ const CustomizeModal = ({ onClose, onProceed }) => {
       id: "bedroom1",
       label: "Bedroom 1",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/sliding-door-wardrobe-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664273/azure_migrated/guides/wardrobe-guide/sliding-door-wardrobe-frame.webp",
     },
     {
       id: "bedroom2",
       label: "Bedroom 2",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/walkin-wardrobe-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664282/azure_migrated/guides/wardrobe-guide/walkin-wardrobe-frame.webp",
     },
     {
       id: "bedroom3",
       label: "Bedroom 3",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/l-shaped-wardrobe-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664285/azure_migrated/guides/wardrobe-guide/l-shaped-wardrobe-frame.webp",
     },
     {
       id: "bedroom4",
       label: "Bedroom 4",
       image:
-        "https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/wardrobe-guide/builtin-wardrobe-frame.webp",
+        "https://res.cloudinary.com/sevfdaro/image/upload/v1782664287/azure_migrated/guides/wardrobe-guide/builtin-wardrobe-frame.webp",
     },
   ];
 
@@ -398,7 +398,7 @@ const CustomizeModal = ({ onClose, onProceed }) => {
                 <DiagramContainer>
                   {selectedLayout === "u-shaped" ? (
                     <DiagramImage
-                      src="https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped-kitchen-frame.webp"
+                      src="https://res.cloudinary.com/sevfdaro/image/upload/v1782664264/azure_migrated/guides/kitchen-guide/u-shaped-kitchen-frame.webp"
                       alt="U-Shaped Kitchen Layout Diagram"
                     />
                   ) : (
@@ -483,7 +483,7 @@ const CustomizeModal = ({ onClose, onProceed }) => {
                 <DiagramContainer>
                   {selectedBedroom === "u-shaped" ? (
                     <DiagramImage
-                      src="https://universalcmsdev.blob.core.windows.net/universal-website-container/guides/kitchen-guide/u-shaped-kitchen-frame.webp"
+                      src="https://res.cloudinary.com/sevfdaro/image/upload/v1782664264/azure_migrated/guides/kitchen-guide/u-shaped-kitchen-frame.webp"
                       alt="U-Shaped Kitchen Layout Diagram"
                     />
                   ) : (
