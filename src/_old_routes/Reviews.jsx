@@ -1,8 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import styled from 'styled-components';
-import Modal from '../components/modal/js/Modal.jsx';
 
 const PageContent = styled.div`
   padding: 40px 20px;
@@ -46,11 +45,68 @@ const ContentSection = styled.div`
   margin-bottom: 30px;
 `;
 
+const OverallRatingBanner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    gap: 12px;
+    padding: 16px;
+  }
+`;
+
+const RatingNumber = styled.span`
+  font-size: 3rem;
+  font-weight: 700;
+  color: #222;
+
+  @media (max-width: 480px) {
+    font-size: 2.2rem;
+  }
+`;
+
+const RatingStars = styled.div`
+  display: flex;
+  gap: 2px;
+  font-size: 1.6rem;
+  color: #ffc107;
+`;
+
+const TotalReviews = styled.span`
+  font-size: 1rem;
+  color: #666;
+`;
+
+const GoogleBadge = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #444;
+  font-weight: 500;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
 const ReviewsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   margin-top: 30px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ReviewCard = styled.div`
@@ -72,18 +128,13 @@ const ReviewHeader = styled.div`
   margin-bottom: 15px;
 `;
 
-const ReviewerAvatar = styled.div`
+const ReviewerAvatar = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #4286F5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 1.2rem;
   margin-right: 15px;
+  object-fit: cover;
+  background: #4286F5;
 `;
 
 const ReviewerInfo = styled.div`
@@ -119,70 +170,55 @@ const ReviewText = styled.p`
   margin: 0;
 `;
 
-const ProjectType = styled.span`
-  background: #e3f2fd;
-  color: #1976d2;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-top: 15px;
+const WriteReviewButton = styled.a`
   display: inline-block;
+  margin-top: 15px;
+  padding: 12px 24px;
+  background-color: #D50F25;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #b00d1f;
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 1.1rem;
+  color: #666;
 `;
 
 const Reviews = () => {
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewData, setReviewData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const reviews = [
-    {
-      id: 1,
-      name: 'Priya Sharma',
-      date: 'December 2023',
-      rating: 5,
-      text: 'Amazing experience with Universal Interiors! They transformed our 2BHK apartment into a beautiful, functional space. The team was professional, punctual, and delivered exactly what we envisioned.',
-      projectType: '2BHK Apartment'
-    },
-    {
-      id: 2,
-      name: 'Rajesh Kumar',
-      date: 'November 2023',
-      rating: 5,
-      text: 'Excellent kitchen renovation work. The modular kitchen design is both stylish and practical. The quality of materials used is top-notch and the installation was flawless.',
-      projectType: 'Kitchen Renovation'
-    },
-    {
-      id: 3,
-      name: 'Anita Patel',
-      date: 'October 2023',
-      rating: 5,
-      text: 'Outstanding service from start to finish. The design team understood our requirements perfectly and created a stunning master bedroom with custom wardrobe. Highly recommended!',
-      projectType: 'Master Bedroom'
-    },
-    {
-      id: 4,
-      name: 'Suresh Reddy',
-      date: 'September 2023',
-      rating: 5,
-      text: 'Professional team with great attention to detail. Our living room transformation exceeded expectations. The cost was reasonable and the timeline was maintained perfectly.',
-      projectType: 'Living Room'
-    },
-    {
-      id: 5,
-      name: 'Meera Singh',
-      date: 'August 2023',
-      rating: 5,
-      text: 'Fantastic work on our kids bedroom! The space-saving solutions and colorful design made it perfect for our children. The team was patient with our multiple revisions.',
-      projectType: 'Kids Bedroom'
-    },
-    {
-      id: 6,
-      name: 'Vikram Malhotra',
-      date: 'July 2023',
-      rating: 5,
-      text: 'Complete home interior work done beautifully. From consultation to completion, everything was handled professionally. The quality and finish are exceptional.',
-      projectType: 'Complete Home'
-    }
-  ];
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setReviewData(data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Failed to load reviews. Please try again later.');
+        setLoading(false);
+      });
+  }, []);
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -191,6 +227,20 @@ const Reviews = () => {
       </Star>
     ));
   };
+
+  const renderOverallStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating - fullStars >= 0.5;
+    const stars = [];
+    for (let i = 0; i < fullStars; i++) stars.push('★');
+    if (hasHalf) stars.push('★');
+    while (stars.length < 5) stars.push('☆');
+    return stars.join('');
+  };
+
+  const googleWriteReviewUrl = reviewData?.placeId
+    ? `https://search.google.com/local/writereview?placeid=${reviewData.placeId}`
+    : '#';
 
   return (
     <Layout>
@@ -201,30 +251,60 @@ const Reviews = () => {
           We take pride in delivering exceptional interior design solutions that exceed expectations.
         </PageDescription>
 
-        <ContentSection>
-          <h2>What Our Customers Say</h2>
-          <p>Discover why homeowners choose Universal Interiors for their interior design projects:</p>
-          <ReviewsGrid>
-            {reviews.map((review) => (
-              <ReviewCard key={review.id}>
-                <ReviewHeader>
-                  <ReviewerAvatar>
-                    {review.name.split(' ').map(n => n[0]).join('')}
-                  </ReviewerAvatar>
-                  <ReviewerInfo>
-                    <ReviewerName>{review.name}</ReviewerName>
-                    <ReviewDate>{review.date}</ReviewDate>
-                  </ReviewerInfo>
-                </ReviewHeader>
-                <StarRating>
-                  {renderStars(review.rating)}
-                </StarRating>
-                <ReviewText>{review.text}</ReviewText>
-                <ProjectType>{review.projectType}</ProjectType>
-              </ReviewCard>
-            ))}
-          </ReviewsGrid>
-        </ContentSection>
+        {loading && (
+          <LoadingSpinner>Loading Google Reviews...</LoadingSpinner>
+        )}
+
+        {error && (
+          <ContentSection>
+            <p style={{ color: '#999', textAlign: 'center' }}>{error}</p>
+          </ContentSection>
+        )}
+
+        {reviewData && (
+          <>
+            <OverallRatingBanner>
+              <RatingNumber>{reviewData.overallRating}</RatingNumber>
+              <div>
+                <RatingStars>{renderOverallStars(reviewData.overallRating)}</RatingStars>
+                <TotalReviews>{reviewData.totalReviews} Google Reviews</TotalReviews>
+              </div>
+              <GoogleBadge>
+                <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+                Verified Google Reviews
+              </GoogleBadge>
+            </OverallRatingBanner>
+
+            <ContentSection>
+              <h2>What Our Customers Say</h2>
+              <p>Real reviews from our valued customers on Google:</p>
+              <ReviewsGrid>
+                {reviewData.reviews.map((review, index) => (
+                  <ReviewCard key={index}>
+                    <ReviewHeader>
+                      <ReviewerAvatar
+                        src={review.profile_photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.author_name)}&background=random`}
+                        alt={review.author_name}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(review.author_name)}&background=random`;
+                        }}
+                      />
+                      <ReviewerInfo>
+                        <ReviewerName>{review.author_name}</ReviewerName>
+                        <ReviewDate>{review.relative_time_description}</ReviewDate>
+                      </ReviewerInfo>
+                    </ReviewHeader>
+                    <StarRating>
+                      {renderStars(review.rating)}
+                    </StarRating>
+                    <ReviewText>{review.text}</ReviewText>
+                  </ReviewCard>
+                ))}
+              </ReviewsGrid>
+            </ContentSection>
+          </>
+        )}
 
         <ContentSection>
           <h2>Why Choose Universal Interiors?</h2>
@@ -250,50 +330,16 @@ const Reviews = () => {
 
         <ContentSection>
           <h2>Share Your Experience</h2>
-          <p>Had a great experience with us? We'd love to hear about it! Share your review and help others discover the quality of our services.</p>
-          <button 
-            onClick={() => setIsReviewModalOpen(true)}
-            style={{
-              marginTop: '15px',
-              padding: '12px 24px',
-              backgroundColor: '#D50F25',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
+          <p>Had a great experience with us? We'd love to hear about it! Leave us a review on Google and help others discover the quality of our services.</p>
+          <WriteReviewButton
+            href={googleWriteReviewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Write a Review
-          </button>
+            Write a Review on Google
+          </WriteReviewButton>
         </ContentSection>
       </PageContent>
-
-      <Modal open={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)}>
-        <div style={{ padding: '30px', textAlign: 'center', maxWidth: '500px', width: '100%', boxSizing: 'border-box' }}>
-          <button 
-            onClick={() => setIsReviewModalOpen(false)} 
-            style={{ position: 'absolute', top: '10px', right: '15px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#999' }}
-          >&times;</button>
-          <h2 style={{ marginBottom: '15px', color: '#333' }}>Write a Review</h2>
-          <p style={{ color: '#666', marginBottom: '25px' }}>Thank you for choosing Universal Interiors! Please share your experience.</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
-            <input type="text" placeholder="Your Name" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #ddd', width: '100%', boxSizing: 'border-box' }} />
-            <input type="text" placeholder="Project Type (e.g. Kitchen Renovation)" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #ddd', width: '100%', boxSizing: 'border-box' }} />
-            <textarea placeholder="Your review..." rows="4" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #ddd', width: '100%', resize: 'vertical', boxSizing: 'border-box' }}></textarea>
-            <button 
-              onClick={() => {
-                alert('Thank you for your review! It has been submitted for moderation.');
-                setIsReviewModalOpen(false);
-              }}
-              style={{ padding: '14px', backgroundColor: '#4286F5', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}
-            >
-              Submit Review
-            </button>
-          </div>
-        </div>
-      </Modal>
     </Layout>
   );
 };
