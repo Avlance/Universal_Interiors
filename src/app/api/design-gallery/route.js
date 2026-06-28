@@ -17,9 +17,12 @@ export async function GET() {
     }
 
     const formattedData = categories.map(cat => ({
+      name: cat.name,
       category: cat.category,
-      categoryItems: cat.categoryItems.map(item => ({
+      categoryItems: (cat.categoryItems || []).map(item => ({
+        name: item.name,
         subCategory: item.subCategory,
+        count: item.count,
         previewImage: item.previewImage
       }))
     }));

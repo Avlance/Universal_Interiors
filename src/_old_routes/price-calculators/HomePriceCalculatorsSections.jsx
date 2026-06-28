@@ -744,25 +744,25 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
       id: "1bhk",
       label: "1 BHK",
       description: "Ideal for small to medium homes",
-      image: "/images/home/design-ideas/living-room-1.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657678/local_assets_migrated/home/design-ideas/living-room-1.webp",
     },
     {
       id: "2bhk",
       label: "2 BHK",
       description: "Best for narrow kitchen spaces",
-      image: "/images/home/design-ideas/living-room-2.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657680/local_assets_migrated/home/design-ideas/living-room-2.webp",
     },
     {
       id: "3bhk",
       label: "3 BHK",
       description: "Luxury layout with open space",
-      image: "/images/home/design-ideas/living-room-3.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657681/local_assets_migrated/home/design-ideas/living-room-3.webp",
     },
     {
       id: "4bhk",
       label: "4 BHK",
       description: "Compact and efficient",
-      image: "/images/home/design-ideas/living-room-4.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657682/local_assets_migrated/home/design-ideas/living-room-4.webp",
     },
   ];
 
@@ -3028,25 +3028,25 @@ const PROPERTY_TYPES = [
     id: "1bhk",
     label: "1 BHK",
     description: "Ideal for small to medium homes",
-    image: "/images/home/design-ideas/living-room-1.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657678/local_assets_migrated/home/design-ideas/living-room-1.webp",
   },
   {
     id: "2bhk",
     label: "2 BHK",
     description: "Best for narrow kitchen spaces",
-    image: "/images/home/design-ideas/living-room-2.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657680/local_assets_migrated/home/design-ideas/living-room-2.webp",
   },
   {
     id: "3bhk",
     label: "3 BHK",
     description: "Luxury layout with open space",
-    image: "/images/home/design-ideas/living-room-3.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657681/local_assets_migrated/home/design-ideas/living-room-3.webp",
   },
   {
     id: "4bhk",
     label: "4 BHK",
     description: "Compact and efficient",
-    image: "/images/home/design-ideas/living-room-4.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657682/local_assets_migrated/home/design-ideas/living-room-4.webp",
   },
 ];
 

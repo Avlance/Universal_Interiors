@@ -784,10 +784,10 @@ const statsConfig = [
 
 // Array of background images for rotation (same as LiveConsultationForm)
 const backgroundImages = [
-  '/images/home/hero/hero-1.webp',
-  '/images/home/hero/hero-2.webp',
-  '/images/home/hero/hero-3.webp',
-  '/images/home/hero/hero-4.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657691/local_assets_migrated/home/hero/hero-1.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657692/local_assets_migrated/home/hero/hero-2.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657693/local_assets_migrated/home/hero/hero-3.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657694/local_assets_migrated/home/hero/hero-4.webp',
 ];
 
 const DotsContainer = styled.div`

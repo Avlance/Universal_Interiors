@@ -1790,7 +1790,7 @@ const Header = () => {
           <ActionButtonsContainer>
             <ConsultationForm />
             <UserIcon
-              src={"/images/user-icon.webp"}
+              src={"https://res.cloudinary.com/sevfdaro/image/upload/v1782657739/local_assets_migrated/root/user-icon.webp"}
               alt={"profile"}
               loading="lazy"
               

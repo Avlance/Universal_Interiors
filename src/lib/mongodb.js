@@ -1,5 +1,16 @@
 import { MongoClient } from 'mongodb';
 import { MockDb } from './mock-db.js';
+import dns from 'dns';
+
+// Override DNS resolution servers to prevent querySrv ECONNREFUSED on Windows machines
+if (dns && typeof dns.setServers === 'function') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    console.warn('Failed to set DNS servers in mongodb.js:', e.message);
+  }
+}
+
 
 const uri = process.env.MONGODB_URI;
 

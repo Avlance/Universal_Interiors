@@ -281,7 +281,7 @@ const RoadMap = () => {
           </StepperSection>
 
           <RoadmapImage
-            src="/images/home/roadmap/roadmap-1.webp"
+            src="https://res.cloudinary.com/sevfdaro/image/upload/v1782657696/local_assets_migrated/home/roadmap/roadmap-1.webp"
             loading="lazy"
             alt="Roadmap Visual"
           />

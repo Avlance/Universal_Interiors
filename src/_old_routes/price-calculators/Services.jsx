@@ -267,7 +267,7 @@ const ServiceIconWrapper = styled.div`
 
 const serviceData = [
   {
-    image: "/images/home/services/service-demo-1.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657697/local_assets_migrated/home/services/service-demo-1.webp",
     title: "Design Consultation",
     description: (
       <>
@@ -279,7 +279,7 @@ const serviceData = [
     fill: "#D50F25", // Add this line
   },
   {
-    image: "/images/home/services/service-demo-2.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657698/local_assets_migrated/home/services/service-demo-2.webp",
     title: "Project Execution",
     description: (
       <>
@@ -291,7 +291,7 @@ const serviceData = [
     fill: "#559944", // Add this line
   },
   {
-    image: "/images/home/services/service-demo-3.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657698/local_assets_migrated/home/services/service-demo-3.webp",
     title: "Quality Assurance",
     description: (
       <>
@@ -303,7 +303,7 @@ const serviceData = [
     fill: "#FAC73D", // Add this line
   },
   {
-    image: "/images/home/services/service-demo-4.webp",
+    image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657699/local_assets_migrated/home/services/service-demo-4.webp",
     title: "Custom Solutions",
     description: (
       <>

@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import Button from '../../../components/button/js/Button.jsx';
 
 const bannerImages = [
-  '/images/home/hero/hero-1.webp',
-  '/images/home/hero/hero-2.webp',
-  '/images/home/hero/hero-3.webp',
-  '/images/home/hero/hero-4.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657691/local_assets_migrated/home/hero/hero-1.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657692/local_assets_migrated/home/hero/hero-2.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657693/local_assets_migrated/home/hero/hero-3.webp',
+  'https://res.cloudinary.com/sevfdaro/image/upload/v1782657694/local_assets_migrated/home/hero/hero-4.webp',
 ];
 
 const BannerContainer = styled.section`
@@ -537,7 +537,7 @@ const HeroBanner = ({ costEstimatorRef }) => {
           <ActionButtonsContainer>
             <Button primary className='universal-fs-h3 primary-button' onClick={handleScrollToCostEstimator}>Get Free Quote</Button>
             <ImageWithLabel>
-              <img src={"/images/home/hero/user-list.webp"} alt="profile" loading="lazy"  />
+              <img src={"https://res.cloudinary.com/sevfdaro/image/upload/v1782657695/local_assets_migrated/home/hero/user-list.webp"} alt="profile" loading="lazy"  />
               <span className="universal-fs-h3 universal-font-medium">Trusted by 10,000+ families</span>
             </ImageWithLabel>
           </ActionButtonsContainer>

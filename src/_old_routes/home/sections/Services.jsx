@@ -399,31 +399,31 @@ const SessionLabel = styled.div`
 
 const serviceData = [
   {
-    image: '/images/home/services/service-demo-1.webp',
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657697/local_assets_migrated/home/services/service-demo-1.webp',
     title: 'Design Consultation',
     description: (<><span>Expert advice</span><br />Bring your vision to life</>),
     fill: '#D50F25' // Add this line
   },
   {
-    image: '/images/home/services/service-demo-2.webp',
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657698/local_assets_migrated/home/services/service-demo-2.webp',
     title: 'Project Execution',
     description: (<><span>Seamless management</span><br />From start to finish</>),
     fill: '#559944' // Add this line
   },
   {
-    image: '/images/home/services/service-demo-3.webp',
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657698/local_assets_migrated/home/services/service-demo-3.webp',
     title: 'Quality Assurance',
     description: (<><span>Top-notch quality</span><br />In every detail</>),
     fill: '#FAC73D' // Add this line
   },
   {
-    image: '/images/home/services/service-demo-4.webp',
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657699/local_assets_migrated/home/services/service-demo-4.webp',
     title: 'Custom Solutions',
     description: (<><span>Personalized interiors</span><br />Tailored for you</>),
     fill: '#5485EE' // Add this line
   },
   {
-    image: '/images/home/services/service-demo-5.webp',
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657700/local_assets_migrated/home/services/service-demo-5.webp',
     title: 'After-Sales Support',
     description: (<><span>Continued care</span><br />Post-completion support</>),
     fill: '#D50F25' // Add this line

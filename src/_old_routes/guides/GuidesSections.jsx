@@ -1199,19 +1199,19 @@ const layoutCards = [
 const galleryCards = [
     {
       title: "Smart Space Urban Kitchen Concept",
-      image: "/images/guides/ModularKitchenGallery/ImageBadge1.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657661/local_assets_migrated/guides/ModularKitchenGallery/ImageBadge1.webp",
     },
     {
       title: "Warm Wood Compact Kitchen Design",
-      image: "/images/guides/ModularKitchenGallery/ImageBadge2.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657662/local_assets_migrated/guides/ModularKitchenGallery/ImageBadge2.webp",
     },
     {
       title: "Bold Tones Contemporary Kitchen",
-      image: "/images/guides/ModularKitchenGallery/ImageBadge3.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657663/local_assets_migrated/guides/ModularKitchenGallery/ImageBadge3.webp",
     },
     {
       title: "Minimal Luxe White Kitchen Setup",
-      image: "/images/guides/ModularKitchenGallery/ImageBadge4.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657664/local_assets_migrated/guides/ModularKitchenGallery/ImageBadge4.webp",
     },
   ];
 
@@ -1469,19 +1469,19 @@ const WardrobelayoutCards = [
 const WardrobegalleryCards = [
     {
       title: "Contemporary Sliding Wardrobe Style",
-      image: "/images/guides/WardrobeGallery/Image1.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657665/local_assets_migrated/guides/WardrobeGallery/Image1.webp",
     },
     {
       title: "Warm Wooden Hinged Wardrobe Setup",
-      image: "/images/guides/WardrobeGallery/Image2.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657666/local_assets_migrated/guides/WardrobeGallery/Image2.webp",
     },
     {
       title: "Luxury Walk-In Wardrobe Look",
-      image: "/images/guides/WardrobeGallery/Image3.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657667/local_assets_migrated/guides/WardrobeGallery/Image3.webp",
     },
     {
       title: "Compact Built-In Wardrobe Design",
-      image: "/images/guides/WardrobeGallery/Image4.webp",
+      image: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657668/local_assets_migrated/guides/WardrobeGallery/Image4.webp",
     },
   ];
 
@@ -1843,7 +1843,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "/images/guides/ModularKitchen-vs-CarpenterMadeKitchen/MK-icon.svg"
+                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657659/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/MK-icon"
                             }
                             alt="Carpenter Icon"
                           />
@@ -1854,7 +1854,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "/images/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon.svg"
+                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657658/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon"
                             }
                             alt="Carpenter Icon"
                           />
@@ -2420,7 +2420,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "/images/guides/ModularKitchen-vs-CarpenterMadeKitchen/MW-icon.svg"
+                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657659/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/MW-icon"
                             }
                             alt="Carpenter Icon"
                           />
@@ -2431,7 +2431,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "/images/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon.svg"
+                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657658/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon"
                             }
                             alt="Carpenter Icon"
                           />

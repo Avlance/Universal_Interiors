@@ -120,27 +120,27 @@ const BlogImage = styled.div`
 const blogPosts = [
   {
     id: 1,
-    image: '/images/home/brand-partners/logo-1.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657669/local_assets_migrated/home/brand-partners/logo-1.webp'
   },
   {
     id: 2,
-    image: '/images/home/brand-partners/logo-2.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657670/local_assets_migrated/home/brand-partners/logo-2.webp'
   },
   {
     id: 3,
-    image: '/images/home/brand-partners/logo-3.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657670/local_assets_migrated/home/brand-partners/logo-3.webp'
   },
   {
     id: 4,
-    image: '/images/home/brand-partners/logo-4.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657671/local_assets_migrated/home/brand-partners/logo-4.webp'
   },
   {
     id: 5,
-    image: '/images/home/brand-partners/logo-5.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657672/local_assets_migrated/home/brand-partners/logo-5.webp'
   },
   {
     id: 6,
-    image: '/images/home/brand-partners/logo-6.webp'
+    image: 'https://res.cloudinary.com/sevfdaro/image/upload/v1782657673/local_assets_migrated/home/brand-partners/logo-6.webp'
   }
 ];
 

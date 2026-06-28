@@ -13,9 +13,9 @@ export async function getDesignGallery() {
           name: "Rooms & Spaces",
           category: "rooms-and-spaces",
           categoryItems: [
-            { name: "Living Room", count: 10, subCategory: "living-room", previewImage: "/images/guides/WardrobeGallery/Image1.webp" },
-            { name: "Master Bedroom", count: 15, subCategory: "master-bedroom", previewImage: "/images/guides/WardrobeGallery/Image2.webp" },
-            { name: "Kids Bedroom", count: 5, subCategory: "kids-bedroom", previewImage: "/images/guides/WardrobeGallery/Image3.webp" }
+            { name: "Living Room", count: 10, subCategory: "living-room", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657665/local_assets_migrated/guides/WardrobeGallery/Image1.webp" },
+            { name: "Master Bedroom", count: 15, subCategory: "master-bedroom", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657666/local_assets_migrated/guides/WardrobeGallery/Image2.webp" },
+            { name: "Kids Bedroom", count: 5, subCategory: "kids-bedroom", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657667/local_assets_migrated/guides/WardrobeGallery/Image3.webp" }
           ]
         },
         {
@@ -39,8 +39,8 @@ export async function getDesignGalleryItems(category, subCategory, offset = 0) {
     return {
       data: {
         items: [
-           { id: "1", name: "Modern Concept 1", previewImage: "/images/guides/WardrobeGallery/Image1.webp" },
-           { id: "2", name: "Elegant Design 2", previewImage: "/images/guides/WardrobeGallery/Image2.webp" }
+           { id: "1", name: "Modern Concept 1", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657665/local_assets_migrated/guides/WardrobeGallery/Image1.webp" },
+           { id: "2", name: "Elegant Design 2", previewImage: "https://res.cloudinary.com/sevfdaro/image/upload/v1782657666/local_assets_migrated/guides/WardrobeGallery/Image2.webp" }
         ],
         hasMore: false
       }
