@@ -160,12 +160,22 @@ const GoogleReviewCard = styled.div`
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   padding: 24px;
   text-align: left;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   border: 0.5px solid #3686F7;
   min-width: 350px;
   width: 350px;
   background: linear-gradient(126.27deg, #FFD8F7 -11.56%, #FFFFFF 16.68%, #FFFFFF 73.72%, #D6E7FF 134.39%);
   overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(54, 134, 247, 0.18);
+    border-color: #3686F7;
+  }
   
   @media (max-width: 768px) {
     padding: 20px;
@@ -180,6 +190,110 @@ const GoogleReviewCard = styled.div`
     border-radius: 10px;
     min-height: 180px;
   }
+`;
+
+const ReadMoreHint = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3686F7;
+  margin-top: 10px;
+  transition: gap 0.2s ease, color 0.2s ease;
+  
+  ${GoogleReviewCard}:hover & {
+    gap: 8px;
+    color: #1a5fd4;
+  }
+`;
+
+/* ── Modal Styled Components ── */
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: grFadeIn 0.2s ease-out;
+  
+  @keyframes grFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+`;
+
+const ModalCard = styled.div`
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 560px;
+  max-height: 82vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  animation: grScaleIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  @keyframes grScaleIn {
+    from { transform: scale(0.94) translateY(12px); opacity: 0; }
+    to   { transform: scale(1) translateY(0);       opacity: 1; }
+  }
+  
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+  &::-webkit-scrollbar-thumb { background: #3686F7; border-radius: 10px; }
+  
+  @media (max-width: 480px) {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+`;
+
+const ModalCloseBtn = styled.button`
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f0f0;
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  
+  &:hover {
+    background: #3686F7;
+    color: #fff;
+    transform: rotate(90deg) scale(1.1);
+  }
+`;
+
+const ModalReviewerName = styled.h3`
+  margin: 0 0 3px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+`;
+
+const ModalReviewText = styled.p`
+  color: #333;
+  line-height: 1.75;
+  font-size: 0.97rem;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
 `;
 
 const ReviewerInfo = styled.div`
@@ -257,17 +371,17 @@ const ReviewText = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* Show up to 5 lines */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   
   @media (max-width: 768px) {
     line-height: 1.5;
-    -webkit-line-clamp: 4; /* Show up to 4 lines on tablet */
+    -webkit-line-clamp: 3;
   }
   
   @media (max-width: 480px) {
     line-height: 1.4;
-    -webkit-line-clamp: 3; /* Show up to 3 lines on mobile */
+    -webkit-line-clamp: 2;
   }
 `;
 
@@ -311,6 +425,16 @@ const GoogleReviews = () => {
   const [googleReviews, setGoogleReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedReview, setSelectedReview] = useState(null);
+
+  useEffect(() => {
+    if (selectedReview) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedReview]);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -395,45 +519,48 @@ const GoogleReviews = () => {
               try {
                 if (!Array.isArray(googleReviews?.data)) throw new Error('No reviews found');
                 return googleReviews?.data?.map((review, idx) => (
-                  <GoogleReviewCard key={idx}>
-                    <ReviewerInfo>
-                      <ReviewerAvatar>
-                        <img src={review.profilePhoto} alt={review.customerName} loading="lazy" />
-                      </ReviewerAvatar>
-                      <ReviewerDetails>
-                        <ReviewerName className='universal-font-bold universal-fs-h3'>{review.customerName}</ReviewerName>
-                        <ReviewDate className='universal-fs-h2'>{review.date}</ReviewDate>
-                      </ReviewerDetails>
-                      <ReviewerTopRightIcon>
-                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-                          <path d="M17.1041 8.49792H16.5V8.4668H9.75V11.4668H13.9886C13.3703 13.2132 11.7086 14.4668 9.75 14.4668C7.26487 14.4668 5.25 12.4519 5.25 9.9668C5.25 7.48167 7.26487 5.4668 9.75 5.4668C10.8971 5.4668 11.9408 5.89955 12.7354 6.60642L14.8568 4.48505C13.5173 3.23667 11.7255 2.4668 9.75 2.4668C5.60812 2.4668 2.25 5.82492 2.25 9.9668C2.25 14.1087 5.60812 17.4668 9.75 17.4668C13.8919 17.4668 17.25 14.1087 17.25 9.9668C17.25 9.46392 17.1982 8.97305 17.1041 8.49792Z" fill="#FFC107" />
-                          <path d="M3.11523 6.47592L5.57936 8.28305C6.24611 6.6323 7.86086 5.4668 9.75048 5.4668C10.8976 5.4668 11.9412 5.89955 12.7359 6.60642L14.8572 4.48505C13.5177 3.23667 11.726 2.4668 9.75048 2.4668C6.86973 2.4668 4.37148 4.09317 3.11523 6.47592Z" fill="#FF3D00" />
-                          <path d="M9.75012 17.4671C11.6874 17.4671 13.4476 16.7257 14.7785 15.5201L12.4572 13.5558C11.6791 14.1479 10.728 14.4681 9.75012 14.4671C7.79937 14.4671 6.14299 13.2232 5.51899 11.4873L3.07324 13.3717C4.31449 15.8006 6.83524 17.4671 9.75012 17.4671Z" fill="#4CAF50" />
-                          <path d="M17.1041 8.49792H16.5V8.4668H9.75V11.4668H13.9886C13.6928 12.298 13.16 13.0242 12.456 13.5559L12.4571 13.5552L14.7784 15.5194C14.6141 15.6687 17.25 13.7168 17.25 9.9668C17.25 9.46392 17.1982 8.97305 17.1041 8.49792Z" fill="#1976D2" />
-                        </svg>
-                      </ReviewerTopRightIcon>
-                    </ReviewerInfo>
-                    <ReviewStars>
-                      {(() => {
-                        const fullStars = Math.floor(review.rating);
-                        const hasHalfStar = review.rating % 1 >= 0.5;
-                        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-                        return (
-                          <>
-                            {[...Array(fullStars)].map((_, i) => (
-                              <StarIcon key={"filled-" + i} color="#FBBC05" />
-                            ))}
-                            {hasHalfStar && <HalfStarIcon key="half" />}
-                            {[...Array(emptyStars)].map((_, i) => (
-                              <StarIcon key={"empty-" + i} color="#ccc" />
-                            ))}
-                          </>
-                        );
-                      })()}
-                    </ReviewStars>
-                    <ReviewText className='universal-font-medium universal-fs-h3'>
-                      {review.review}
-                    </ReviewText>
+                  <GoogleReviewCard key={idx} onClick={() => setSelectedReview(review)}>
+                    <div>
+                      <ReviewerInfo>
+                        <ReviewerAvatar>
+                          <img src={review.profilePhoto} alt={review.customerName} loading="lazy" />
+                        </ReviewerAvatar>
+                        <ReviewerDetails>
+                          <ReviewerName className='universal-font-bold universal-fs-h3'>{review.customerName}</ReviewerName>
+                          <ReviewDate className='universal-fs-h2'>{review.date}</ReviewDate>
+                        </ReviewerDetails>
+                        <ReviewerTopRightIcon>
+                          <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
+                            <path d="M17.1041 8.49792H16.5V8.4668H9.75V11.4668H13.9886C13.3703 13.2132 11.7086 14.4668 9.75 14.4668C7.26487 14.4668 5.25 12.4519 5.25 9.9668C5.25 7.48167 7.26487 5.4668 9.75 5.4668C10.8971 5.4668 11.9408 5.89955 12.7354 6.60642L14.8568 4.48505C13.5173 3.23667 11.7255 2.4668 9.75 2.4668C5.60812 2.4668 2.25 5.82492 2.25 9.9668C2.25 14.1087 5.60812 17.4668 9.75 17.4668C13.8919 17.4668 17.25 14.1087 17.25 9.9668C17.25 9.46392 17.1982 8.97305 17.1041 8.49792Z" fill="#FFC107" />
+                            <path d="M3.11523 6.47592L5.57936 8.28305C6.24611 6.6323 7.86086 5.4668 9.75048 5.4668C10.8976 5.4668 11.9412 5.89955 12.7359 6.60642L14.8572 4.48505C13.5177 3.23667 11.726 2.4668 9.75048 2.4668C6.86973 2.4668 4.37148 4.09317 3.11523 6.47592Z" fill="#FF3D00" />
+                            <path d="M9.75012 17.4671C11.6874 17.4671 13.4476 16.7257 14.7785 15.5201L12.4572 13.5558C11.6791 14.1479 10.728 14.4681 9.75012 14.4671C7.79937 14.4671 6.14299 13.2232 5.51899 11.4873L3.07324 13.3717C4.31449 15.8006 6.83524 17.4671 9.75012 17.4671Z" fill="#4CAF50" />
+                            <path d="M17.1041 8.49792H16.5V8.4668H9.75V11.4668H13.9886C13.6928 12.298 13.16 13.0242 12.456 13.5559L12.4571 13.5552L14.7784 15.5194C14.6141 15.6687 17.25 13.7168 17.25 9.9668C17.25 9.46392 17.1982 8.97305 17.1041 8.49792Z" fill="#1976D2" />
+                          </svg>
+                        </ReviewerTopRightIcon>
+                      </ReviewerInfo>
+                      <ReviewStars>
+                        {(() => {
+                          const fullStars = Math.floor(review.rating);
+                          const hasHalfStar = review.rating % 1 >= 0.5;
+                          const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                          return (
+                            <>
+                              {[...Array(fullStars)].map((_, i) => (
+                                <StarIcon key={"filled-" + i} color="#FBBC05" />
+                              ))}
+                              {hasHalfStar && <HalfStarIcon key="half" />}
+                              {[...Array(emptyStars)].map((_, i) => (
+                                <StarIcon key={"empty-" + i} color="#ccc" />
+                              ))}
+                            </>
+                          );
+                        })()}
+                      </ReviewStars>
+                      <ReviewText className='universal-font-medium universal-fs-h3'>
+                        {review.review}
+                      </ReviewText>
+                    </div>
+                    <ReadMoreHint className='universal-fs-h2'>Read Full Review <span>→</span></ReadMoreHint>
                   </GoogleReviewCard>
                 ));
               } catch (err) {
@@ -453,7 +580,48 @@ const GoogleReviews = () => {
 
         {/* <ViewMoreButton>View All Customer Stories</ViewMoreButton> */}
       </ContentWrapper>
-    </TestimonialsContainer >
+
+      {/* ── Full Review Popup Modal ── */}
+      {selectedReview && (
+        <ModalOverlay onClick={() => setSelectedReview(null)}>
+          <ModalCard onClick={(e) => e.stopPropagation()}>
+            <ModalCloseBtn onClick={() => setSelectedReview(null)}>&#x2715;</ModalCloseBtn>
+
+            {/* Author row */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '18px', paddingRight: '24px' }}>
+              <ReviewerAvatar style={{ width: 56, height: 56, marginRight: 14 }}>
+                <img src={selectedReview.profilePhoto} alt={selectedReview.customerName} loading="lazy" />
+              </ReviewerAvatar>
+              <div>
+                <ModalReviewerName>{selectedReview.customerName}</ModalReviewerName>
+                <ReviewDate className='universal-fs-h2'>{selectedReview.date}</ReviewDate>
+              </div>
+            </div>
+
+            {/* Stars */}
+            <ReviewStars style={{ marginBottom: 14 }}>
+              {(() => {
+                const fullStars = Math.floor(selectedReview.rating);
+                const hasHalfStar = selectedReview.rating % 1 >= 0.5;
+                const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                return (
+                  <>
+                    {[...Array(fullStars)].map((_, i) => <StarIcon key={'f' + i} color="#FBBC05" />)}
+                    {hasHalfStar && <HalfStarIcon key="half" />}
+                    {[...Array(emptyStars)].map((_, i) => <StarIcon key={'e' + i} color="#ccc" />)}
+                  </>
+                );
+              })()}
+            </ReviewStars>
+
+            {/* Full review text */}
+            <ModalReviewText className='universal-font-medium universal-fs-h3'>
+              {selectedReview.review}
+            </ModalReviewText>
+          </ModalCard>
+        </ModalOverlay>
+      )}
+    </TestimonialsContainer>
   );
 };
 

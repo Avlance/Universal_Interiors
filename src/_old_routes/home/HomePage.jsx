@@ -12,7 +12,6 @@ import GoogleReviews from './sections/GoogleReviews.jsx';
 import YouTubeReviews from './sections/YouTubeReviews.jsx';
 import FactoryTour from './sections/FactoryTour.jsx';
 import RoadMap from './sections/Roadmap.jsx';
-import ReviewSlider from '../../components/ReviewSlider.jsx';
 
 const HomePage = () => {
   const costEstimatorRef = useRef(null);
@@ -26,7 +25,6 @@ const HomePage = () => {
       <YouTubeReviews />
       <FactoryTour />
       <GoogleReviews />
-      <ReviewSlider />
       <RoadMap />
       <BlogSection />
       <DesignerInfo />
