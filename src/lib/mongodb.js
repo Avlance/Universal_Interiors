@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb';
 import { MockDb } from './mock-db.js';
 import dns from 'dns';
+import fs from 'fs';
+import path from 'path';
 
 // Override DNS resolution servers to prevent querySrv ECONNREFUSED on Windows machines
 if (dns && typeof dns.setServers === 'function') {
@@ -11,8 +13,34 @@ if (dns && typeof dns.setServers === 'function') {
   }
 }
 
+// Force override process.env.MONGODB_URI from the .env file directly to bypass stale shell environment variables
+try {
+  const envPath = path.resolve(process.cwd(), '.env');
+  console.log('--- DB Config envPath:', envPath);
+  if (fs.existsSync(envPath)) {
+    const envConfig = fs.readFileSync(envPath, 'utf-8');
+    console.log('--- .env content snippet:', envConfig.substring(0, 250).replace(/\r?\n/g, ' | '));
+    envConfig.split('\n').forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const parts = trimmed.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0].trim();
+        const val = parts.slice(1).join('=').trim();
+        if (key === 'MONGODB_URI') {
+          process.env.MONGODB_URI = val;
+        }
+      }
+    });
+  } else {
+    console.log('--- .env file NOT FOUND at:', envPath);
+  }
+} catch (e) {
+  console.warn('Failed to manually parse .env:', e.message);
+}
 
 const uri = process.env.MONGODB_URI;
+console.log('--- MONGODB_URI in Next.js:', uri ? uri.substring(0, 30) + '...' : 'undefined');
 
 // ─── Mock mode (no real MongoDB needed) ───────────────────────────────────────
 // Activated when MONGODB_URI=mock in .env

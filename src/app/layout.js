@@ -12,7 +12,7 @@ import { Suspense } from "react";
 
 export default function AppLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
         <StyledComponentsRegistry>
           <Suspense fallback={null}>
