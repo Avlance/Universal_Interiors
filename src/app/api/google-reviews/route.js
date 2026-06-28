@@ -39,9 +39,9 @@ export async function GET() {
     const body = await response.json();
     const result = body.result || {};
     const rawReviews = result.reviews || [];
-    
+
     const sortedReviews = [...rawReviews].sort((a, b) => (b.time || 0) - (a.time || 0));
-    
+
     const formattedReviews = sortedReviews.slice(0, 5).map(r => ({
       customerName: r.author_name,
       profilePhoto: r.profile_photo_url,
