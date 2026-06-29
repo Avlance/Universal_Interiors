@@ -73,3 +73,32 @@ export async function sendBookingConfirmationWhatsApp(phone, name) {
     body,
   });
 }
+
+// ─── Custom message (Admin Dashboard) ────────────────────────────────────────
+/**
+ * Send a custom message from the admin portal.
+ *
+ * @param {string} phone   - 10-digit Indian number
+ * @param {string} message - The custom message text
+ * @param {'sms'|'whatsapp'} channel - The delivery channel
+ */
+export async function sendCustomMessage(phone, message, channel = 'whatsapp') {
+  const client = getClient();
+  const to = `+91${phone}`;
+
+  if (channel === 'whatsapp') {
+    if (!FROM_WHATSAPP) throw new Error('[Twilio] TWILIO_FROM_WHATSAPP is missing in .env');
+    return client.messages.create({
+      from: FROM_WHATSAPP,
+      to: `whatsapp:${to}`,
+      body: message,
+    });
+  }
+
+  if (!FROM_SMS) throw new Error('[Twilio] TWILIO_FROM_SMS is missing in .env');
+  return client.messages.create({
+    from: FROM_SMS,
+    to,
+    body: message,
+  });
+}

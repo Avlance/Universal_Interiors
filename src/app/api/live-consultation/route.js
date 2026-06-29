@@ -20,6 +20,7 @@ export async function POST(request) {
       whatsappUpdates: !!whatsappUpdates,
       pinCode,
       createdAt: new Date(),
+      status: "New"
     };
 
     await db.collection('live_consultations').insertOne(liveConsultation);

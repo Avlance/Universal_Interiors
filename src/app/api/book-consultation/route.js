@@ -19,6 +19,7 @@ export async function POST(request) {
       city:            city  || "",
       whatsappUpdates: !!whatsappUpdates,
       createdAt:       new Date(),
+      status:          "New"
     };
 
     await db.collection('book_consultations').insertOne(consultation);

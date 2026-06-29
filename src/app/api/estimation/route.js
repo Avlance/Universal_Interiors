@@ -29,7 +29,8 @@ export async function POST(request) {
       email,
       city,
       whatsappQuote: !!whatsappQuote,
-      createdAt: new Date()
+      createdAt: new Date(),
+      status: "New"
     };
 
     await db.collection('quote_estimation').replaceOne(
