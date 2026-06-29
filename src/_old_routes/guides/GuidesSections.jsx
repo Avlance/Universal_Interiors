@@ -1843,7 +1843,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657659/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/MK-icon"
+                              "/assets/guides/MK-icon.svg"
                             }
                             alt="Carpenter Icon"
                           />
@@ -1854,7 +1854,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657658/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon"
+                              "/assets/guides/CMK-icon.svg"
                             }
                             alt="Carpenter Icon"
                           />
@@ -2420,7 +2420,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657659/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/MW-icon"
+                              "/assets/guides/MW-icon.svg"
                             }
                             alt="Carpenter Icon"
                           />
@@ -2431,7 +2431,7 @@ const GuidesSections = () => {
                         <IconContainer3 className="universal-fs-h5 universal-font-semibold">
                           <ImageIcon3
                             src={
-                              "https://res.cloudinary.com/sevfdaro/raw/upload/v1782657658/local_assets_migrated/guides/ModularKitchen-vs-CarpenterMadeKitchen/CMK-icon"
+                              "/assets/guides/CMK-icon.svg"
                             }
                             alt="Carpenter Icon"
                           />
