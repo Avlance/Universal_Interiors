@@ -353,6 +353,66 @@ const RibbonWrapper = styled.div`
     justify-content: center;
 `;
 
+const ChannelPickerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const ChannelOption = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid ${props => props.$selected ? '#D50F25' : '#ddd'};
+  background: ${props => props.$selected ? '#fff5f5' : '#fff'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    border-color: #D50F25;
+    background: #fff5f5;
+  }
+`;
+
+const ChannelIcon = styled.span`
+  font-size: 28px;
+  flex-shrink: 0;
+`;
+
+const ChannelInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const ChannelTitle = styled.span`
+  font-weight: 600;
+  color: #111;
+  font-size: 14px;
+  font-family: var(--universal-font);
+`;
+
+const ChannelDesc = styled.span`
+  color: #777;
+  font-size: 12px;
+  font-family: var(--universal-font);
+`;
+
+const ChannelRadio = styled.span`
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid ${props => props.$selected ? '#D50F25' : '#ccc'};
+  background: ${props => props.$selected ? '#D50F25' : 'transparent'};
+  flex-shrink: 0;
+`;
+
 const OTPInputGroup = styled.div`
   display: flex;
   justify-content: center;
@@ -409,6 +469,8 @@ const countries = [
 const ConsultationFormContent = ({ onSuccess }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [otpMode, setOtpMode] = useState(false);
+  const [channelMode, setChannelMode] = useState(false); // step 2: channel picker
+  const [otpChannel, setOtpChannel] = useState('whatsapp'); // 'sms' | 'whatsapp'
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [consultationPayload, setConsultationPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -435,6 +497,8 @@ const ConsultationFormContent = ({ onSuccess }) => {
     setCurrentImageIndex(0);
     setIsLoading(false);
     setIsOtpLoading(false);
+    setChannelMode(false);
+    setOtpChannel('whatsapp');
   };
 
   useEffect(() => {
@@ -472,21 +536,13 @@ const ConsultationFormContent = ({ onSuccess }) => {
     }
   };
 
-  // OTP functions
+  // Called after user picks a channel and confirms
   const handleSendOTP = async () => {
-    // Prevent multiple API calls
-    if (isLoading) {
-      return;
-    }
-    
+    if (isLoading) return;
     setIsLoading(true);
-    
     try {
-      const otpPayload = {
-        phone: form.phone
-      };
-      
-      const sendOtpResult = await sendOTP(otpPayload);
+      const sendOtpResult = await sendOTP({ phone: form.phone, channel: otpChannel });
+      setChannelMode(false);
       setOtpMode(true);
       const message = sendOtpResult?.message || 'OTP sent successfully!';
       showSuccessToast(message);
@@ -550,30 +606,23 @@ const ConsultationFormContent = ({ onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Prevent multiple API calls
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
 
-    // Validate all inputs
-    const nameInput = document.querySelector('input[name="name"]');
-    const phoneInput = document.querySelector('input[name="phone"]');
-    const phoneInputParent = phoneInput.parentElement;
-    const emailInput = document.querySelector('input[name="email"]');
-    const citySelect = document.querySelector('select[name="city"]');
+    // Scope queries to THIS form only — avoid grabbing wrong inputs from other forms on the page
+    const formEl = e.currentTarget;
+    const nameInput = formEl.querySelector('input[name="name"]');
+    const phoneInput = formEl.querySelector('input[name="phone"]');
+    const phoneInputParent = phoneInput?.parentElement;
+    const emailInput = formEl.querySelector('input[name="email"]');
+    const citySelect = formEl.querySelector('select[name="city"]');
 
     const isNameValid = inputValidation(nameInput);
     const isPhoneValid = inputValidation(phoneInput, phoneInputParent);
     const isEmailValid = inputValidation(emailInput);
     const isCityValid = selectValidation(citySelect);
 
-    if (!isNameValid || !isPhoneValid || !isEmailValid || !isCityValid) {
-      // Error messages are handled by inputValidation/selectValidation
-      return;
-    }
+    if (!isNameValid || !isPhoneValid || !isEmailValid || !isCityValid) return;
 
-    // Prepare payload for API call
     const payload = {
       name: nameInput.value,
       phone: phoneInput.value,
@@ -582,10 +631,11 @@ const ConsultationFormContent = ({ onSuccess }) => {
       whatsappUpdates: consentChecked,
     };
 
-    // Store the payload and send OTP first
+    // Store the payload then show channel picker (step 2)
     setConsultationPayload(payload);
-    await handleSendOTP();
+    setChannelMode(true);
   };
+
 
   return (
     <ModalWrapper>
@@ -609,7 +659,42 @@ const ConsultationFormContent = ({ onSuccess }) => {
             <div>You <span style={{ color: "#5485EE" }}>Relax</span></div>
             <div>First Session's On <span style={{ color: "#559944" }}>Us.</span></div>
           </ModalTitle>
-          {!otpMode ? (
+          {channelMode && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
+              <span className="universal-fs-h4 universal-font-semibold" style={{ color: '#111' }}>How would you like to receive your OTP?</span>
+              <span className="universal-fs-h3 universal-font" style={{ color: '#8692A6' }}>Sending to +91 {consultationPayload?.phone}</span>
+              <ChannelPickerWrapper>
+                <ChannelOption type="button" $selected={otpChannel === 'whatsapp'} onClick={() => setOtpChannel('whatsapp')}>
+                  <ChannelIcon>💬</ChannelIcon>
+                  <ChannelInfo>
+                    <ChannelTitle>WhatsApp</ChannelTitle>
+                    <ChannelDesc>Receive code on WhatsApp</ChannelDesc>
+                  </ChannelInfo>
+                  <ChannelRadio $selected={otpChannel === 'whatsapp'} />
+                </ChannelOption>
+                <ChannelOption type="button" $selected={otpChannel === 'sms'} onClick={() => setOtpChannel('sms')}>
+                  <ChannelIcon>📱</ChannelIcon>
+                  <ChannelInfo>
+                    <ChannelTitle>SMS</ChannelTitle>
+                    <ChannelDesc>Receive code as a text message</ChannelDesc>
+                  </ChannelInfo>
+                  <ChannelRadio $selected={otpChannel === 'sms'} />
+                </ChannelOption>
+              </ChannelPickerWrapper>
+              <SubmitButton type="button" onClick={handleSendOTP} disabled={isLoading}>
+                {isLoading ? (
+                  <Loader type="button" text="Sending OTP..." textColor="#ffffff" fontSize="14px" mobileFontSize="13px" smallMobileFontSize="12px" buttonSpinnerSize="16px" buttonSpinnerMobileSize="14px" buttonSpinnerSmallMobileSize="12px" />
+                ) : (
+                  <ButtonText className="universal-fs-h4 universal-font-semibold">Send OTP</ButtonText>
+                )}
+              </SubmitButton>
+              <span
+                onClick={() => setChannelMode(false)}
+                style={{ textAlign: 'center', color: '#5485EE', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--universal-font)' }}
+              >← Back</span>
+            </div>
+          )}
+          {!channelMode && !otpMode ? (
             <Form onSubmit={handleSubmit}>
               <InputContainer>
                 <Input
@@ -686,7 +771,7 @@ const ConsultationFormContent = ({ onSuccess }) => {
                 By proceeding, you consent to our <ConsentLink>Terms</ConsentLink> and acknowledge our <ConsentLink>Privacy Policy</ConsentLink>
               </ConsentLabel>
             </Form>
-          ) : (
+          ) : !channelMode && (
             <form onSubmit={handleOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24 }}>
               <span style={{ textAlign: "left", color: "#8692A6" }} className="universal-fs-h3 universal-font">We've sent a verification code to your registered mobile number and email.</span>
               <OTPInputGroup>

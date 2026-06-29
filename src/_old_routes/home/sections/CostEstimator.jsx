@@ -475,6 +475,67 @@ align-items: center;
   }
 `;
 
+const ChannelPickerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const ChannelOption = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid ${props => props.$selected ? '#D50F25' : '#ddd'};
+  background: ${props => props.$selected ? '#fff5f5' : '#fff'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    border-color: #D50F25;
+    background: #fff5f5;
+  }
+`;
+
+const ChannelIcon = styled.span`
+  font-size: 28px;
+  flex-shrink: 0;
+`;
+
+const ChannelInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const ChannelTitle = styled.span`
+  font-weight: 600;
+  color: #111;
+  font-size: 14px;
+  font-family: var(--universal-font);
+`;
+
+const ChannelDesc = styled.span`
+  color: #777;
+  font-size: 12px;
+  font-family: var(--universal-font);
+`;
+
+const ChannelRadio = styled.span`
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid ${props => props.$selected ? '#D50F25' : '#ccc'};
+  background: ${props => props.$selected ? '#D50F25' : 'transparent'};
+  flex-shrink: 0;
+`;
+
+
 const propertyTypes = [
   {
     key: '1bhk',
@@ -656,7 +717,12 @@ const StepThree = ({
   ConsentLabel,
   Button,
   onBack, step, stepLabels,
-  isLoading
+  isLoading,
+  channelMode,
+  setChannelMode,
+  otpChannel,
+  setOtpChannel,
+  handleSendOTP
 }) => (
   <StepThreeContainer>
     <ProgressBar currentStep={step} stepLabels={stepLabels} />
@@ -665,80 +731,108 @@ const StepThree = ({
       <svg width="232" height="232" viewBox="0 0 232 232" fill="none"> <circle cx="116" cy="116" r="115.91" fill="white" fillOpacity="0.3" /> <circle cx="116" cy="116" r="86.9325" fill="white" fillOpacity="0.6" /> <circle cx="115.955" cy="116.045" r="57.955" fill="white" /> <g clipPath="url(#clip0_233_2238)"> <path d="M87.9678 119.45L101.466 132.949L104.871 129.52L91.3968 116.045M140.683 100.542L115.134 126.115L105.089 116.045L101.635 119.45L115.134 132.949L144.112 103.971M130.444 103.971L127.039 100.542L111.705 115.876L115.134 119.281L130.444 103.971Z" fill="#D50F25" /> </g> <defs> <clipPath id="clip0_233_2238"> <rect width="57.955" height="57.955" fill="white" transform="translate(86.9778 87.0675)" /> </clipPath> </defs> </svg>
     </AnimatedSvgWrapper>
     <StepTwoContent>
-      <ResponsiveH4 className='universal-font-bold' style={{ marginBottom: "8px" }}>Contact Information</ResponsiveH4>
-      <Form>
-        <div>
-          <Input style={{ border: "1px solid #999999", "borderRadius": "6px" }}
-            name="name"
-            placeholder="Enter full name"
-            value={form.name}
-            onChange={handleInputChange}
-            required
-          />
+      <ResponsiveH4 className='universal-font-bold' style={{ marginBottom: "8px" }}>
+        {channelMode ? "Verification" : "Contact Information"}
+      </ResponsiveH4>
+      
+      {channelMode ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
+          <span className="universal-fs-h4 universal-font-semibold" style={{ color: '#111' }}>How would you like to receive your OTP?</span>
+          <span className="universal-fs-h3 universal-font" style={{ color: '#8692A6' }}>Sending to +91 {form.phone}</span>
+          <ChannelPickerWrapper>
+            <ChannelOption type="button" $selected={otpChannel === 'whatsapp'} onClick={() => setOtpChannel('whatsapp')}>
+              <ChannelIcon>💬</ChannelIcon>
+              <ChannelInfo>
+                <ChannelTitle>WhatsApp</ChannelTitle>
+                <ChannelDesc>Receive code on WhatsApp</ChannelDesc>
+              </ChannelInfo>
+              <ChannelRadio $selected={otpChannel === 'whatsapp'} />
+            </ChannelOption>
+            <ChannelOption type="button" $selected={otpChannel === 'sms'} onClick={() => setOtpChannel('sms')}>
+              <ChannelIcon>📱</ChannelIcon>
+              <ChannelInfo>
+                <ChannelTitle>SMS</ChannelTitle>
+                <ChannelDesc>Receive code as a text message</ChannelDesc>
+              </ChannelInfo>
+              <ChannelRadio $selected={otpChannel === 'sms'} />
+            </ChannelOption>
+          </ChannelPickerWrapper>
         </div>
-        <div>
-          <CountryPhoneRow>
-            <label className="universal-font-medium universal-fs-h3" style={{
-              minWidth: 30,
-              padding: '10px 8px',
-              border: 'none',
-              borderRadius: 0,
-              display: 'flex',
-              alignItems: 'center',
-              background: '#fff',
-              color: '#222',
-              height: '100%',
-              margin: "auto"
-            }}>+91</label>
-            <Input
-              name="phone"
-              type="tel"
-              placeholder="Enter your Mobile Number*"
-              value={form.phone}
+      ) : (
+        <Form>
+          <div>
+            <Input style={{ border: "1px solid #999999", "borderRadius": "6px" }}
+              name="name"
+              placeholder="Enter full name"
+              value={form.name}
               onChange={handleInputChange}
               required
-              style={{ flex: 1, border: 'none', borderRadius: 0 }}
             />
-          </CountryPhoneRow>
-        </div>
-        <div>
-          <Input
-            name="email"
-            type="email"
-            placeholder="Enter email"
-            value={form.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <Select
-            name="city"
-            value={form.city}
-            onChange={handleInputChange}
-            required
-            className="universal-fs-h3 universal-font"
-          >
-            {cities.map((city) => (
-              <option key={city} value={city}>{city ? city : 'Choose city'}</option>
-            ))}
-          </Select>
-        </div>
-        <ConsentLabelRow>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <ToggleSwitch checked={consentChecked} onChange={e => setConsentChecked(e.target.checked)} />
-            <span style={{ color: "#8692A6", margin: "auto 0px", marginLeft: "8px" }} className='universal-fs-h3'>Send Updates on whatsapp</span>
           </div>
-          <WhatsAppIcon>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"> <g clipPath="url(#clip0_218_2658)"> <path d="M0.682949 15.8085C0.682199 18.4971 1.3902 21.1224 2.73645 23.4363L0.554199 31.3423L8.7082 29.2208C10.9635 30.4391 13.4904 31.0774 16.0582 31.0776H16.0649C24.5418 31.0776 31.4422 24.2332 31.4458 15.8205C31.4474 11.744 29.8489 7.9107 26.9447 5.02673C24.041 2.14301 20.1791 0.554046 16.0643 0.552186C7.58645 0.552186 0.686574 7.39622 0.683074 15.8085" fill="url(#paint0_linear_218_2658)" /> <path d="M0.13375 15.8035C0.132875 18.5889 0.86625 21.308 2.2605 23.7048L0 31.8942L8.44637 29.6967C10.7736 30.9558 13.3939 31.6196 16.0601 31.6206H16.067C24.848 31.6206 31.9963 24.53 32 15.8162C32.0015 11.5932 30.3455 7.62208 27.3375 4.63479C24.3291 1.64788 20.3291 0.00173643 16.067 0C7.2845 0 0.13725 7.08961 0.13375 15.8035ZM5.16388 23.292L4.8485 22.7953C3.52275 20.7036 2.823 18.2865 2.824 15.8045C2.82675 8.56174 8.76725 2.66915 16.072 2.66915C19.6095 2.67064 22.934 4.03895 25.4345 6.52155C27.9349 9.0044 29.3108 12.3049 29.3099 15.8152C29.3066 23.058 23.366 28.9513 16.067 28.9513H16.0618C13.6851 28.9501 11.3542 28.3168 9.3215 27.12L8.83775 26.8353L3.8255 28.1393L5.16388 23.292Z" fill="url(#paint1_linear_218_2658)" /> <path d="M12.0847 9.19665C11.7864 8.53891 11.4726 8.52564 11.1889 8.51411C10.9567 8.50419 10.6912 8.50493 10.4259 8.50493C10.1604 8.50493 9.72907 8.60403 9.36445 8.99907C8.99945 9.39448 7.97095 10.35 7.97095 12.2935C7.97095 14.2369 9.39757 16.1152 9.59645 16.379C9.79557 16.6424 12.3506 20.7582 16.3971 22.3416C19.7601 23.6574 20.4444 23.3957 21.1743 23.3297C21.9043 23.264 23.5298 22.3744 23.8614 21.452C24.1933 20.5297 24.1933 19.7392 24.0938 19.574C23.9943 19.4094 23.7288 19.3105 23.3307 19.1131C22.9326 18.9156 20.9752 17.9598 20.6103 17.828C20.2453 17.6962 19.9799 17.6305 19.7144 18.026C19.4489 18.421 18.6866 19.3105 18.4542 19.574C18.2221 19.838 17.9897 19.8709 17.5917 19.6733C17.1933 19.4751 15.9112 19.0585 14.3901 17.7129C13.2066 16.6658 12.4076 15.3728 12.1753 14.9772C11.9431 14.5823 12.1504 14.3682 12.3501 14.1714C12.5289 13.9944 12.7483 13.7101 12.9476 13.4796C13.1461 13.2489 13.2123 13.0843 13.3451 12.8208C13.4779 12.5571 13.4114 12.3264 13.3121 12.1289C13.2123 11.9313 12.4387 9.97767 12.0847 9.19665Z" fill="white" /> </g> <defs> <linearGradient id="paint0_linear_218_2658" x1="1545.14" y1="3079.56" x2="1545.14" y2="0.552186" gradientUnits="userSpaceOnUse"> <stop stopColor="#1FAF38" /> <stop offset="1" stopColor="#60D669" /> </linearGradient> <linearGradient id="paint1_linear_218_2658" x1="1600" y1="3189.42" x2="1600" y2="0" gradientUnits="userSpaceOnUse"> <stop stopColor="#F9F9F9" /> <stop offset="1" stopColor="white" /> </linearGradient> <clipPath id="clip0_218_2658"> <rect width="32" height="32" fill="white" /> </clipPath> </defs> </svg>
-          </WhatsAppIcon>
-        </ConsentLabelRow>
-      </Form>
+          <div>
+            <CountryPhoneRow>
+              <label className="universal-font-medium universal-fs-h3" style={{
+                minWidth: 30,
+                padding: '10px 8px',
+                border: 'none',
+                borderRadius: 0,
+                display: 'flex',
+                alignItems: 'center',
+                background: '#fff',
+                color: '#222',
+                height: '100%',
+                margin: "auto"
+              }}>+91</label>
+              <Input
+                name="phone"
+                type="tel"
+                placeholder="Enter your Mobile Number*"
+                value={form.phone}
+                onChange={handleInputChange}
+                required
+                style={{ flex: 1, border: 'none', borderRadius: 0 }}
+              />
+            </CountryPhoneRow>
+          </div>
+          <div>
+            <Input
+              name="email"
+              type="email"
+              placeholder="Enter email"
+              value={form.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Select
+              name="city"
+              value={form.city}
+              onChange={handleInputChange}
+              required
+              className="universal-fs-h3 universal-font"
+            >
+              {cities.map((city) => (
+                <option key={city} value={city}>{city ? city : 'Choose city'}</option>
+              ))}
+            </Select>
+          </div>
+          <ConsentLabelRow>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <ToggleSwitch checked={consentChecked} onChange={e => setConsentChecked(e.target.checked)} />
+              <span style={{ color: "#8692A6", margin: "auto 0px", marginLeft: "8px" }} className='universal-fs-h3'>Send Updates on whatsapp</span>
+            </div>
+            <WhatsAppIcon>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"> <g clipPath="url(#clip0_218_2658)"> <path d="M0.682949 15.8085C0.682199 18.4971 1.3902 21.1224 2.73645 23.4363L0.554199 31.3423L8.7082 29.2208C10.9635 30.4391 13.4904 31.0774 16.0582 31.0776H16.0649C24.5418 31.0776 31.4422 24.2332 31.4458 15.8205C31.4474 11.744 29.8489 7.9107 26.9447 5.02673C24.041 2.14301 20.1791 0.554046 16.0643 0.552186C7.58645 0.552186 0.686574 7.39622 0.683074 15.8085" fill="url(#paint0_linear_218_2658)" /> <path d="M0.13375 15.8035C0.132875 18.5889 0.86625 21.308 2.2605 23.7048L0 31.8942L8.44637 29.6967C10.7736 30.9558 13.3939 31.6196 16.0601 31.6206H16.067C24.848 31.6206 31.9963 24.53 32 15.8162C32.0015 11.5932 30.3455 7.62208 27.3375 4.63479C24.3291 1.64788 20.3291 0.00173643 16.067 0C7.2845 0 0.13725 7.08961 0.13375 15.8035ZM5.16388 23.292L4.8485 22.7953C3.52275 20.7036 2.823 18.2865 2.824 15.8045C2.82675 8.56174 8.76725 2.66915 16.072 2.66915C19.6095 2.67064 22.934 4.03895 25.4345 6.52155C27.9349 9.0044 29.3108 12.3049 29.3099 15.8152C29.3066 23.058 23.366 28.9513 16.067 28.9513H16.0618C13.6851 28.9501 11.3542 28.3168 9.3215 27.12L8.83775 26.8353L3.8255 28.1393L5.16388 23.292Z" fill="url(#paint1_linear_218_2658)" /> <path d="M12.0847 9.19665C11.7864 8.53891 11.4726 8.52564 11.1889 8.51411C10.9567 8.50419 10.6912 8.50493 10.4259 8.50493C10.1604 8.50493 9.72907 8.60403 9.36445 8.99907C8.99945 9.39448 7.97095 10.35 7.97095 12.2935C7.97095 14.2369 9.39757 16.1152 9.59645 16.379C9.79557 16.6424 12.3506 20.7582 16.3971 22.3416C19.7601 23.6574 20.4444 23.3957 21.1743 23.3297C21.9043 23.264 23.5298 22.3744 23.8614 21.452C24.1933 20.5297 24.1933 19.7392 24.0938 19.574C23.9943 19.4094 23.7288 19.3105 23.3307 19.1131C22.9326 18.9156 20.9752 17.9598 20.6103 17.828C20.2453 17.6962 19.9799 17.6305 19.7144 18.026C19.4489 18.421 18.6866 19.3105 18.4542 19.574C18.2221 19.838 17.9897 19.8709 17.5917 19.6733C17.1933 19.4751 15.9112 19.0585 14.3901 17.7129C13.2066 16.6658 12.4076 15.3728 12.1753 14.9772C11.9431 14.5823 12.1504 14.3682 12.3501 14.1714C12.5289 13.9944 12.7483 13.7101 12.9476 13.4796C13.1461 13.2489 13.2123 13.0843 13.3451 12.8208C13.4779 12.5571 13.4114 12.3264 13.3121 12.1289C13.2123 11.9313 12.4387 9.97767 12.0847 9.19665Z" fill="white" /> </g> <defs> <linearGradient id="paint0_linear_218_2658" x1="1545.14" y1="3079.56" x2="1545.14" y2="0.552186" gradientUnits="userSpaceOnUse"> <stop stopColor="#1FAF38" /> <stop offset="1" stopColor="#60D669" /> </linearGradient> <linearGradient id="paint1_linear_218_2658" x1="1600" y1="3189.42" x2="1600" y2="0" gradientUnits="userSpaceOnUse"> <stop stopColor="#F9F9F9" /> <stop offset="1" stopColor="white" /> </linearGradient> <clipPath id="clip0_218_2658"> <rect width="32" height="32" fill="white" /> </clipPath> </defs> </svg>
+            </WhatsAppIcon>
+          </ConsentLabelRow>
+        </Form>
+      )}
     </StepTwoContent>
     
     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-      <Button className="universal-font-medium" style={{ minWidth: 100 }} secondary onClick={onBack} disabled={isLoading}>Back</Button>
-      <Button className="universal-font-medium" style={{ minWidth: 100, marginLeft: 16 }} primary onClick={handleSubmitNow} disabled={isLoading}>
+      <Button className="universal-font-medium" style={{ minWidth: 100 }} secondary onClick={channelMode ? () => setChannelMode(false) : onBack} disabled={isLoading}>Back</Button>
+      <Button className="universal-font-medium" style={{ minWidth: 100, marginLeft: 16 }} primary onClick={channelMode ? handleSendOTP : handleSubmitNow} disabled={isLoading}>
         {isLoading ? (
           <Loader 
             type="button" 
@@ -752,7 +846,7 @@ const StepThree = ({
             buttonSpinnerSmallMobileSize="12px"
           />
         ) : (
-          'Submit Now'
+          channelMode ? 'Send OTP' : 'Submit Now'
         )}
       </Button>
     </div>
@@ -839,6 +933,9 @@ const CostEstimator = forwardRef((props, ref) => {
   const [showAnimatedSvg, setShowAnimatedSvg] = useState(false);
   const svgTimeoutRef = useRef();
 
+  const [channelMode, setChannelMode] = useState(false);
+  const [otpChannel, setOtpChannel] = useState('whatsapp');
+
   // OTP state management
   const [otp, setOtp] = useState('');
   const [estimationPayload, setEstimationPayload] = useState(null);
@@ -896,11 +993,13 @@ const CostEstimator = forwardRef((props, ref) => {
     
     try {
       const otpPayload = {
-        phone: form.phone
+        phone: form.phone,
+        channel: otpChannel
       };
       
       const sendOtpResult = await sendOTP(otpPayload);
       setOtp(''); // Reset OTP input value
+      setChannelMode(false);
       setStep(4);
       const message = sendOtpResult?.message || 'OTP sent successfully!';
       showSuccessToast(message);
@@ -959,6 +1058,8 @@ const CostEstimator = forwardRef((props, ref) => {
           });
           setSelectedPropertyType(null);
           setSelectedPurposeType(null);
+          setChannelMode(false);
+          setOtpChannel('whatsapp');
         }, 2000);
       }
     } catch (errorMessage) {
@@ -975,19 +1076,21 @@ const CostEstimator = forwardRef((props, ref) => {
       return;
     }
     
-    // Validate full name, phone, and email inputs
-    const nameInput = document.querySelector('input[name="name"]');
-    const phoneInput = document.querySelector('input[name="phone"]');
-    const phoneInputParent = document.querySelector('input[name="phone"]').parentElement;
-    const emailInput = document.querySelector('input[name="email"]');
-    const citySelect = document.querySelector('select[name="city"]');
-    const isNameValid = inputValidation(nameInput);
-    const isPhoneValid = inputValidation(phoneInput, phoneInputParent);
-    const isEmailValid = inputValidation(emailInput);
-    const isCityValid = selectValidation(citySelect);
-
-    if (!isNameValid || !isPhoneValid || !isEmailValid || !isCityValid) {
-      // Error messages are handled by inputValidation/selectValidation
+    // Validate directly from state
+    if (form.name.length < 3 || !/^[A-Za-z ]+$/.test(form.name)) {
+      showFailureToast('Please enter a valid name (at least 3 letters, no special characters).', 4000);
+      return;
+    }
+    if (!form.phone || !/^[6-9]\d{9}$/.test(form.phone)) {
+      showFailureToast('Please enter a valid 10-digit mobile number.', 4000);
+      return;
+    }
+    if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) {
+      showFailureToast('Please enter a valid email address.', 4000);
+      return;
+    }
+    if (!form.city) {
+      showFailureToast('Please select a city.', 4000);
       return;
     }
     
@@ -996,16 +1099,16 @@ const CostEstimator = forwardRef((props, ref) => {
       propertyType: selectedPropertyType,
       purpose: selectedPurposeType,
       scope: { ...counts },
-      name: nameInput.value,
-      phone: phoneInput.value,
-      email: emailInput.value,
-      city: citySelect.value,
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      city: form.city,
       whatsappQuote: consentChecked,
     };
 
-    // Store the payload and send OTP first
+    // Store the payload and show channel picker (step 3.5)
     setEstimationPayload(payload);
-    await handleSendOTP();
+    setChannelMode(true);
   };
   return (
     <TestimonialsContainer ref={ref}>
@@ -1083,6 +1186,11 @@ const CostEstimator = forwardRef((props, ref) => {
               step={step}
               stepLabels={stepLabels}
               isLoading={isLoading}
+              channelMode={channelMode}
+              setChannelMode={setChannelMode}
+              otpChannel={otpChannel}
+              setOtpChannel={setOtpChannel}
+              handleSendOTP={handleSendOTP}
             />
           )}
           {step === 4 && (

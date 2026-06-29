@@ -19,7 +19,8 @@
     "prop-types": "^15.8.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "styled-components": "^6.4.3"
+    "styled-components": "^6.4.3",
+    "twilio": "^6.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

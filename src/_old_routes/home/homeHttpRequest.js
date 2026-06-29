@@ -27,6 +27,7 @@ export async function liveConsultation(payload) {
 }
 
 export async function sendOTP(payload) {
+  // payload must include { phone, channel: 'sms' | 'whatsapp' }
   return apiService.post(SEND_OTP_API_URL, payload);
 }
 
