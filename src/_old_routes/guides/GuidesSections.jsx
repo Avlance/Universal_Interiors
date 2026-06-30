@@ -75,6 +75,10 @@ const ContentBox = styled.div`
   min-width: fit-content; /* 👈 Ensures it grows to fit content */
   max-width: 100%; /* 👈 Prevents overflow beyond parent */
   flex: 0 1 auto;
+
+  @media (max-width: 768px) {
+    min-width: 0;
+  }
 `;
 
 const Title = styled.h1`
@@ -83,11 +87,9 @@ const Title = styled.h1`
   color: #1c1c1c;
   margin-bottom: 1rem;
   line-height: 1.2;
-  white-space: nowrap; /* 👈 Prevents wrapping */
-  overflow: hidden; /* 👈 Hides overflow if needed */
 
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 `;
 
@@ -114,6 +116,12 @@ const Button = styled.button`
   height: 48px;
   overflow: hidden;
   width: 50%;
+
+  @media (max-width: 768px) {
+    width: auto;
+    min-width: 260px;
+    margin: 0 auto;
+  }
 
   &:disabled {
     background: #999;
@@ -201,15 +209,21 @@ const LayoutCardsContainer = styled.div`
   grid-template-columns: repeat(5, 1fr); // Force 5 columns
   gap: 2rem;
   margin-bottom: 4rem;
-  width: 1180px;
+  max-width: 1180px;
+  width: 100%;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     gap: 1.5rem;
     overflow-x: auto;
     padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    
+    & > * {
+      scroll-snap-align: center;
+      flex: 0 0 280px; /* Fixed width for cards on mobile so they scroll nicely */
+    }
   }
 `;
 
@@ -279,6 +293,14 @@ const PopupContainer = styled.div`
   height: 700px; // or auto with max-height
   max-height: 90vh;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    width: 100%;
+    height: auto;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
 `;
 
 const PopupImageSide = styled.div`
@@ -290,6 +312,13 @@ const PopupImageSide = styled.div`
   justify-content: flex-start; // push image to top
   height: 100%;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 16px;
+    align-items: center;
+    overflow-y: visible;
+  }
 `;
 
 const PopupImage = styled.img`
@@ -297,6 +326,12 @@ const PopupImage = styled.img`
   height: auto;
   object-fit: contain;
   margin: 50px 0 0 70px;
+
+  @media (max-width: 768px) {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 240px;
+  }
 `;
 
 const PopupContent = styled.div`
@@ -304,14 +339,19 @@ const PopupContent = styled.div`
   position: relative;
   overflow-y: auto;
   max-height: 100%;
+
+  @media (max-width: 768px) {
+    overflow-y: visible;
+    max-height: none;
+    padding-top: 0;
+  }
 `;
 const Header = styled.div`
   display: flex;
-  top: 0;
   justify-content: flex-end;
   position: sticky;
   top: 0;
-  padding: -30px 8px;
+  padding: 8px;
   z-index: 10;
   background: white; // optional, prevents overlap
 `;
@@ -380,6 +420,8 @@ const PopupButton = styled.button`
   @media (max-width: 768px) {
     height: 44px;
     margin-top: 6px;
+    width: 100%;
+    min-width: 0;
   }
 
   @media (max-width: 480px) {
@@ -497,6 +539,11 @@ const ComparisonTitle3 = styled.h2`
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    font-size: 1.2rem;
+  }
 `;
 
 const ComparisonTable3 = styled.table`
@@ -619,6 +666,10 @@ const VerticalDivider = styled.div`
 const FeatureCell3 = styled(TableCell3)`
   color: var(--universal-black);
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    white-space: normal;
+  }
 `;
 //#endregion
 
@@ -647,6 +698,10 @@ const GalleryHeader = styled.div`
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const HeaderTextBlock = styled.div`
@@ -700,15 +755,21 @@ const GalleryGrid = styled.div`
   grid-template-columns: repeat(5, 1fr); // Force 5 columns
   gap: 2rem;
   margin-bottom: 0rem;
-  width: 1180px;
+  max-width: 1180px;
+  width: 100%;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     gap: 1.5rem;
     overflow-x: auto;
     padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    
+    & > * {
+      scroll-snap-align: center;
+      flex: 0 0 280px;
+    }
   }
 `;
 
@@ -867,6 +928,10 @@ const ChecklistContent = styled.div`
   display: grid;
   grid-template-columns: auto 1fr; // icon column auto-sized
   border-right: 1px solid #878787;
+
+  @media (max-width: 768px) {
+    border-right: none;
+  }
 `;
 
 const ChecklistTitle = styled.h2`

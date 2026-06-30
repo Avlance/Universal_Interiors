@@ -6,7 +6,7 @@ import ModalOverlay from './ModalOverlay';
 const ModalContent = styled.div`
   background: #fff;
   border-radius: 16px;
-  min-width: 340px;
+  min-width: min(340px, 95vw);
   max-width: 95vw;
   max-height: 90vh;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
