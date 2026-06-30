@@ -509,6 +509,10 @@ const ComparisonTable3 = styled.table`
   box-shadow: none; /* ⬅️ explicitly remove shadow */
   position: relative;
 
+  @media (max-width: 768px) {
+    min-width: 600px; /* Force minimum width to prevent text squishing on mobile */
+  }
+
   &::after {
     content: "";
     position: absolute;
@@ -590,6 +594,11 @@ const TableCell3 = styled.td`
   text-align: center;
   &:last-child {
     border-right: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+    font-size: 0.9rem;
   }
 `;
 const VerticalDivider = styled.div`
@@ -1832,7 +1841,7 @@ const GuidesSections = () => {
                 Modular Kitchen <span style={{ color: "#549943" }}>vs</span>{" "}
                 Carpenter-Made Kitchen
               </ComparisonTitle3>
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative", overflowX: "auto", paddingBottom: "10px", WebkitOverflowScrolling: "touch" }}>
                 <ComparisonTable3>
                   <thead>
                     <tr>
@@ -1940,11 +1949,6 @@ const GuidesSections = () => {
                     </TableRow3>
                   </tbody>
                 </ComparisonTable3>
-                {/* Vertical dividers (full column height) */}
-                <VerticalDivider style={{ left: "18%" }} />{" "}
-                {/* between Features + Modular */}
-                <VerticalDivider style={{ left: "61%" }} />{" "}
-                {/* between Modular + Carpenter */}
               </div>
             </SectionContainer3>
           </ComparisonSection3>
@@ -2409,7 +2413,7 @@ const GuidesSections = () => {
                 Modular Wardrobe <span style={{ color: "#549943" }}>vs</span>{" "}
                 Carpenter-Made Wardrobe
               </ComparisonTitle3>
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative", overflowX: "auto", paddingBottom: "10px", WebkitOverflowScrolling: "touch" }}>
                 <ComparisonTable3>
                   <thead>
                     <tr>
@@ -2513,11 +2517,6 @@ const GuidesSections = () => {
                     </TableRow3>
                   </tbody>
                 </ComparisonTable3>
-                {/* Vertical dividers (full column height) */}
-                <VerticalDivider style={{ left: "20%" }} />{" "}
-                {/* between Features + Wardrobe */}
-                <VerticalDivider style={{ left: "60%" }} />{" "}
-                {/* between Wardrobe + Carpenter */}
               </div>
             </SectionContainer3>
           </ComparisonSection3>
