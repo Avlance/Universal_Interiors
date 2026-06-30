@@ -10,6 +10,10 @@ const DashboardContainer = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 `;
 
 const Header = styled.div`
@@ -17,6 +21,13 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
 `;
 
 const Title = styled.h1`
@@ -30,6 +41,11 @@ const MetricsRow = styled.div`
   gap: 20px;
   margin-bottom: 32px;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
 `;
 
 const MetricCard = styled.div`
@@ -39,6 +55,11 @@ const MetricCard = styled.div`
   box-shadow: 0 2px 10px rgba(0,0,0,0.03);
   flex: 1;
   min-width: 200px;
+
+  @media (max-width: 480px) {
+    min-width: 140px;
+    padding: 16px;
+  }
 `;
 
 const MetricTitle = styled.div`
@@ -68,6 +89,18 @@ const TabContainer = styled.div`
   margin-bottom: 24px;
   border-bottom: 1px solid #eaeaea;
   padding-bottom: 8px;
+  
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none; /* Firefox */
+    
+    &::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+  }
 `;
 
 const Tab = styled.button`
@@ -80,6 +113,7 @@ const Tab = styled.button`
   cursor: pointer;
   position: relative;
   transition: color 0.2s;
+  white-space: nowrap;
 
   &:hover {
     color: #D50F25;
@@ -95,6 +129,11 @@ const Tab = styled.button`
     background: #D50F25;
     transform: scaleX(${props => props.$active ? 1 : 0});
     transition: transform 0.2s;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 `;
 
@@ -164,6 +203,11 @@ const ModalContent = styled.div`
   border-radius: 12px;
   width: 100%;
   max-width: 500px;
+  margin: 16px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -384,7 +428,7 @@ export default function Dashboard() {
         </MetricCard>
       </MetricsRow>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: '16px' }}>
         <TabContainer style={{ marginBottom: 0, border: 'none', padding: 0 }}>
           <Tab $active={activeTab === 'All'} onClick={() => setActiveTab('All')}>All Leads</Tab>
           <Tab $active={activeTab === 'New'} onClick={() => setActiveTab('New')}>New</Tab>
@@ -393,7 +437,7 @@ export default function Dashboard() {
           <Tab $active={activeTab === 'Turned as customer'} onClick={() => setActiveTab('Turned as customer')}>Turned as customer</Tab>
         </TabContainer>
 
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ fontFamily: 'var(--universal-font-medium)' }}>
             {selectedPhones.size} selected
           </div>
