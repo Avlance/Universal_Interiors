@@ -999,6 +999,11 @@ const defaultNavItems = [
     key: "guides",
   },
   {
+    label: "Catalogs",
+    to: "/catalogs",
+    key: "catalogs",
+  },
+  {
     label: "Price Calculators",
     to: "/price-calculators",
     submenu: [
