@@ -87,8 +87,8 @@ const FooterGrid = styled.div`
   }
   
   @media (max-width: 480px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px 12px;
+    grid-template-columns: 1fr;
+    gap: 24px;
     margin-bottom: 24px;
   }
 `;

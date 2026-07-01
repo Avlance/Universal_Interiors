@@ -299,15 +299,11 @@ const TipItem = styled.div`
   }
 `;
 const HorizontalLine = styled.div`
-  width: 450px;
+  width: calc(100% - 30px);
+  max-width: 450px;
   height: 0;
   border: 0.5px solid #999999;
-  // margin: 0 auto;
   margin-left: 30px;
-
-  @media (max-width: 768px) {
-    max-width: 456px;
-  }
 `;
 
 const TipDot = styled.span`
@@ -576,6 +572,14 @@ const NextButtonWrapper = styled.div`
   border-bottom: 1px solid #eaeaea;
   box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.06), 0 12px 24px rgba(0, 0, 0, 0.06);
   width: 100vw;
+
+  @media (max-width: 768px) {
+    bottom: 60px;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 55px;
+  }
 `;
 
 const NextButtonContainer = styled.div`
@@ -583,8 +587,9 @@ const NextButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: 1180px;
-  margin-left: 1198px;
+  margin-left: auto;
   margin-right: auto;
+  padding: 0 20px;
   width: 100%;
   grid-column: 1 / -1;
   border-top: none;
@@ -592,8 +597,9 @@ const NextButtonContainer = styled.div`
   background: transparent;
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    justify-content: center;
     gap: 1rem;
+    padding: 0 16px;
   }
 `;
 
@@ -633,12 +639,16 @@ const ButtonText = styled.span`
   text-align: center;
 `;
 
-// ------------------ Step 3: Package Table styles ------------------ //
 const PackagesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 `;
 
 const PackageCardWrapper = styled.div`

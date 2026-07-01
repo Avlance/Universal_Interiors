@@ -177,6 +177,14 @@ const VideoPlaceholderWrapper = styled.div`
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     width: 600px;
 
+    @media (max-width: 768px) {
+      width: 280px;
+    }
+
+    @media (max-width: 480px) {
+      width: 260px;
+    }
+
     .video-svg-icon {
       display: flex;
     }
@@ -308,7 +316,7 @@ const FactoryTour = () => {
       <ContentWrapper>
         <SectionHeader>
           <SectionTitle className='universal-fs-h8 universal-font-bold'>
-            Take a Tour of Our <span style={{ color: "#D50F25" }}> Interiors</span> us?
+            Take a Tour of Our <span style={{ color: "#D50F25" }}> Interiors</span>
           </SectionTitle>
           <SectionDescription className='universal-fs-h3 universal-font-medium'>
             Modern Interiors, Hassle-Free Execution

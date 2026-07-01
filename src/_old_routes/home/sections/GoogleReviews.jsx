@@ -482,10 +482,10 @@ const GoogleReviews = () => {
         <TestimonialGrid>
           <SectionHeader>
             <SectionTitle className='universal-fs-h16 universal-font-bold'>
-              Take a Tour of Our <span style={{ color: "#D50F25" }}> Interiors</span> us?
+              What Our <span style={{ color: "#D50F25" }}>Customers</span> Say
             </SectionTitle>
             <SectionDescription className='universal-fs-h3 universal-font-medium'>
-              Modern Interiors, Hassle-Free Execution
+              Real reviews and testimonials from happy homeowners who designed with us
             </SectionDescription>
           </SectionHeader>
         </TestimonialGrid>
@@ -523,7 +523,7 @@ const GoogleReviews = () => {
                     <div>
                       <ReviewerInfo>
                         <ReviewerAvatar>
-                          <img src={review.profilePhoto} alt={review.customerName} loading="lazy" />
+                          <img src={review.profilePhoto} alt={review.customerName} loading="lazy" referrerPolicy="no-referrer" />
                         </ReviewerAvatar>
                         <ReviewerDetails>
                           <ReviewerName className='universal-font-bold universal-fs-h3'>{review.customerName}</ReviewerName>
@@ -590,7 +590,7 @@ const GoogleReviews = () => {
             {/* Author row */}
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '18px', paddingRight: '24px' }}>
               <ReviewerAvatar style={{ width: 56, height: 56, marginRight: 14 }}>
-                <img src={selectedReview.profilePhoto} alt={selectedReview.customerName} loading="lazy" />
+                <img src={selectedReview.profilePhoto} alt={selectedReview.customerName} loading="lazy" referrerPolicy="no-referrer" />
               </ReviewerAvatar>
               <div>
                 <ModalReviewerName>{selectedReview.customerName}</ModalReviewerName>

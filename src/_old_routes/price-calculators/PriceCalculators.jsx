@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useLocation } from '@/utils/react-router-dom';
+import { useLocation, Link } from '@/utils/react-router-dom';
 import styled from "styled-components";
 import Layout from "../../components/layout/Layout";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -323,6 +323,14 @@ const NextButtonWrapper = styled.div`
   border-bottom: 1px solid #eaeaea;
   box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.06), 0 12px 24px rgba(0, 0, 0, 0.06);
   width: 100vw;
+
+  @media (max-width: 768px) {
+    bottom: 60px;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 55px;
+  }
 `;
 
 const NextButtonContainer = styled.div`
@@ -330,8 +338,9 @@ const NextButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: 1180px;
-  margin-left: 1198px;
+  margin-left: auto;
   margin-right: auto;
+  padding: 0 20px;
   width: 100%;
   grid-column: 1 / -1;
   border-top: none;
@@ -339,8 +348,9 @@ const NextButtonContainer = styled.div`
   background: transparent;
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    justify-content: center;
     gap: 1rem;
+    padding: 0 16px;
   }
 `;
 
@@ -694,6 +704,11 @@ const PackagesGrid = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 24px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 `;
 
 const PackageCardWrapper = styled.div`
@@ -852,15 +867,11 @@ const TipItem = styled.div`
   }
 `;
 const HorizontalLine = styled.div`
-  width: 450px;
+  width: calc(100% - 30px);
+  max-width: 450px;
   height: 0;
   border: 0.5px solid #999999;
-  // margin: 0 auto;
   margin-left: 30px;
-
-  @media (max-width: 768px) {
-    max-width: 456px;
-  }
 `;
 
 const TipDot = styled.span`
@@ -887,7 +898,126 @@ const TipDesc = styled.p`
 `;
 //#endregion
 
-//Select a kitchen package that fits your style & budget
+// ------------------ Price Calculator Selector Landing Page Styles ------------------ //
+const LandingContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px 80px 20px;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 40px 16px 60px 16px;
+  }
+`;
+
+const LandingHeader = styled.div`
+  margin-bottom: 50px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 35px;
+  }
+`;
+
+const LandingTitle = styled.h1`
+  margin-bottom: 16px;
+  color: #1a1a1a;
+`;
+
+const LandingSub = styled.p`
+  color: #666;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+`;
+
+const CalculatorCardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+`;
+
+const LandingCalculatorCard = styled(Link)`
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 40px 30px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(213, 15, 37, 0.12);
+    border-color: #d50f25;
+  }
+
+  @media (max-width: 480px) {
+    padding: 30px 20px;
+  }
+`;
+
+const LandingCardIconContainer = styled.div`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #fdf2f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: #d50f25;
+  transition: all 0.3s ease;
+
+  ${LandingCalculatorCard}:hover & {
+    background: #d50f25;
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+`;
+
+const LandingCardTitle = styled.h2`
+  margin-bottom: 12px;
+  color: #1a1a1a;
+`;
+
+const LandingCardDesc = styled.p`
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  flex-grow: 1;
+`;
+
+const LandingCardButton = styled.span`
+  background: #d50f25;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  ${LandingCalculatorCard}:hover & {
+    background: #111111;
+  }
+`;
+
 // #region 3rd page 2nd section table
 const TipsSection = () => {
   const leftTips = [
@@ -1439,6 +1569,69 @@ const PriceCalculators = () => {
   const handleFormSuccess = () => {
     setOpen(false);
   };
+
+  const isLandingPage = location.pathname === "/price-calculators";
+
+  if (isLandingPage) {
+    return (
+      <Layout>
+        <Breadcrumb
+          items={[
+            { label: "Home", to: "/" },
+            {
+              label: "Price Estimators",
+              to: "/price-calculators",
+            },
+          ]}
+        />
+        <LandingContainer>
+          <LandingHeader>
+            <LandingTitle className="universal-fs-h12 universal-font-extra-bold">
+              Select Your <span style={{ color: "#D50F25" }}>Price Estimator</span>
+            </LandingTitle>
+            <LandingSub className="universal-fs-h3 universal-font-medium">
+              Choose a specialized calculator below to estimate the exact cost of your home interior design project in minutes.
+            </LandingSub>
+          </LandingHeader>
+          <CalculatorCardGrid>
+            <LandingCalculatorCard to="/price-calculators/kitchen-price-calculation">
+              <LandingCardIconContainer>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 18h12M6 14h12M6 10h12M3 22h18a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1z" />
+                  <circle cx="9" cy="6" r="1" />
+                  <circle cx="15" cy="6" r="1" />
+                </svg>
+              </LandingCardIconContainer>
+              <LandingCardTitle className="universal-fs-h8 universal-font-bold">Modular Kitchen Calculator</LandingCardTitle>
+              <LandingCardDesc className="universal-fs-h3 universal-font-medium">
+                Calculate custom pricing based on layout shapes (L-shaped, U-shaped, Straight, Parallel), sizes, base cabinet options, and premium accessories.
+              </LandingCardDesc>
+              <LandingCardButton className="universal-fs-h3 universal-font-semibold">
+                Start Estimating <span>→</span>
+              </LandingCardButton>
+            </LandingCalculatorCard>
+
+            <LandingCalculatorCard to="/price-calculators/home-interior-calculation">
+              <LandingCardIconContainer>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9,22 9,12 15,12 15,22" />
+                </svg>
+              </LandingCardIconContainer>
+              <LandingCardTitle className="universal-fs-h8 universal-font-bold">Home Interior Calculator</LandingCardTitle>
+              <LandingCardDesc className="universal-fs-h3 universal-font-medium">
+                Estimate full home design costs based on BHK size, layout configurations, premium wardrobes, living room setups, and essential furniture.
+              </LandingCardDesc>
+              <LandingCardButton className="universal-fs-h3 universal-font-semibold">
+                Start Estimating <span>→</span>
+              </LandingCardButton>
+            </LandingCalculatorCard>
+          </CalculatorCardGrid>
+        </LandingContainer>
+        <Footer />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

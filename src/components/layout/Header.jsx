@@ -805,7 +805,7 @@ const BottomMenuContainer = styled.div`
   margin: 0 auto;
 `;
 
-const BottomMenuItem = styled.div`
+const BottomMenuItem = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -815,6 +815,10 @@ const BottomMenuItem = styled.div`
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
 
   &:hover {
     transform: translateY(-2px);
@@ -894,7 +898,7 @@ const BottomMenuSlider = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 20%;
+  width: 25%;
   height: 3px;
   background: #d50f25;
   border-radius: 2px 2px 0 0;
@@ -1137,7 +1141,8 @@ const Header = () => {
           <polyline points="10,9 9,9 8,9" />
         </svg>
       ),
-      type: "alert",
+      type: "navigation",
+      path: "/price-calculators",
     },
 
   ];
@@ -1153,6 +1158,12 @@ const Header = () => {
       pathname.startsWith("/design-gallery/")
     ) {
       return 1; // Design Gallery
+    }
+    if (
+      pathname === "/price-calculators" ||
+      pathname.startsWith("/price-calculators/")
+    ) {
+      return 3; // Price Estimator
     }
 
     // Return null if no match found - this will maintain current active state

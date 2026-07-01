@@ -81,14 +81,14 @@ const StepperSection = styled.div`
     flex-wrap: nowrap;
     gap: 8px;
     overflow-x: auto;
-    padding: 0 16px;
+    padding: 0 16px 40px 16px;
     width: 100%;
   }
   
   @media (max-width: 480px) {
     margin: 20px 0 24px 0;
     gap: 4px;
-    padding: 0 8px;
+    padding: 0 8px 30px 8px;
   }
 `;
 
