@@ -31,6 +31,7 @@ const Page = React.forwardRef((props, ref) => {
             <p className="text-gray-200 text-center px-6 mb-6">Register to view the rest of this premium design catalog.</p>
             <button 
               onPointerDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.onUnlock(); }}
               className="bg-red-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-700 transition relative z-50 cursor-pointer pointer-events-auto"
             >
@@ -96,17 +97,19 @@ export default function FlipbookViewer({ catalog, userPhone, onUnlockRequest }) 
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full py-8 relative">
       
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50 items-end">
+      <div className="fixed bottom-24 md:bottom-8 right-8 flex flex-col gap-4 z-[9999] items-end pointer-events-none">
         <button 
+          onTouchStart={(e) => e.stopPropagation()}
           onClick={handleInquire}
-          className="bg-gray-900 text-white p-4 rounded-full shadow-2xl hover:bg-gray-800 transition-all flex items-center justify-center hover:scale-110"
+          className="bg-gray-900 text-white p-4 rounded-full shadow-2xl hover:bg-gray-800 transition-all flex items-center justify-center hover:scale-110 pointer-events-auto"
           title="Inquire about this design"
         >
           <FaInfoCircle className="text-2xl" />
         </button>
         <button 
+          onTouchStart={(e) => e.stopPropagation()}
           onClick={handleShare}
-          className="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#1ebe5d] transition-all flex items-center justify-center hover:scale-110"
+          className="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#1ebe5d] transition-all flex items-center justify-center hover:scale-110 pointer-events-auto"
           title="Share via WhatsApp"
         >
           <FaWhatsapp className="text-2xl" />

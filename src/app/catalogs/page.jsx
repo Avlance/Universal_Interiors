@@ -39,18 +39,18 @@ export default function CatalogsLandingPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-24 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-8 gap-y-20 justify-items-center">
             {catalogs.map(catalog => (
               <div key={catalog.id} className="flex flex-col items-center group w-full max-w-md">
-                {/* 3D Book Cover Effect (Dynamic Aspect Ratio) */}
-                <Link href={`/catalogs/${catalog.slug}`} className="relative perspective-1000 w-full mb-8 transition-transform duration-300 group-hover:-translate-y-4">
-                  <div className="w-full relative transform-style-3d group-hover:rotate-y-[-10deg] transition-transform duration-500 shadow-2xl rounded-xl overflow-hidden bg-white">
+                {/* 3D Book Cover Effect (Fixed Aspect Ratio to ensure no whitespace) */}
+                <Link href={`/catalogs/${catalog.slug}`} className="relative perspective-1000 w-full aspect-[4/3] mb-8 transition-transform duration-300 group-hover:-translate-y-4 block">
+                  <div className="w-full h-full relative transform-style-3d group-hover:rotate-y-[-10deg] transition-transform duration-500 shadow-2xl rounded-xl overflow-hidden bg-gray-100">
                     {/* Book spine lighting */}
-                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-black/30 via-black/10 to-transparent z-10"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-black/30 via-black/10 to-transparent z-10 pointer-events-none"></div>
                     <img 
                       src={catalog.coverImage} 
                       alt={catalog.title}
-                      className="w-full h-auto block"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </Link>

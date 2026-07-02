@@ -1131,6 +1131,22 @@ const Header = () => {
     },
     {
       id: 3,
+      label: "Catalogs",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+        </svg>
+      ),
+      type: "navigation",
+      path: "/catalogs",
+    },
+    {
+      id: 4,
       label: "Price Estimator",
       icon: (
         <svg
@@ -1168,7 +1184,13 @@ const Header = () => {
       pathname === "/price-calculators" ||
       pathname.startsWith("/price-calculators/")
     ) {
-      return 3; // Price Estimator
+      return 4; // Price Estimator
+    }
+    if (
+      pathname === "/catalogs" ||
+      pathname.startsWith("/catalogs/")
+    ) {
+      return 3; // Catalogs
     }
 
     // Return null if no match found - this will maintain current active state
