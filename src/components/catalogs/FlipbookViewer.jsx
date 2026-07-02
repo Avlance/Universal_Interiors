@@ -30,8 +30,9 @@ const Page = React.forwardRef((props, ref) => {
             <h3 className="text-white text-2xl font-bold mb-2">Premium Content</h3>
             <p className="text-gray-200 text-center px-6 mb-6">Register to view the rest of this premium design catalog.</p>
             <button 
-              onClick={props.onUnlock}
-              className="bg-red-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-700 transition"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.onUnlock(); }}
+              className="bg-red-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-red-700 transition relative z-50 cursor-pointer pointer-events-auto"
             >
               Unlock Catalog
             </button>
@@ -87,33 +88,28 @@ export default function FlipbookViewer({ catalog, userPhone, onUnlockRequest }) 
   };
 
   const isMobile = windowWidth < 768;
-  const bookWidth = isMobile ? windowWidth : Math.min(windowWidth * 0.8, 1200) / 2;
-  const bookHeight = isMobile ? windowWidth * 1.4 : bookWidth * 1.3;
+  const bookWidth = isMobile ? windowWidth : Math.min(windowWidth * 0.9, 1200) / 2;
+  // Adjusted for landscape PDF pages (width > height). Assuming a standard 16:9 or 4:3 landscape ratio per page.
+  const bookHeight = isMobile ? windowWidth * 0.75 : bookWidth * 0.75;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] w-full py-8 relative">
       
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50 items-end">
         <button 
           onClick={handleInquire}
-          className="bg-gray-900 text-white p-4 rounded-full shadow-xl hover:bg-gray-800 transition flex items-center justify-center group"
+          className="bg-gray-900 text-white p-4 rounded-full shadow-2xl hover:bg-gray-800 transition-all flex items-center justify-center hover:scale-110"
           title="Inquire about this design"
         >
-          <FaInfoCircle className="text-xl" />
-          <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out pl-0 group-hover:pl-2 font-medium">
-            Inquire Design
-          </span>
+          <FaInfoCircle className="text-2xl" />
         </button>
         <button 
           onClick={handleShare}
-          className="bg-green-500 text-white p-4 rounded-full shadow-xl hover:bg-green-600 transition flex items-center justify-center group"
+          className="bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#1ebe5d] transition-all flex items-center justify-center hover:scale-110"
           title="Share via WhatsApp"
         >
-          <FaWhatsapp className="text-xl" />
-          <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out pl-0 group-hover:pl-2 font-medium">
-            Share
-          </span>
+          <FaWhatsapp className="text-2xl" />
         </button>
       </div>
 
