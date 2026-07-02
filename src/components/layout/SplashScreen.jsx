@@ -1,0 +1,429 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import styled, { keyframes, css } from "styled-components";
+
+// ─── Keyframes ──────────────────────────────────────────────────────────────
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to   { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(1.04); }
+`;
+
+const drawPath = keyframes`
+  to { stroke-dashoffset: 0; }
+`;
+
+const fillFade = keyframes`
+  from { fill-opacity: 0; }
+  to   { fill-opacity: 1; }
+`;
+
+const logoReveal = keyframes`
+  from { opacity: 0; transform: translateY(16px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+`;
+
+const taglineSlide = keyframes`
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+`;
+
+const barExpand = keyframes`
+  from { width: 0%; }
+  to   { width: 100%; }
+`;
+
+const pulseGlow = keyframes`
+  0%, 100% { box-shadow: 0 0 0 0 rgba(213, 15, 37, 0.0); }
+  50%       { box-shadow: 0 0 28px 4px rgba(213, 15, 37, 0.25); }
+`;
+
+const shimmer = keyframes`
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+`;
+
+const floatParticle = keyframes`
+  0%   { transform: translateY(0) scale(1);   opacity: 0.7; }
+  50%  { transform: translateY(-18px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(0) scale(1);   opacity: 0.7; }
+`;
+
+const lineSlide = keyframes`
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+`;
+
+// ─── Styled Components ───────────────────────────────────────────────────────
+
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #faf8f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: ${({ isLeaving }) =>
+    isLeaving
+      ? css`${fadeOut} 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards`
+      : css`${fadeIn} 0.4s ease forwards`};
+  pointer-events: ${({ isLeaving }) => (isLeaving ? "none" : "all")};
+`;
+
+const GridLines = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background: rgba(213, 15, 37, 0.05);
+    transform-origin: left center;
+  }
+
+  &::before {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+    animation: ${lineSlide} 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+  }
+  &::after {
+    width: 1px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform-origin: center top;
+    animation: ${lineSlide} 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+  }
+`;
+
+const VertLine = styled.div`
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.04);
+  left: ${({ pos }) => pos};
+  top: 0;
+`;
+
+const HorzLine = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.04);
+  top: ${({ pos }) => pos};
+  left: 0;
+`;
+
+const Center = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  z-index: 2;
+`;
+
+const LogoWrap = styled.div`
+  animation: ${logoReveal} 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const AnimatedSvg = styled.svg`
+  /* The colored shapes get a fill-fade animation */
+  .shape-blue   { animation: ${fillFade} 0.6s ease 0.7s both; }
+  .shape-green  { animation: ${fillFade} 0.6s ease 0.9s both; }
+  .shape-red1   { animation: ${fillFade} 0.6s ease 1.1s both; }
+  .shape-red2   { animation: ${fillFade} 0.6s ease 1.2s both; }
+  .shape-yellow { animation: ${fillFade} 0.6s ease 1.3s both; }
+  .shape-stroke { animation: ${fillFade} 0.6s ease 1.4s both; }
+
+  /* The text paths draw on with stroke animation */
+  .text-path {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: ${drawPath} 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.0s forwards;
+  }
+
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.06));
+`;
+
+const Tagline = styled.div`
+  font-family: "Outfit", "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #888;
+  margin-top: 36px;
+  animation: ${taglineSlide} 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
+`;
+
+const BarTrack = styled.div`
+  width: 240px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  margin-top: 32px;
+  overflow: hidden;
+  animation: ${taglineSlide} 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
+`;
+
+const BarFill = styled.div`
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d50f25, #f5b400, #d50f25);
+  background-size: 400px 100%;
+  width: 100%;
+  animation:
+    ${barExpand} 2.2s cubic-bezier(0.4, 0, 0.2, 1) 1.6s both,
+    ${shimmer} 1.8s linear 1.6s infinite,
+    ${pulseGlow} 2s ease-in-out 1.6s infinite;
+`;
+
+const Particles = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+`;
+
+const Dot = styled.span`
+  position: absolute;
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  border-radius: 50%;
+  background: ${({ color }) => color};
+  top: ${({ top }) => top};
+  left: ${({ left }) => left};
+  opacity: 0.5;
+  animation: ${floatParticle} ${({ dur }) => dur}s ease-in-out ${({ delay }) => delay}s infinite;
+`;
+
+const particles = [
+  { size: 6,  color: "#4286F5", top: "20%", left: "12%",  dur: 3.2, delay: 0.0 },
+  { size: 4,  color: "#D50F25", top: "70%", left: "8%",   dur: 2.8, delay: 0.5 },
+  { size: 8,  color: "#F5B400", top: "30%", left: "88%",  dur: 3.5, delay: 0.3 },
+  { size: 5,  color: "#009925", top: "75%", left: "82%",  dur: 2.6, delay: 0.8 },
+  { size: 4,  color: "#D50F25", top: "15%", left: "65%",  dur: 3.0, delay: 1.1 },
+  { size: 6,  color: "#4286F5", top: "60%", left: "20%",  dur: 2.9, delay: 0.6 },
+  { size: 3,  color: "#F5B400", top: "85%", left: "50%",  dur: 3.3, delay: 0.2 },
+  { size: 5,  color: "#009925", top: "10%", left: "40%",  dur: 2.7, delay: 1.4 },
+];
+
+// ─── Component ───────────────────────────────────────────────────────────────
+
+const SplashScreen = ({ onFinish }) => {
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  useEffect(() => {
+    // Increase animation time to 4.5s before fade-out begins
+    const leaveTimer = setTimeout(() => {
+      setIsLeaving(true);
+    }, 4500);
+
+    // After the fade-out animation (0.7s), call onFinish
+    const doneTimer = setTimeout(() => {
+      if (onFinish) onFinish();
+    }, 5200);
+
+    return () => {
+      clearTimeout(leaveTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [onFinish]);
+
+  return (
+    <Overlay 
+      isLeaving={isLeaving} 
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, backgroundColor: '#f7f6f2' }}
+    >
+      {/* Subtle grid */}
+      <GridLines />
+      <VertLine pos="25%" />
+      <VertLine pos="75%" />
+      <HorzLine pos="30%" />
+      <HorzLine pos="70%" />
+
+      {/* Floating colour particles */}
+      <Particles>
+        {particles.map((p, i) => (
+          <Dot key={i} {...p} />
+        ))}
+      </Particles>
+
+      <Center>
+        {/* ── Animated Logo SVG ── */}
+        <LogoWrap>
+          <AnimatedSvg
+            width="450"
+            height="100"
+            viewBox="0 0 181 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Universal Interiors logo"
+          >
+            {/* Icon shapes */}
+            <path
+              className="shape-blue"
+              d="M0 30.3201V17.1981L6.81304 13.2578V30.3201H0Z"
+              fill="#4286F5"
+              fillOpacity="0"
+            />
+            <path
+              className="shape-green"
+              d="M19.2229 30.3074V16.2573L16.5951 14.3594L14.1737 16.2573V24.8602H6.81348V30.3074H19.2229Z"
+              fill="#009925"
+              fillOpacity="0"
+            />
+            <path
+              className="shape-red1"
+              d="M16.5537 7.92474V0.00195312L33.7772 9.99155V17.2254L16.5537 7.92474Z"
+              fill="#D50F25"
+              fillOpacity="0"
+            />
+            <path
+              className="shape-red2"
+              d="M16.5459 7.92649V0.00195312L-6.29425e-05 9.99377V17.2292L16.5459 7.92649Z"
+              fill="#D50F25"
+              fillOpacity="0"
+            />
+            <path
+              className="shape-yellow"
+              d="M16.498 38.4978V31.6848L27.5774 26.0138V13.877L33.7778 17.2275V29.4113L16.498 38.4978Z"
+              fill="#F5B400"
+              fillOpacity="0"
+            />
+            <path
+              className="shape-stroke"
+              d="M12.6523 15.4295L16.4968 12.4609L20.1954 14.9915"
+              stroke="#D50F25"
+              strokeWidth="1.11929"
+              strokeLinecap="round"
+              fillOpacity="0"
+            />
+
+            {/* Text — drawn on with stroke, then fill fades */}
+            <g clipPath="url(#ui-splash-clip)">
+              {/* UNIVERSAL text letter blocks */}
+              <path
+                className="text-path"
+                d="M50.7588 5.14844H54.636V14.6932C54.636 15.4296 54.8501 16.027 55.2783 16.4855C55.7066 16.944 56.349 17.1732 57.2055 17.1732C58.0773 17.1732 58.7273 16.944 59.1555 16.4855C59.5838 16.027 59.7979 15.4296 59.7979 14.6932V5.14844H63.6751V14.9433C63.6751 15.8603 63.5069 16.6592 63.1704 17.3399C62.8492 18.0207 62.3903 18.5834 61.7939 19.028C61.2127 19.4587 60.5244 19.7852 59.7291 20.0075C58.9491 20.2298 58.1079 20.3409 57.2055 20.3409C56.3031 20.3409 55.4619 20.2298 54.6819 20.0075C53.9018 19.7852 53.2136 19.4587 52.6171 19.028C52.0359 18.5834 51.5771 18.0207 51.2406 17.3399C50.9194 16.6592 50.7588 15.8603 50.7588 14.9433V5.14844Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M78.036 5.14737H81.7756V20.4649L70.6717 11.5245V19.7355H66.9551V4.41797L78.036 13.3584V5.14737Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M85.1768 5.14844H89.1228V19.7366H85.1768V5.14844Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M99.2483 13.8596L103.171 5.14844H107.714L99.2483 20.6535L90.8057 5.14844H95.3252L99.2483 13.8596Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M109.396 5.14844H113.112V19.7366H109.396V5.14844ZM111.965 8.04522V5.14844H120.064V8.04522H111.965ZM111.965 13.4845V10.6502H119.605V13.4845H111.965ZM111.965 19.7366V16.8398H120.064V19.7366H111.965Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M123.212 5.14844H127.089V19.7366H123.212V5.14844ZM125.644 8.12858V5.14844H129.062C130.439 5.14844 131.586 5.34989 132.503 5.7528C133.421 6.15571 134.117 6.7184 134.591 7.44086C135.065 8.14942 135.302 8.97608 135.302 9.92084C135.302 10.8517 135.065 11.6784 134.591 12.4008C134.117 13.1094 133.421 13.6651 132.503 14.068C131.586 14.4709 130.439 14.6724 129.062 14.6724H125.644V11.9423H128.787C129.307 11.9423 129.75 11.8729 130.117 11.7339C130.5 11.5811 130.79 11.3658 130.989 11.0879C131.188 10.7961 131.287 10.4488 131.287 10.0459C131.287 9.64297 131.188 9.30258 130.989 9.02471C130.79 8.73295 130.5 8.51065 130.117 8.35783C129.75 8.205 129.307 8.12858 128.787 8.12858H125.644Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M127.227 13.1302H131.242L136.266 19.7366H131.723L127.227 13.1302Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M137.126 16.3827L139.833 14.6113C140.154 15.1392 140.514 15.5977 140.911 15.9867C141.324 16.3758 141.768 16.6745 142.242 16.8829C142.731 17.0913 143.244 17.1955 143.779 17.1955C144.345 17.1955 144.812 17.0704 145.179 16.8204C145.546 16.5564 145.729 16.2021 145.729 15.7575C145.729 15.3824 145.622 15.0837 145.408 14.8614C145.194 14.6252 144.85 14.4029 144.376 14.1945C143.901 13.9861 143.274 13.7499 142.494 13.4859C142.112 13.3609 141.668 13.1872 141.164 12.9649C140.674 12.7426 140.208 12.4578 139.764 12.1105C139.321 11.7492 138.954 11.3185 138.663 10.8184C138.372 10.3043 138.227 9.68606 138.227 8.9636C138.227 8.10221 138.472 7.35891 138.961 6.7337C139.466 6.1085 140.139 5.63612 140.98 5.31657C141.837 4.98313 142.785 4.81641 143.825 4.81641C144.896 4.81641 145.821 4.97618 146.601 5.29573C147.396 5.61528 148.054 6.01819 148.574 6.50446C149.094 6.99073 149.492 7.48395 149.767 7.98411L146.807 9.48461C146.578 9.13727 146.31 8.83856 146.004 8.58848C145.714 8.3245 145.385 8.12305 145.018 7.98411C144.666 7.83129 144.284 7.75487 143.871 7.75487C143.32 7.75487 142.9 7.86602 142.609 8.08832C142.318 8.29672 142.173 8.56069 142.173 8.88024C142.173 9.21369 142.311 9.50545 142.586 9.75553C142.877 10.0056 143.282 10.2349 143.802 10.4433C144.337 10.6517 144.98 10.874 145.729 11.1101C146.295 11.3047 146.823 11.5339 147.312 11.7979C147.802 12.048 148.23 12.3536 148.597 12.7148C148.979 13.0761 149.278 13.4929 149.492 13.9652C149.706 14.4376 149.813 14.9795 149.813 15.5908C149.813 16.3271 149.645 16.9871 149.308 17.5706C148.987 18.1402 148.543 18.6196 147.977 19.0086C147.427 19.3976 146.792 19.6894 146.073 19.8839C145.37 20.0923 144.643 20.1965 143.894 20.1965C142.854 20.1965 141.883 20.0297 140.98 19.6963C140.093 19.349 139.321 18.8835 138.663 18.3C138.005 17.7165 137.493 17.0774 137.126 16.3827Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M169.274 5.14844H173.152V16.7147H179.598V19.7366H169.274V5.14844Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+              <path
+                className="text-path"
+                d="M154.925 16.9241L155.2 14.2357H163.161L163.413 16.9241H154.925ZM159.123 10.5053L156.875 15.2152L157.059 15.9863L155.063 19.7375H150.681L159.123 4.23242L167.589 19.7375H163.184L161.257 16.1322L161.395 15.236L159.123 10.5053Z"
+                fill="#D50F25"
+                stroke="#D50F25"
+                strokeWidth="0.3"
+              />
+
+              {/* INTERIORS sub-text */}
+              <path
+                className="text-path"
+                d="M56.1678 27.675H57.1929V36.1172H56.1678V27.675ZM73.2345 27.675H74.2596V36.5393L67.8677 29.8338V36.1172H66.8426V27.2529L73.2345 33.9584V27.675ZM83.0684 28.6398V27.675H88.4352V28.6398H86.2643V36.1172H85.2392V28.6398H83.0684ZM97.8042 36.1172V35.1524H102.061V36.1172H97.8042ZM97.8042 28.6398V27.675H102.061V28.6398H97.8042ZM97.8042 32.0167V31.0519H101.82V32.0167H97.8042ZM97.2373 27.675H98.2625V36.1172H97.2373V27.675ZM113.094 31.9564H114.24L117.255 36.1172H115.989L113.094 31.9564ZM111.587 27.675H112.612V36.1172H111.587V27.675ZM112.154 28.5795V27.675H113.878C114.425 27.675 114.911 27.7795 115.337 27.9886C115.772 28.1896 116.113 28.479 116.363 28.8569C116.62 29.2348 116.749 29.685 116.749 30.2076C116.749 30.7222 116.62 31.1725 116.363 31.5584C116.113 31.9363 115.772 32.2298 115.337 32.4388C114.911 32.6398 114.425 32.7403 113.878 32.7403H112.154V31.8358H113.878C114.24 31.8358 114.558 31.7715 114.831 31.6428C115.112 31.5142 115.329 31.3293 115.482 31.088C115.643 30.8468 115.723 30.5534 115.723 30.2076C115.723 29.8619 115.643 29.5684 115.482 29.3272C115.329 29.086 115.112 28.9011 114.831 28.7725C114.558 28.6438 114.24 28.5795 113.878 28.5795H112.154ZM126.054 27.675H127.079V36.1172H126.054V27.675ZM137.332 31.8961C137.332 32.5313 137.468 33.0981 137.742 33.5966C138.023 34.0951 138.405 34.489 138.887 34.7785C139.37 35.0679 139.917 35.2127 140.528 35.2127C141.147 35.2127 141.693 35.0679 142.168 34.7785C142.65 34.489 143.028 34.0951 143.302 33.5966C143.583 33.0981 143.724 32.5313 143.724 31.8961C143.724 31.2609 143.583 30.6941 143.302 30.1956C143.028 29.6971 142.65 29.3031 142.168 29.0137C141.693 28.7242 141.147 28.5795 140.528 28.5795C139.917 28.5795 139.37 28.7242 138.887 29.0137C138.405 29.3031 138.023 29.6971 137.742 30.1956C137.468 30.6941 137.332 31.2609 137.332 31.8961ZM136.246 31.8961C136.246 31.277 136.351 30.7061 136.56 30.1835C136.777 29.6529 137.078 29.1946 137.464 28.8087C137.85 28.4147 138.305 28.1092 138.827 27.8921C139.35 27.6669 139.917 27.5544 140.528 27.5544C141.147 27.5544 141.714 27.6669 142.228 27.8921C142.751 28.1092 143.205 28.4147 143.591 28.8087C143.977 29.1946 144.274 29.6529 144.483 30.1835C144.701 30.7061 144.809 31.277 144.809 31.8961C144.809 32.5071 144.701 33.078 144.483 33.6086C144.274 34.1393 143.977 34.6016 143.591 34.9956C143.205 35.3815 142.751 35.687 142.228 35.9122C141.714 36.1292 141.147 36.2378 140.528 36.2378C139.917 36.2378 139.35 36.1292 138.827 35.9122C138.305 35.687 137.85 35.3815 137.464 34.9956C137.078 34.6016 136.777 34.1393 136.56 33.6086C136.351 33.078 136.246 32.5071 136.246 31.8961ZM155.483 31.9564H156.629L159.644 36.1172H158.377L155.483 31.9564ZM153.975 27.675H155V36.1172H153.975V27.675ZM154.542 28.5795V27.675H156.267C156.814 27.675 157.3 27.7795 157.726 27.9886C158.16 28.1896 158.502 28.479 158.751 28.8569C159.009 29.2348 159.137 29.685 159.137 30.2076C159.137 30.7222 159.009 31.1725 158.751 31.5584C158.502 31.9363 158.16 32.2298 157.726 32.4388C157.3 32.6398 156.814 32.7403 156.267 32.7403H154.542V31.8358H156.267C156.629 31.8358 156.946 31.7715 157.22 31.6428C157.501 31.5142 157.718 31.3293 157.871 31.088C158.032 30.8468 158.112 30.5534 158.112 30.2076C158.112 29.8619 158.032 29.5684 157.871 29.3272C157.718 29.086 157.501 28.9011 157.22 28.7725C156.946 28.6438 156.629 28.5795 156.267 28.5795H154.542ZM168.756 33.5604C168.949 33.8981 169.15 34.1956 169.359 34.4529C169.576 34.7102 169.817 34.9112 170.083 35.0559C170.348 35.2006 170.65 35.273 170.987 35.273C171.437 35.273 171.799 35.1483 172.073 34.8991C172.346 34.6499 172.483 34.3323 172.483 33.9463C172.483 33.5684 172.394 33.2669 172.217 33.0418C172.041 32.8167 171.807 32.6358 171.518 32.4991C171.236 32.3544 170.935 32.2257 170.613 32.1132C170.404 32.0408 170.171 31.9483 169.914 31.8358C169.657 31.7152 169.411 31.5664 169.178 31.3896C168.945 31.2046 168.752 30.9795 168.599 30.7142C168.455 30.4488 168.382 30.1232 168.382 29.7373C168.382 29.3192 168.487 28.9453 168.696 28.6157C168.905 28.286 169.194 28.0288 169.564 27.8438C169.934 27.6509 170.356 27.5544 170.83 27.5544C171.289 27.5544 171.687 27.6428 172.024 27.8197C172.37 27.9885 172.664 28.2097 172.905 28.483C173.146 28.7483 173.335 29.0298 173.472 29.3272L172.591 29.8338C172.487 29.6247 172.354 29.4197 172.193 29.2187C172.032 29.0177 171.835 28.8529 171.602 28.7242C171.377 28.5956 171.1 28.5313 170.77 28.5313C170.312 28.5313 169.978 28.6438 169.769 28.869C169.56 29.086 169.456 29.3313 169.456 29.6046C169.456 29.8378 169.516 30.0549 169.636 30.2559C169.757 30.4488 169.958 30.6338 170.24 30.8107C170.529 30.9795 170.919 31.1483 171.409 31.3172C171.634 31.3976 171.872 31.5021 172.121 31.6308C172.37 31.7594 172.599 31.9242 172.808 32.1252C173.025 32.3182 173.202 32.5554 173.339 32.8368C173.476 33.1102 173.544 33.4398 173.544 33.8257C173.544 34.1956 173.472 34.5292 173.327 34.8267C173.19 35.1242 172.997 35.3775 172.748 35.5865C172.507 35.7956 172.229 35.9564 171.916 36.0689C171.61 36.1815 171.289 36.2378 170.951 36.2378C170.493 36.2378 170.067 36.1413 169.673 35.9483C169.287 35.7473 168.945 35.486 168.648 35.1644C168.358 34.8348 168.121 34.485 167.936 34.1152L168.756 33.5604Z"
+                fill="#2d2d2d"
+                stroke="#2d2d2d"
+                strokeWidth="0.15"
+              />
+            </g>
+
+            <rect
+              width="300"
+              height="40"
+              fill="none"
+            />
+
+            <defs>
+              <clipPath id="ui-splash-clip">
+                <rect width="131" height="40" fill="white" transform="translate(49.0586)" />
+              </clipPath>
+            </defs>
+          </AnimatedSvg>
+        </LogoWrap>
+
+        {/* Tagline */}
+        <Tagline>Transform Your Space</Tagline>
+
+        {/* Loading progress bar */}
+        <BarTrack>
+          <BarFill />
+        </BarTrack>
+      </Center>
+    </Overlay>
+  );
+};
+
+export default SplashScreen;
