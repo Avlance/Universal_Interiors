@@ -843,7 +843,7 @@ const TipsSubheading = styled.p`
 
 const TipsGrid = styled.div`
   display: grid;
-  grid-template-columns: 5fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 28px;
 
   @media (max-width: 900px) {
@@ -894,7 +894,6 @@ const TipDesc = styled.p`
   font-size: var(--universal-fs-h3);
   line-height: 1.55;
   text-align: left; // Ensures alignment starts from the left
-  direction: 1tr;
 `;
 //#endregion
 
