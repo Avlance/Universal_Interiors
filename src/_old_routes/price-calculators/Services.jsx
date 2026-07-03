@@ -93,7 +93,8 @@ const ServicesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr); // 5 equal-width cards
   gap: 2rem;
-  width: 1180px;
+  width: 100%;
+  max-width: 1180px;
   margin: 0 auto;
   margin-bottom: 4rem;
 

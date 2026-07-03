@@ -57,6 +57,11 @@ const KitchenCalculatorContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  overflow-x: hidden;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 // Wrapper to allow embedded sections (like YouTubeReviews) to use full width
@@ -127,7 +132,8 @@ const LayoutCardsContainer = styled.div`
   grid-template-columns: repeat(5, 1fr); // Force 5 columns
   gap: 1rem;
   margin-bottom: 4rem;
-  width: 1180px;
+  width: 100%;
+  max-width: 1180px;
   @media (max-width: 768px) {
     display: flex;
     flex-wrap: nowrap;
@@ -296,6 +302,10 @@ const DimensionCardsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const DimensionCard = styled.div`
@@ -475,7 +485,6 @@ const ContinueButton1 = styled.button`
   font-family: var(--universal-font-semibold);
   font-size: var(--universal-fs-h4);
   padding: 0.5rem 1rem;
-  width: 1px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -497,6 +506,8 @@ const ContinueButton1 = styled.button`
   @media (max-width: 768px) {
     font-size: var(--universal-fs-h3);
     padding: 10px 22px;
+    margin-right: 0;
+    width: auto;
   }
 `;
 // Additional styled components for KitchenSizeStep
@@ -536,6 +547,11 @@ const LayoutPreviewCard = styled.div`
   min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: unset;
+  }
 `;
 
 const SizeMiddle = styled.div`
@@ -547,6 +563,12 @@ const SizeMiddle = styled.div`
   padding-top: 0.5rem;
   margin-top: 2rem;
   transform: translateX(20px);
+
+  @media (max-width: 768px) {
+    transform: none;
+    width: 100%;
+    padding: 0 1rem;
+  }
 `;
 
 const SizeFieldRow = styled.div`
@@ -557,6 +579,11 @@ const SizeFieldRow = styled.div`
   max-width: 520px;
   margin-left: 50px;
   margin-top: 20px; /* 👈 move it down */
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    max-width: 100%;
+  }
 `;
 
 const DimLabel = styled.span`

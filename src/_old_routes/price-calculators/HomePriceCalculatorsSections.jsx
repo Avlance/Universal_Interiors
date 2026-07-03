@@ -76,18 +76,25 @@ const StepActions = styled.div`
 
 const LayoutCardsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr); // Force 5 columns
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
   margin-bottom: 4rem;
-  width: 1180px;
+  width: 100%;
+  max-width: 1180px;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 1rem;
     overflow-x: auto;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    width: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -101,6 +108,12 @@ const KitchenLayoutCardWrapper = styled.div`
   min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    scroll-snap-align: center;
+    width: 250px;
+    min-width: 250px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -121,6 +134,11 @@ const LayoutPreviewCard = styled.div`
   min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: unset;
+  }
 `;
 
 const LayoutImage = styled.div`
@@ -163,8 +181,11 @@ const CardDescription = styled.p`
   white-space: nowrap; /* keep on a single line */
   overflow: visible; /* don't cut off */
   text-overflow: unset;
-`;
 
+  @media (max-width: 768px) {
+    white-space: normal;
+  }
+`;
 const LayoutCheckbox = styled.div`
   position: relative;
   display: flex;
@@ -3331,6 +3352,9 @@ const HomePriceCalculatorsSections = () => {
   const [selectedDesign, setSelectedDesign] = useState(null);
 
   // Image loading state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const getActiveTabFromUrl = () => {
     if (pathSegments.length === 0) return null;
 

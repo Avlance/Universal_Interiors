@@ -288,8 +288,8 @@ const ReadMoreButton = styled.button`
 const PopupContainer = styled.div`
   display: grid;
   grid-template-columns: 1.1fr 1fr;
-  width: 1100px;
-  max-width: 98vw;
+  width: 100%;
+  max-width: 1100px;
   height: 700px; // or auto with max-height
   max-height: 90vh;
   overflow: hidden;
