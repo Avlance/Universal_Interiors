@@ -79,7 +79,12 @@ const ReviewsWrapper = styled.div`
 const LayoutSelectionSection = styled.section`
   margin-bottom: 4rem;
   margin-left: -2.5rem;
-  padding: 1rem 1rem 0.5rem -5rem;
+  padding: 1rem 1rem 0.5rem 1rem;
+  
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 1rem 0;
+  }
 `;
 
 const StepHeader = styled.div`
@@ -110,6 +115,11 @@ const StepTitleDec = styled.p`
   margin: 1rem auto 0;
   color: #222222;
   white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    white-space: normal;
+    padding: 0 1rem;
+  }
 `;
 
 const LayoutCardsContainer = styled.div`
@@ -119,13 +129,23 @@ const LayoutCardsContainer = styled.div`
   margin-bottom: 4rem;
   width: 1180px;
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 1rem;
     overflow-x: auto;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    width: auto;
+    
+    /* Native scrolling */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    
+    /* Hide scrollbar for cleaner look */
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -139,6 +159,12 @@ const KitchenLayoutCardWrapper = styled.div`
   min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    scroll-snap-align: center;
+    width: 260px;
+    min-width: 260px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -231,6 +257,8 @@ const LayoutDescription = styled.p`
 
   @media (max-width: 768px) {
     font-size: var(--universal-fs-h3);
+    white-space: normal;
+    padding: 0 0.5rem;
   }
 `;
 
@@ -258,6 +286,10 @@ const CardDescription = styled.p`
   white-space: nowrap; /* keep on a single line */
   overflow: visible; /* don't cut off */
   text-overflow: unset;
+  
+  @media (max-width: 768px) {
+    white-space: normal;
+  }
 `;
 
 const DimensionCardsGrid = styled.div`

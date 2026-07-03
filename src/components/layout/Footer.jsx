@@ -87,8 +87,8 @@ const FooterGrid = styled.div`
   }
   
   @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
     margin-bottom: 24px;
   }
 `;
@@ -98,7 +98,7 @@ const FooterSection = styled.div`
   flex-direction: column;
   
   @media (max-width: 480px) {
-    text-align: center;
+    text-align: left;
   }
 `;
 

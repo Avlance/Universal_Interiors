@@ -143,6 +143,8 @@ const LogoWrap = styled.div`
 `;
 
 const AnimatedSvg = styled.svg`
+  max-width: 90vw;
+  height: auto;
   /* The colored shapes get a fill-fade animation */
   .shape-blue   { animation: ${fillFade} 0.6s ease 0.7s both; }
   .shape-green  { animation: ${fillFade} 0.6s ease 0.9s both; }
