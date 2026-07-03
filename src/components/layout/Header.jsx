@@ -1011,11 +1011,10 @@ const defaultNavItems = [
         label: "Kitchen Price Calculation",
         to: "/price-calculators/kitchen-price-calculation",
       },
-      // { label: 'Specialty Designs', to: '/design-gallery/specialty-designs' },
-      // { label: 'Apartment Layouts', to: '/design-gallery/apartment-layouts' }
     ],
     key: "priceCalculators",
   },
+  { label: "Catalogs", to: "/catalogs", key: "catalogs" },
   { label: "Reviews", to: "/reviews" },
   {
     label: "Customer Support",
