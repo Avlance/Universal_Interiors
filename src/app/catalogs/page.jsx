@@ -16,12 +16,31 @@ export const metadata = {
 // Revalidate every hour
 export const revalidate = 3600; 
 
-const customCovers = {
-  "CATCH PLUS 0.8MM compressed": "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225718_xguudb.png",
-  "Calplus Ecatalogue": "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225751_iedui0.png",
-  "collective 0.8mm": "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225954_ba1dkn.png",
-  "Merino Laminates Play E Catalogue 2025": "https://res.cloudinary.com/sevfdaro/image/upload/v1783099840/Screenshot_2026-07-03_225923_onleyb.png"
+const catalogMetadata = {
+  "Calplus-Ecatalogue": {
+    title: "Calplus Decorative Laminates",
+    cover: "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225751_iedui0.png"
+  },
+  "CATCH_PLUS_0.8MM_compressed": {
+    title: "Catchplus Decorative Laminates",
+    cover: "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225718_xguudb.png"
+  },
+  "Merino-Laminates-Play-E-Catalogue-2025": {
+    title: "Merino Laminates",
+    cover: "https://res.cloudinary.com/sevfdaro/image/upload/v1783099840/Screenshot_2026-07-03_225923_onleyb.png"
+  },
+  "collective-0.8mm": {
+    title: "Collective Laminates",
+    cover: "https://res.cloudinary.com/sevfdaro/image/upload/v1783099839/Screenshot_2026-07-03_225954_ba1dkn.png"
+  }
 };
+
+const catalogOrder = [
+  "Calplus-Ecatalogue",
+  "CATCH_PLUS_0.8MM_compressed",
+  "Merino-Laminates-Play-E-Catalogue-2025",
+  "collective-0.8mm"
+];
 
 async function fetchCatalogs() {
   try {
@@ -45,22 +64,51 @@ async function fetchCatalogs() {
             pages: []
           };
         }
-        catalogsMap[catalogName].pages.push(r.secure_url);
+        
+        // Parse page number to avoid alphabetical versioning/hash shuffle
+        const pageNum = parseInt(parts[1], 10);
+        catalogsMap[catalogName].pages.push({
+          url: r.secure_url,
+          pageNum: isNaN(pageNum) ? 9999 : pageNum
+        });
       }
     });
 
-    const catalogsArray = Object.keys(catalogsMap).map((key, index) => {
+    const catalogsArray = Object.keys(catalogsMap).map((key) => {
       const catalog = catalogsMap[key];
-      catalog.pages.sort();
+      
+      // Sort pages numerically by page number
+      catalog.pages.sort((a, b) => a.pageNum - b.pageNum);
+      
+      const pageUrls = catalog.pages.map(p => p.url);
+      const meta = catalogMetadata[key] || {
+        title: key.replace(/-/g, ' ').replace(/_/g, ' '),
+        cover: pageUrls[0]
+      };
+      
       return {
-        id: index + 1,
-        title: catalog.title,
-        coverImageUrl: customCovers[catalog.title] || catalog.pages[0],
-        pages: catalog.pages
+        key,
+        title: meta.title,
+        coverImageUrl: meta.cover,
+        pages: pageUrls
       };
     });
 
-    return catalogsArray;
+    // Sort catalogs by their specified order
+    catalogsArray.sort((a, b) => {
+      const idxA = catalogOrder.indexOf(a.key);
+      const idxB = catalogOrder.indexOf(b.key);
+      const posA = idxA === -1 ? 9999 : idxA;
+      const posB = idxB === -1 ? 9999 : idxB;
+      return posA - posB;
+    });
+
+    return catalogsArray.map((c, index) => ({
+      id: index + 1,
+      title: c.title,
+      coverImageUrl: c.coverImageUrl,
+      pages: c.pages
+    }));
   } catch (error) {
     console.error("Failed to fetch catalogs from Cloudinary:", error);
     return [];

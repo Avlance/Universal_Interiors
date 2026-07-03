@@ -15,10 +15,10 @@ export default function CatalogGallery({ initialCatalogs = [] }) {
 
       {/* 1. HEADER SECTION */}
       <div className="w-full max-w-3xl mx-auto px-4 flex flex-col items-center text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight universal-font-bold">
           Premium Design Catalogs
         </h2>
-        <p className="text-gray-500 text-lg md:text-xl">
+        <p className="text-gray-500 text-lg md:text-xl leading-relaxed universal-font-medium">
           Explore our latest collections of interior designs. Click on any catalog to read it in our immersive 3D viewer.
         </p>
       </div>
@@ -33,7 +33,7 @@ export default function CatalogGallery({ initialCatalogs = [] }) {
       {/* 2. GRID WRAPPER */}
       <div className="w-full px-4 flex justify-center">
 
-        {/* 3. THE GRID: Exactly 2 columns, centered, with maximum width */}
+        {/* 3. THE GRID: 2 columns, centered, with maximum width */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-5xl">
 
           {initialCatalogs.map((catalog) => (
@@ -57,18 +57,21 @@ export default function CatalogGallery({ initialCatalogs = [] }) {
                     <span className="bg-white text-black p-4 rounded-full mb-4 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                       <BookOpen size={28} className="stroke-[1.5]" />
                     </span>
-                    <span className="text-white font-semibold text-lg tracking-wide drop-shadow-md">
+                    <span className="text-white font-semibold text-lg tracking-wide drop-shadow-md universal-font-semibold">
                       Read Catalog
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* 5. UNIFORM TITLE TAB */}
-              <div className="h-24 flex-none border-t border-gray-100 flex items-center justify-center bg-white px-6">
-                <h3 className="text-xl font-bold text-gray-800 text-center line-clamp-2">
+              {/* 5. REFINED TITLE TAB */}
+              <div className="p-6 flex-grow border-t border-gray-100 flex flex-col items-center justify-center bg-white min-h-[96px]">
+                <h3 className="text-lg font-bold text-gray-900 text-center line-clamp-2 leading-snug tracking-wide universal-font-semibold">
                   {catalog.title}
                 </h3>
+                <span className="mt-2 text-xs font-bold text-amber-700 tracking-widest uppercase universal-font-medium">
+                  {catalog.pages ? `${catalog.pages.length} Pages` : '0 Pages'}
+                </span>
               </div>
 
             </div>
