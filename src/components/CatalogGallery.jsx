@@ -31,15 +31,15 @@ export default function CatalogGallery({ initialCatalogs = [] }) {
       <div className="w-full h-16 md:h-24 flex-none"></div>
 
       {/* 2. GRID WRAPPER */}
-      <div className="w-full px-4 flex justify-center">
+      <div className="w-full px-4 sm:px-6 lg:px-8 flex justify-center">
 
-        {/* 3. THE GRID: 2 columns, centered, with maximum width */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-5xl">
+        {/* 3. THE GRID: Mobile-first 1 column, scaling to 2 columns on tablets and desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full max-w-5xl">
 
           {initialCatalogs.map((catalog) => (
             <div
               key={catalog.id}
-              className="group relative cursor-pointer rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 flex flex-col overflow-hidden mx-auto w-full max-w-[420px]"
+              className="group relative cursor-pointer rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 flex flex-col overflow-hidden w-full mx-auto sm:max-w-md md:max-w-none"
               onClick={() => setSelectedCatalog(catalog)}
             >
 

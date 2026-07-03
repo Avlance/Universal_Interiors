@@ -65,6 +65,7 @@ const VideoContainer = styled.div`
   gap: 30px;
   overflow-x: auto;
   padding: 20px;
+  -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   // width: 100%;
   

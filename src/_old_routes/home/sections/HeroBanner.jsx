@@ -14,7 +14,7 @@ const bannerImages = [
 const BannerContainer = styled.section`
   background-size: cover;
   background-position: center;
-  height: 70vh;
+  height: 70svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -44,13 +44,13 @@ const BannerContainer = styled.section`
   }
   
   @media (max-width: 768px) {
-    height: 80vh;
+    height: 80svh;
     padding: 1rem;
     min-height: 500px;
   }
   
   @media (max-width: 480px) {
-    height: 85vh;
+    height: 85svh;
     padding: 0.5rem;
     min-height: 450px;
   }
@@ -163,9 +163,8 @@ const StatsContainer = styled.div`
     margin: 12px auto;
     margin-bottom: 40px;
   }
-  
   @media (max-width: 480px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     padding: 10px;
     gap: 6px;
     margin: 8px auto;

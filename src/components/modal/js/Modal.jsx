@@ -8,7 +8,7 @@ const ModalContent = styled.div`
   border-radius: 16px;
   min-width: min(340px, 95vw);
   max-width: 95vw;
-  max-height: 90vh;
+  max-height: 90svh;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
   position: relative;
   display: flex;

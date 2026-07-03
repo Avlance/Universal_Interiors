@@ -31,7 +31,7 @@ export default function ImageFlipbook({ pages = [], onClose }) {
   if (!pages || pages.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300 touch-none">
 
       {/* Top Controls Header */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-50 flex items-center gap-4">
@@ -44,7 +44,7 @@ export default function ImageFlipbook({ pages = [], onClose }) {
         </button>
       </div>
 
-      <div className="w-[95vw] md:w-[95vw] h-[90vh] max-w-none mx-auto flex justify-center items-center relative">
+      <div className="w-full h-full max-w-[1600px] mx-auto flex justify-center items-center relative pb-20 md:pb-0">
 
         {/* Desktop Previous Button */}
         {!isMobile && (
@@ -58,13 +58,13 @@ export default function ImageFlipbook({ pages = [], onClose }) {
         )}
 
         {/* Flipbook Container */}
-        <div className="shadow-2xl drop-shadow-2xl z-0 w-[90%] md:w-[85%] h-[85%] flex justify-center items-center">
+        <div className="shadow-2xl drop-shadow-2xl z-0 w-full h-full max-h-[85vh] flex justify-center items-center px-4 md:px-12">
           <HTMLFlipBook
             // THE FIX: Wide Landscape dimensions to match your source images perfectly
             width={900}
             height={600}
             size="stretch"
-            minWidth={300}
+            minWidth={150}
             maxWidth={1000}
             minHeight={250}
             maxHeight={700}

@@ -591,7 +591,7 @@ const NextButtonWrapper = styled.div`
   border-top: 1px solid #eaeaea;
   border-bottom: 1px solid #eaeaea;
   box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.06), 0 12px 24px rgba(0, 0, 0, 0.06);
-  width: 100vw;
+  width: 100%;
 
   @media (max-width: 768px) {
     bottom: 60px;

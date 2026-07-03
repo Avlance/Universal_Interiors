@@ -212,6 +212,7 @@ const ReadMoreHint = styled.span`
 const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
+  touch-action: none;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -234,7 +235,7 @@ const ModalCard = styled.div`
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
   width: 100%;
   max-width: 560px;
-  max-height: 82vh;
+  max-height: 82svh;
   overflow-y: auto;
   padding: 32px;
   position: relative;

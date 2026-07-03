@@ -65,6 +65,7 @@ const MobileOverlay = styled.div`
     z-index: 1002;
     backdrop-filter: blur(2px);
     transition: opacity 0.3s ease-in-out;
+    touch-action: none; /* MASTER POLICY: Prevent background scroll hacking on touch */
   }
 `;
 
@@ -786,13 +787,13 @@ const BottomMenuBar = styled.div`
     border-top: 1px solid #e5e5e5;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 999;
-    height: 60px;
-    padding: 0 16px;
+    height: calc(60px + env(safe-area-inset-bottom)); /* MASTER POLICY: iOS Home Bar Safety */
+    padding: 0 16px env(safe-area-inset-bottom) 16px;
   }
 
   @media (max-width: 480px) {
-    height: 55px;
-    padding: 0 12px;
+    height: calc(55px + env(safe-area-inset-bottom));
+    padding: 0 12px env(safe-area-inset-bottom) 12px;
   }
 `;
 

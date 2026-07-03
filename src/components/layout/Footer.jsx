@@ -15,11 +15,11 @@ const FooterContainer = styled.footer`
   margin-right: calc(50% - 50vw);
   
   @media (max-width: 768px) {
-    padding: 40px 0 20px;
+    padding: 40px 0 calc(80px + env(safe-area-inset-bottom));
   }
   
   @media (max-width: 480px) {
-    padding: 30px 0 15px;
+    padding: 30px 0 calc(70px + env(safe-area-inset-bottom));
   }
 `;
 

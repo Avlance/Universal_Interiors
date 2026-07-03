@@ -260,10 +260,8 @@ const ReviewDescription = styled.p`
 
 const VideoModalOverlay = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  touch-action: none;
   background: rgba(0,0,0,0.7);
   z-index: 9999;
   display: flex;
@@ -276,7 +274,7 @@ const VideoModalContent = styled.div`
   border-radius: 12px;
   padding: 0;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 80svh;
   box-shadow: 0 8px 40px rgba(0,0,0,0.4);
   position: relative;
   display: flex;

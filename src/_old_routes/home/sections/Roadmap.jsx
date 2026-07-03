@@ -81,6 +81,7 @@ const StepperSection = styled.div`
     flex-wrap: nowrap;
     gap: 8px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 0 16px 40px 16px;
     width: 100%;
   }

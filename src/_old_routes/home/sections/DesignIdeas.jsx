@@ -100,6 +100,7 @@ const TabsContainer = styled.div`
   gap: 15px;
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   position: relative;
   margin-right: 20px;
   margin-left: 20px;
@@ -233,6 +234,7 @@ const DesignGrid = styled.div`
     width: 100%;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
     
     &::-webkit-scrollbar {
       display: none;

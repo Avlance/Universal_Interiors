@@ -115,6 +115,7 @@ const ServicesGrid = styled.div`
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch; /* Master Policy: native smooth scrolling on iOS */
   
   /* Ensure cards don't shrink */
   & > * {
