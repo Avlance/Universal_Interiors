@@ -115,7 +115,7 @@ const DesktopText = styled.div`
   }
 `;
 
-const TopHeader = () => {
+const TopHeader = ({ onGrabDiscount }) => {
   return (
     <TopHeaderContainer className='universal-fs-h3'>
       <TopHeaderContent>
@@ -124,7 +124,12 @@ const TopHeader = () => {
           <DesktopText>
             <TopNavLink className='universal-fs-h3 universal-font-bold'>
               Over 10,000 Happy Homes! Now Get 25% OFF on Your First Modular Interior.{' '}
-              <span style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}>Grab Your Discount</span>
+              <span 
+                onClick={onGrabDiscount}
+                style={{ textDecoration: 'underline', textUnderlineOffset: '3px', cursor: 'pointer' }}
+              >
+                Grab Your Discount
+              </span>
             </TopNavLink>
           </DesktopText>
 
@@ -134,7 +139,12 @@ const TopHeader = () => {
               25% OFF - First Modular Interior
             </div>
             <div className='universal-fs-h2 universal-font' style={{ marginTop: '2px' }}>
-              <span style={{ textDecoration: 'underline', textUnderlineOffset: '2px' }}>Grab Your Discount</span>
+              <span 
+                onClick={onGrabDiscount}
+                style={{ textDecoration: 'underline', textUnderlineOffset: '2px', cursor: 'pointer' }}
+              >
+                Grab Your Discount
+              </span>
             </div>
           </MobileText>
         </TopNavLinks>

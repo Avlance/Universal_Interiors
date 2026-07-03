@@ -1815,7 +1815,7 @@ const Header = () => {
           </ActionButtonsContainer>
         </NavContainer>
       </MainHeader>
-      <TopHeader />
+      <TopHeader onGrabDiscount={() => setShowConsultationModal(true)} />
 
       {/* Bottom Menu Bar for Mobile */}
       <BottomMenuBar>
