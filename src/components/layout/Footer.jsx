@@ -74,21 +74,20 @@ const FooterLogoSection = styled.div`
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, auto);
-  gap: 32px 24px;
+  gap: 48px 32px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto 40px auto;
   
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px 16px;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 24px;
     margin-bottom: 30px;
   }
   
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px 16px;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
     margin-bottom: 24px;
   }
 `;
@@ -117,30 +116,31 @@ const FooterHeader = styled.h4`
 
 const FooterSubtitle = styled.div`
   color: #999999;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
   font-weight: 400;
+  padding: 4px 0; /* Increase touch target */
   
   @media (max-width: 768px) {
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
   }
   
   @media (max-width: 480px) {
-    font-size: 13px;
-    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 8px;
   }
 `;
 
 const FooterItem = styled.li`
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   
   @media (max-width: 768px) {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
   
   @media (max-width: 480px) {
-    margin-bottom: 6px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -156,12 +156,13 @@ const FooterLink = styled(Link)`
 
 const FooterSubtitleLink = styled(Link)`
   color: #999999;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
   font-weight: 400;
   text-decoration: none;
   transition: color 0.3s ease;
   display: inline-block;
+  padding: 4px 0; /* Increase touch target */
   
   &:hover {
     color: #fff;
@@ -169,24 +170,25 @@ const FooterSubtitleLink = styled(Link)`
   }
   
   @media (max-width: 768px) {
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
   }
   
   @media (max-width: 480px) {
-    font-size: 13px;
-    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 8px;
   }
 `;
 
 const FooterSubtitleExternalLink = styled.a`
   color: #999999;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
   font-weight: 400;
   text-decoration: none;
   transition: color 0.3s ease;
   display: inline-block;
+  padding: 4px 0; /* Increase touch target */
   
   &:hover {
     color: #fff;
@@ -194,13 +196,13 @@ const FooterSubtitleExternalLink = styled.a`
   }
   
   @media (max-width: 768px) {
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
   }
   
   @media (max-width: 480px) {
-    font-size: 13px;
-    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 8px;
   }
 `;
 

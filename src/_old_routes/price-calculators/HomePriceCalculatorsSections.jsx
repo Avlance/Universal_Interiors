@@ -75,27 +75,18 @@ const StepActions = styled.div`
 `;
 
 const LayoutCardsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex; /* Force flexbox for fluid swipe behavior */
+  flex-wrap: nowrap;
   gap: 1rem;
-  margin-bottom: 4rem;
   width: 100%;
-  max-width: 1180px;
-  @media (max-width: 768px) {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 1rem;
-    overflow-x: auto;
-    padding-bottom: 1.5rem;
-    width: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+  overflow-x: auto;
+  padding: 1rem 0 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  touch-action: pan-x; /* Crucial: Allows side-swiping on mobile */
+  scrollbar-width: none; 
+
+  &::-webkit-scrollbar { display: none; }
 `;
 
 const KitchenLayoutCardWrapper = styled.div`
@@ -103,21 +94,16 @@ const KitchenLayoutCardWrapper = styled.div`
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
-  width: 230px;
-  min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  
+  /* Responsive sizing */
+  width: 75vw;
+  min-width: 250px;
+  scroll-snap-align: center;
 
-  @media (max-width: 768px) {
-    scroll-snap-align: center;
-    width: 250px;
-    min-width: 250px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  @media (min-width: 768px) {
+    width: 230px;
   }
 `;
 const SizeLeft = styled.aside`
@@ -174,17 +160,13 @@ const CardTitle = styled.h3`
 `;
 
 const CardDescription = styled.p`
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: #888888;
-  line-height: 1.5;
   text-align: center;
-  white-space: nowrap; /* keep on a single line */
-  overflow: visible; /* don't cut off */
-  text-overflow: unset;
-
-  @media (max-width: 768px) {
-    white-space: normal;
-  }
+  padding: 0 0.5rem;
+  /* Force text wrapping on mobile */
+  white-space: normal !important;
+  word-wrap: break-word;
 `;
 const LayoutCheckbox = styled.div`
   position: relative;
@@ -469,13 +451,20 @@ const PropertyTypeInner = styled.div`
 const KitchenCalculatorContainer = styled.div`
   max-width: 960px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const LayoutSelectionSection = styled.section`
   margin-bottom: 4rem;
   margin-left: -2.5rem;
-  padding: 1rem 1rem 0.5rem -5rem;
+  padding: 1rem 1rem 0.5rem 1rem;
+  
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 1rem 0;
+  }
 `;
 
 const StepNumber = styled.div`
@@ -498,6 +487,13 @@ const PropertyTypeDescription = styled.p`
   margin: 0.25rem auto 0;
   color: #6b7280;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+  }
 `;
 const PropertyTypeGrid = styled.div`
   display: grid;
@@ -578,6 +574,13 @@ const PropertyTypeCardDescription = styled.p`
   white-space: nowrap; /* keep on a single line */
   overflow: visible; /* don't cut off */
   text-overflow: unset;
+
+  @media (max-width: 768px) {
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+  }
 `;
 
 const NextButtonWrapper = styled.div`
@@ -640,8 +643,7 @@ const NextButton = styled.button`
   min-width: fit-content;
   touch-action: manipulation;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  width: 10%;
+  min-width: 120px;
 
   @media (max-width: 480px) {
     padding: 10px 16px;
@@ -2725,6 +2727,7 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
                     name="layout"
                     selected={selectedOption === option.id}
                     checked={selectedOption === option.id}
+                    onChange={() => handleOptionSelect(option.id)}
                   />
 
                   <OptionIcon>{option.icon}</OptionIcon>
@@ -2741,7 +2744,7 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
             <Button
               primary
               onClick={handlePopupNext}
-              style={{ marginLeft: "220px", width: "130px" }}
+              style={{ width: "100%", marginTop: "1rem" }}
             >
               Next
             </Button>
@@ -2760,11 +2763,15 @@ const PopupOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999; /* Ensure it's above everything */
+  
+  /* Critical for mobile: Ensure tap events pass through if needed */
+  pointer-events: auto; 
+  padding: 1rem;
 `;
 
 // display: flex;
@@ -2781,21 +2788,20 @@ const PopupOverlay = styled.div`
 
 const PopupModal = styled.div`
   background: white;
-  border-radius: 0.5rem;
+  border-radius: 16px;
   padding: 24px;
+  /* Fluid mobile width */
+  width: 95%;
   max-width: 400px;
-  width: 90%;
-  max-height: 80vh;
+  /* Prevent modal from stretching too tall */
+  max-height: 85vh; 
   overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   position: relative;
-  text-align: center;
-  background: #ffffff;
+  margin: auto;
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     padding: 16px;
-    max-width: calc(100% - 32px);
-    border-radius: 12px;
   }
 `;
 
@@ -2842,10 +2848,13 @@ const RadioOption = styled.label`
   height: 16px;
 `;
 
-const RadioInput = styled.input`
-  width: 16px;
-  height: 16px;
+const RadioInput = styled.input.attrs({ type: 'radio' })`
+  width: 18px;
+  height: 18px;
   accent-color: #d50f25;
+  cursor: pointer;
+  /* Increase tap area */
+  transform: scale(1.2);
 `;
 
 const OptionIcon = styled.div`
@@ -2934,7 +2943,7 @@ const StepNumberLarge = styled.div`
 const StepTitle = styled.div`
   text-align: center; /* ✅ center everything inside */
   margin-bottom: 0.5rem;
-  line-height: 0.5;
+  line-height: 1.2;
 `;
 const StepTitleDec = styled.p`
   text-align: center;
@@ -2942,6 +2951,11 @@ const StepTitleDec = styled.p`
   margin: 1rem auto 0;
   color: #222222;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    white-space: normal;
+    padding: 0 1rem;
+  }
 `;
 
 const ScopeTitle = styled.h2`
@@ -2955,6 +2969,11 @@ const ScopeSubtitle = styled.p`
   margin: 0.25rem auto 0;
   color: #6b7280;
   white-space: nowrap;
+
+  @media (max-width: 768px) {
+    white-space: normal;
+    padding: 0 1rem;
+  }
 `;
 
 const ScopeGrid = styled.div`
@@ -2978,18 +2997,22 @@ const SelectedPreview = styled.div`
 
 const ScopeList = styled.div`
   background: #fff;
-  padding: 0px 12px;
-  margin-left: 38px;
-  margin-right: -128px;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't push elements out */
 `;
 
 const ScopeRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  margin-bottom: 18px;
-  //  margin-left: 58px;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  
+  /* Force clicks to be recognized */
+  pointer-events: auto; 
+  position: relative;
+  z-index: 10;
 `;
 
 const ScopeRowLabel = styled.div`
@@ -3004,17 +3027,23 @@ const Counter = styled.div`
 `;
 
 const CounterBtn = styled.button`
-  padding: 0.2rem 0.7rem;
-  border: 1px solid #999999;
-  background: #ffffff;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 0 0.5rem;
-  min-width: 32px;
-  min-height: 32px;
+  /* Force minimum size for easy tapping on mobile */
+  min-width: 44px; 
+  min-height: 44px; 
+  
+  /* Styling */
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.5rem;
+  border: 1px solid #999999;
+  background: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  
+  /* Prevent browser zoom on tap */
+  touch-action: manipulation; 
 `;
 
 const CounterVal = styled.div`

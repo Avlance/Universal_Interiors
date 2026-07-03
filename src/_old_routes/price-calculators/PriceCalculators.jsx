@@ -56,12 +56,9 @@ const CloseButton = styled.button`
 const KitchenCalculatorContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  overflow-x: hidden;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+  padding: 2rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 // Wrapper to allow embedded sections (like YouTubeReviews) to use full width
@@ -112,7 +109,7 @@ const StepNumberLarge = styled.div`
 const StepTitle = styled.div`
   text-align: center; /* ✅ center everything inside */
   margin-bottom: 0.5rem;
-  line-height: 0.5;
+  line-height: 1.2;
 `;
 const StepTitleDec = styled.p`
   text-align: center;
@@ -128,31 +125,18 @@ const StepTitleDec = styled.p`
 `;
 
 const LayoutCardsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); // Force 5 columns
+  display: flex; /* Force flexbox for fluid swipe behavior */
+  flex-wrap: nowrap;
   gap: 1rem;
-  margin-bottom: 4rem;
   width: 100%;
-  max-width: 1180px;
-  @media (max-width: 768px) {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 1rem;
-    overflow-x: auto;
-    padding-bottom: 1.5rem;
-    width: auto;
-    
-    /* Native scrolling */
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    
-    /* Hide scrollbar for cleaner look */
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+  overflow-x: auto;
+  padding: 1rem 0 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  touch-action: pan-x; /* Crucial: Allows side-swiping on mobile */
+  scrollbar-width: none; 
+
+  &::-webkit-scrollbar { display: none; }
 `;
 
 const KitchenLayoutCardWrapper = styled.div`
@@ -160,21 +144,16 @@ const KitchenLayoutCardWrapper = styled.div`
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
-  width: 230px;
-  min-width: 230px;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  
+  /* Responsive sizing */
+  width: 75vw;
+  min-width: 250px;
+  scroll-snap-align: center;
 
-  @media (max-width: 768px) {
-    scroll-snap-align: center;
-    width: 260px;
-    min-width: 260px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  @media (min-width: 768px) {
+    width: 230px;
   }
 `;
 
@@ -255,17 +234,13 @@ const LayoutTitle = styled.h3`
 
 const LayoutDescription = styled.p`
   color: #718096;
-  font-size: var(--universal-fs-h14);
+  font-size: 0.85rem;
   text-align: center;
   margin: 0;
-  line-height: 1.4;
-  white-space: nowrap;
-
-  @media (max-width: 768px) {
-    font-size: var(--universal-fs-h3);
-    white-space: normal;
-    padding: 0 0.5rem;
-  }
+  padding: 0 0.5rem;
+  /* Force text wrapping on mobile */
+  white-space: normal !important;
+  word-wrap: break-word;
 `;
 
 const DimensionsSection = styled.section`
@@ -285,17 +260,13 @@ const CardTitle = styled.h3`
 `;
 
 const CardDescription = styled.p`
-  font-size: var(--universal-fs-h14);
+  font-size: 0.75rem;
   color: #888888;
-  line-height: 1.5;
   text-align: center;
-  white-space: nowrap; /* keep on a single line */
-  overflow: visible; /* don't cut off */
-  text-overflow: unset;
-  
-  @media (max-width: 768px) {
-    white-space: normal;
-  }
+  padding: 0 0.5rem;
+  /* Force text wrapping on mobile */
+  white-space: normal !important;
+  word-wrap: break-word;
 `;
 
 const DimensionCardsGrid = styled.div`
@@ -507,7 +478,7 @@ const ContinueButton1 = styled.button`
     font-size: var(--universal-fs-h3);
     padding: 10px 22px;
     margin-right: 0;
-    width: auto;
+    width: 100%;
   }
 `;
 // Additional styled components for KitchenSizeStep
@@ -1186,7 +1157,7 @@ const KitchenLayoutCard = ({ layout, selected, onSelect }) => (
       <LayoutImageImg src={layout.image} alt={layout.name} />
     </LayoutImage>
 
-    <LayoutCheckbox onClick={() => setSelected(!selected)}>
+    <LayoutCheckbox>
       <OuterBox selected={selected}>
         <InnerBox selected={selected}>
           {selected && (
@@ -1999,13 +1970,11 @@ const PriceCalculators = () => {
                       open={open}
                       onClose={() => {
                         setOpen(false);
-                        resetFormState();
                       }}
                     >
                       <CloseButton
                         onClick={() => {
                           setOpen(false);
-                          resetFormState();
                         }}
                         className="universal-fs-h8 universal-font"
                       >
