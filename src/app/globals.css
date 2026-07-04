@@ -307,3 +307,30 @@ html, body {
   width: 100%;
   position: relative;
 }
+
+/* --- FORCE MODAL RESPONSIVE OVERRIDES --- */
+
+/* This targets the modal background and content to ensure they ignore parent constraints */
+#modal-root, 
+.force-overlay, 
+.force-mobile-modal {
+    max-width: 100vw !important;
+    width: 100% !important;
+}
+
+/* Force mobile-specific modal layout adjustments */
+@media (max-width: 768px) {
+    /* Prevent the modal from being constrained by the container padding */
+    .force-mobile-modal {
+        width: 95vw !important;
+        margin: 0 auto !important;
+        padding: 15px !important;
+        max-height: 85vh !important;
+    }
+    
+    /* Ensure the internal content within the modal doesn't break the layout */
+    .force-mobile-modal * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}

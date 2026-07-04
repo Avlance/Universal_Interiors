@@ -1,6 +1,12 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import ReactDOM from 'react-dom';
 import { useParams, useLocation, useNavigate } from '@/utils/react-router-dom';
+
+const Portal = ({ children }) => {
+  if (typeof document === 'undefined') return null;
+  return ReactDOM.createPortal(children, document.body);
+};
 import Layout from "../../components/layout/Layout.jsx";
 import Breadcrumb from "../../components/Breadcrumb.jsx";
 import styled, { keyframes } from "styled-components";
@@ -11,6 +17,36 @@ import HeroBanner from "./HeroBanner.jsx";
 import Services from "./Services";
 import YouTubeReviews from "../home/sections/YouTubeReviews.jsx";
 import CustomizeModal from "./CustomizeModal.jsx";
+
+// Add this helper component at the top of your file
+const ForceGlobalStyles = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    .force-mobile-modal {
+      width: 95vw !important;
+      max-width: 450px !important;
+      margin: auto !important;
+      padding: 20px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      background: #ffffff !important;
+      border-radius: 20px !important;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5) !important;
+    }
+    .force-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: rgba(0,0,0,0.85) !important;
+      z-index: 999999 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+  ` }} />
+);
 
 // Modal Content Components
 const CloseButton = styled.button`
@@ -2712,44 +2748,48 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
         )}
       </LayoutSelectionSection>
 
+      <ForceGlobalStyles />
       {isPopupOpen && (
-        <PopupOverlay onClick={handleClosePopup}>
-          <PopupModal onClick={(e) => e.stopPropagation()}>
-            <PopupOptions>
-              {popupOptions.map((option) => (
-                <PopupOption
-                  key={option.id}
-                  selected={selectedOption === option.id}
-                  onClick={() => handleOptionSelect(option.id)}
-                >
-                  <RadioInput
-                    type="radio"
-                    name="layout"
+        <Portal>
+          <div className="force-overlay" onClick={handleClosePopup}>
+            <div className="force-mobile-modal" onClick={(e) => e.stopPropagation()}>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', textAlign: 'center' }}>
+                Custom Interiors
+              </h2>
+              <PopupOptions>
+                {popupOptions.map((option) => (
+                  <PopupOption
+                    key={option.id}
                     selected={selectedOption === option.id}
-                    checked={selectedOption === option.id}
-                    onChange={() => handleOptionSelect(option.id)}
-                  />
+                    onClick={() => handleOptionSelect(option.id)}
+                  >
+                    <RadioInput
+                      name="layout"
+                      checked={selectedOption === option.id}
+                      onChange={() => handleOptionSelect(option.id)}
+                    />
 
-                  <OptionIcon>{option.icon}</OptionIcon>
-                  <OptionContent>
-                    <OptionLabel>{option.label}</OptionLabel>
-                    <OptionDescription>{option.description}</OptionDescription>
-                  </OptionContent>
-                </PopupOption>
-              ))}
-            </PopupOptions>
+                    <OptionIcon>{option.icon}</OptionIcon>
+                    <OptionContent>
+                      <OptionLabel>{option.label}</OptionLabel>
+                      <OptionDescription>{option.description}</OptionDescription>
+                    </OptionContent>
+                  </PopupOption>
+                ))}
+              </PopupOptions>
 
-            {/* <PopupNextButton onClick={handlePopupNext}>Next</PopupNextButton> */}
+              {/* <PopupNextButton onClick={handlePopupNext}>Next</PopupNextButton> */}
 
-            <Button
-              primary
-              onClick={handlePopupNext}
-              style={{ width: "100%", marginTop: "1rem" }}
-            >
-              Next
-            </Button>
-          </PopupModal>
-        </PopupOverlay>
+              <Button
+                primary
+                onClick={handlePopupNext}
+                style={{ width: "100%", marginTop: "1rem", padding: "12px" }}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </Portal>
       )}
     </KitchenCalculatorContainer>
   );
@@ -2757,59 +2797,13 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
 
 // Popup Modal Components
 // #region 1 pop styles
-const PopupOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999; /* Ensure it's above everything */
-  
-  /* Critical for mobile: Ensure tap events pass through if needed */
-  pointer-events: auto; 
-  padding: 1rem;
-`;
 
-// display: flex;
-// flex-direction: column;
-// gap: 1rem;
-// border: 1px solid #999999;
-// width: 450px;
-// margin: 2rem auto;
-// padding: 2rem;
-// border-radius: 0.5rem;
-// margin-bottom: 1.5rem;
-// background: #fff;
-// min-height: 530px;
-
-const PopupModal = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  /* Fluid mobile width */
-  width: 95%;
-  max-width: 400px;
-  /* Prevent modal from stretching too tall */
-  max-height: 85vh; 
-  overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  position: relative;
-  margin: auto;
-
-  @media (max-width: 480px) {
-    padding: 16px;
-  }
-`;
 
 const PopupOptions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 20px;
 `;
 
 const PopupOption = styled.div`
@@ -3667,7 +3661,7 @@ const HomePriceCalculatorsSections = () => {
     <Layout>
       <Breadcrumb />
 
-      {!isEstimationView &&
+      {!isEstimationView && !showCustomizeModal &&
         (currentStep === 1 ? (
           <PropertyTypeSelector
             onPropertySelect={handlePropertySelect}
@@ -3699,7 +3693,7 @@ const HomePriceCalculatorsSections = () => {
 
       {/* {(showOtherSections || !selectedPropertyType) && ( */}
       <>
-        {!isEstimationView && <HeroBanner />}
+        {!isEstimationView && !showCustomizeModal && <HeroBanner />}
 
         {isEstimationView && (
           <section
