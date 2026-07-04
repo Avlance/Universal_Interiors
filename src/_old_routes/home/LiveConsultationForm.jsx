@@ -9,6 +9,7 @@ import { liveConsultation, sendOTP, verifyOTP } from './homeHttpRequest.js';
 import { showSuccessToast, showFailureToast, showWarningToast } from '../../components/toast/js/ToastMessage.jsx';
 import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
 import Loader from '../../components/Loader.jsx';
+import { FaWhatsapp, FaSms } from 'react-icons/fa';
 
 const Form = styled.form`
   display: flex;
@@ -464,6 +465,9 @@ const ChannelOption = styled.button`
 const ChannelIcon = styled.span`
   font-size: 28px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ChannelInfo = styled.div`
@@ -703,7 +707,7 @@ const LiveConsultationForm = () => {
                 <span className="universal-fs-h3 universal-font" style={{ color: '#8692A6' }}>Sending to +91 {form.phone}</span>
                 <ChannelPickerWrapper>
                   <ChannelOption type="button" $selected={otpChannel === 'whatsapp'} onClick={() => setOtpChannel('whatsapp')}>
-                    <ChannelIcon>💬</ChannelIcon>
+                    <ChannelIcon><FaWhatsapp color="#25D366" /></ChannelIcon>
                     <ChannelInfo>
                       <ChannelTitle>WhatsApp</ChannelTitle>
                       <ChannelDesc>Receive code on WhatsApp</ChannelDesc>
@@ -711,7 +715,7 @@ const LiveConsultationForm = () => {
                     <ChannelRadio $selected={otpChannel === 'whatsapp'} />
                   </ChannelOption>
                   <ChannelOption type="button" $selected={otpChannel === 'sms'} onClick={() => setOtpChannel('sms')}>
-                    <ChannelIcon>📱</ChannelIcon>
+                    <ChannelIcon><FaSms color="#4A90E2" /></ChannelIcon>
                     <ChannelInfo>
                       <ChannelTitle>SMS</ChannelTitle>
                       <ChannelDesc>Receive code as a text message</ChannelDesc>
