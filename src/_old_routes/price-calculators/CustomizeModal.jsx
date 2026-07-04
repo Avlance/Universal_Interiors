@@ -600,7 +600,13 @@ const CustomizeModal = ({ onClose, onProceed }) => {
             >
               Back
             </button>
-            <ProceedButton onClick={onProceed} style={{ margin: '0', flex: '1', minWidth: '150px', maxWidth: '250px' }}>
+            <ProceedButton onClick={() => onProceed({
+              activeTab,
+              selectedLayout,
+              selectedBedroom,
+              wardrobeLength,
+              kitchenDimensions
+            })} style={{ margin: '0', flex: '1', minWidth: '150px', maxWidth: '250px' }}>
               Proceed to Estimation
             </ProceedButton>
           </div>

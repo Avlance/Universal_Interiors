@@ -601,7 +601,20 @@ export default function Dashboard() {
                 <Td style={{ fontWeight: 600 }}>{lead.name || 'Unknown'}</Td>
                 <Td>+91 {lead.phone}</Td>
                 <Td>{lead.city || lead.pinCode || '-'}</Td>
-                <Td>{lead.propertyType ? `${lead.propertyType} ${lead.purpose ? `(${lead.purpose})` : ''}` : '-'}</Td>
+                <Td>
+                  <div>{lead.propertyType ? `${lead.propertyType} ${lead.purpose ? `(${lead.purpose})` : ''}` : '-'}</div>
+                  {lead.packageIndex !== undefined && lead.packageIndex !== null && (
+                    <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                      Package: {['Essential', 'Premium', 'Elite Luxe'][lead.packageIndex] || lead.packageIndex}
+                    </div>
+                  )}
+                  {lead.customization && (
+                    <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                      {lead.customization.selectedLayout && <span>Layout: {lead.customization.selectedLayout} </span>}
+                      {lead.customization.wardrobeLength && <span>| Wardrobe: {lead.customization.wardrobeLength.feet}'{lead.customization.wardrobeLength.inches}"</span>}
+                    </div>
+                  )}
+                </Td>
                 <Td style={{ textTransform: 'capitalize' }}>{lead.source.replace('_', ' ')}</Td>
                 <Td>
                   <Select 

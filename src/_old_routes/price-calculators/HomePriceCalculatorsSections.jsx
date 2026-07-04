@@ -2669,7 +2669,7 @@ const PropertyTypeSelector = ({ onPropertySelect, onProceedNext }) => {
       selectedOption
     );
     setIsPopupOpen(false);
-    if (onProceedNext) onProceedNext();
+    if (onProceedNext) onProceedNext({ purpose: selectedOption });
   };
 
   return (
@@ -3324,7 +3324,7 @@ const ScopeOfWorkSelector = ({ onBack, onNext, selectedPropertyId }) => {
           </Button>
           <Button
             primary
-            onClick={onNext}
+            onClick={() => onNext({ scope: items })}
             style={{ marginRight: "10px", width: "130px" }}
           >
             Next
@@ -3342,12 +3342,15 @@ const HomePriceCalculatorsSections = () => {
   // State for property type selection
   const [open, setOpen] = useState(false);
   const [selectedPropertyType, setSelectedPropertyType] = useState(null);
+  const [selectedPurpose, setSelectedPurpose] = useState(null);
+  const [selectedScope, setSelectedScope] = useState(null);
   const [showOtherSections, setShowOtherSections] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // 1 = property, 2 = scope, 3 = customize
   const [showCustomizeModal, setShowCustomizeModal] = useState(false);
   const [isEstimationView, setIsEstimationView] = useState(false);
   const [selectedPackageIndex, setSelectedPackageIndex] = useState(null);
   const [isPackageConfirmed, setIsPackageConfirmed] = useState(false);
+  const [customizationData, setCustomizationData] = useState(null);
 
   // Extract the path segments to determine what content to show
   const pathSegments = location.pathname
@@ -3665,7 +3668,8 @@ const HomePriceCalculatorsSections = () => {
         (currentStep === 1 ? (
           <PropertyTypeSelector
             onPropertySelect={handlePropertySelect}
-            onProceedNext={() => {
+            onProceedNext={(data) => {
+              if (data && data.purpose) setSelectedPurpose(data.purpose);
               setCurrentStep(2);
               setShowOtherSections(true);
             }}
@@ -3673,7 +3677,10 @@ const HomePriceCalculatorsSections = () => {
         ) : (
           <ScopeOfWorkSelector
             onBack={() => setCurrentStep(1)}
-            onNext={() => setShowCustomizeModal(true)}
+            onNext={(data) => {
+              if (data && data.scope) setSelectedScope(data.scope);
+              setShowCustomizeModal(true);
+            }}
             selectedPropertyId={selectedPropertyType}
           />
         ))}
@@ -3681,7 +3688,8 @@ const HomePriceCalculatorsSections = () => {
       {showCustomizeModal && (
         <CustomizeModal
           onClose={() => setShowCustomizeModal(false)}
-          onProceed={() => {
+          onProceed={(data) => {
+            setCustomizationData(data);
             setShowCustomizeModal(false);
             // Switch to estimation view; hide initial background sections
             setIsEstimationView(true);
@@ -3929,7 +3937,17 @@ const HomePriceCalculatorsSections = () => {
                     >
                       &times;
                     </CloseButton>
-                    <ConsultationFormContent onSuccess={handleFormSuccess} />
+                    <ConsultationFormContent 
+                      onSuccess={handleFormSuccess} 
+                      isEstimation={true}
+                      extraData={{
+                        propertyType: selectedPropertyType,
+                        purpose: selectedPurpose,
+                        scope: selectedScope,
+                        packageIndex: selectedPackageIndex,
+                        customization: customizationData
+                      }}
+                    />
                   </Modal>
                 </StepActions>
               </NextButtonWrapper>

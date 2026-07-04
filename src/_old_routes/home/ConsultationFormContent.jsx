@@ -5,7 +5,7 @@ import { FaWhatsapp, FaSms } from 'react-icons/fa';
 import Input from '../../components/input/js/Input.jsx';
 import { inputValidation, selectValidation } from '../../utils/js/InputValidation.jsx';
 import { showSuccessToast, showFailureToast } from '../../components/toast/js/ToastMessage.jsx';
-import { freeConsultation, sendOTP, verifyOTP } from './homeHttpRequest.js';
+import { freeConsultation, sendOTP, verifyOTP, submitEstimation } from './homeHttpRequest.js';
 import Loader from '../../components/Loader.jsx';
 import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
 
@@ -470,8 +470,9 @@ const countries = [
   { code: '+971', name: 'UAE', flag: '🇦🇪' },
 ];
 
-const ConsultationFormContent = ({ onSuccess }) => {
+const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = {} }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isSuccessScreen, setIsSuccessScreen] = useState(false);
   const [otpMode, setOtpMode] = useState(false);
   const [channelMode, setChannelMode] = useState(false); // step 2: channel picker
   const [otpChannel, setOtpChannel] = useState('whatsapp'); // 'sms' | 'whatsapp'
@@ -584,20 +585,29 @@ const ConsultationFormContent = ({ onSuccess }) => {
       
       // OTP verified successfully, now submit consultation
       if (consultationPayload) {
-        const result = await freeConsultation(consultationPayload);
-        if (result?.status === 'CREATED') {
-          showSuccessToast('Your Consultation is Booked.soon,we will reach you.');
-          // If API call is successful, proceed
-          resetFormState();
+        let result;
+        if (isEstimation) {
+          result = await submitEstimation(consultationPayload);
+        } else {
+          result = await freeConsultation(consultationPayload);
+        }
+
+        if (result?.status === 'CREATED' || result?.success || result?.message) {
+          // Instead of immediate close, show success UI
+          setIsSuccessScreen(true);
           setOtpMode(false);
           setOtp(new Array(6).fill(''));
           setConsultationPayload(null);
-          // Call the onSuccess callback if provided
-          if (onSuccess) {
-            onSuccess();
-          }
+          
+          setTimeout(() => {
+            setIsSuccessScreen(false);
+            resetFormState();
+            if (onSuccess) {
+              onSuccess();
+            }
+          }, 3000);
         } else {
-          showFailureToast('Failed to Book Consultation. Please try again.');
+          showFailureToast('Failed to submit request. Please try again.');
         }
       }
     } catch (errorMessage) {
@@ -633,6 +643,7 @@ const ConsultationFormContent = ({ onSuccess }) => {
       email: emailInput.value,
       city: citySelect.value,
       whatsappUpdates: consentChecked,
+      ...extraData,
     };
 
     // Store the payload then show channel picker (step 2)
@@ -640,6 +651,34 @@ const ConsultationFormContent = ({ onSuccess }) => {
     setChannelMode(true);
   };
 
+
+  if (isSuccessScreen) {
+    return (
+      <ModalWrapper style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '400px' }}>
+        <div style={{
+          width: '80px',
+          height: '80px',
+          borderRadius: '50%',
+          background: '#4caf50',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 24px auto'
+        }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#333', marginBottom: '16px' }}>
+          {isEstimation ? 'Estimation Request Sent!' : 'Consultation Booked!'}
+        </h2>
+        <p style={{ fontSize: '16px', color: '#666', lineHeight: '1.5' }}>
+          Thank you for contacting us.<br/>
+          Our team will reach out to you shortly.
+        </p>
+      </ModalWrapper>
+    );
+  }
 
   return (
     <ModalWrapper>

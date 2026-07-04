@@ -4,10 +4,10 @@ import { apiCreated, apiBadRequest, apiError } from '@/lib/api-response';
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { propertyType, purpose, scope, name, phone, email, city, whatsappQuote } = body;
+    const { propertyType, purpose, scope, name, phone, email, city, whatsappQuote, whatsappUpdates, packageIndex, customization } = body;
 
-    if (!propertyType || !purpose || !scope || !name || !phone || !email || !city) {
-      return apiBadRequest("All fields are required.");
+    if (!name || !phone || !email || !city) {
+      return apiBadRequest("Name, phone, email and city are required.");
     }
 
     if (!/^[6-9]\d{9}$/.test(phone)) {
@@ -21,14 +21,16 @@ export async function POST(request) {
     const db = await getDb();
     const estimation = {
       _id: phone,
-      propertyType,
-      purpose,
-      scope,
+      propertyType: propertyType || '',
+      purpose: purpose || '',
+      scope: scope || '',
+      packageIndex: packageIndex !== undefined ? packageIndex : null,
+      customization: customization || null,
       name,
       phone,
       email,
       city,
-      whatsappQuote: !!whatsappQuote,
+      whatsappUpdates: !!whatsappUpdates || !!whatsappQuote,
       createdAt: new Date(),
       status: "New"
     };
