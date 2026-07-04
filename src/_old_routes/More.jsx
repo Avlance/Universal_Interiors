@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useLocation, Link } from '@/utils/react-router-dom';
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import Layout from '../components/layout/Layout';
 import styled from 'styled-components';
 import Modal from '../components/modal/js/Modal.jsx';
@@ -73,69 +74,93 @@ const SectionDesc = styled.p`
 
 const ResourcesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  padding: 10px 0;
+`;
+
+const ResourceCardStyles = `
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.12);
+    border-color: rgba(213, 15, 37, 0.2);
+  }
+
+  &:hover .resource-image {
+    transform: scale(1.08);
+  }
 `;
 
 const ResourceCard = styled.div`
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 25px;
-  border: 1px solid #e9ecef;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    border-color: #D50F25;
-  }
+  ${ResourceCardStyles}
 `;
 
 const ResourceCardLink = styled(Link)`
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 25px;
-  border: 1px solid #e9ecef;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    border-color: #D50F25;
+  ${ResourceCardStyles}
+`;
+
+const ResourceImageContainer = styled.div`
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 50%);
+    pointer-events: none;
   }
 `;
 
-const ResourceIcon = styled.div`
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: ${({ $bg }) => $bg || '#4286F5'};
+const ResourceImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+`;
+
+const ResourceContent = styled.div`
+  padding: 28px 24px;
+  flex-grow: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.6rem;
-  margin-bottom: 16px;
+  flex-direction: column;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
 `;
 
 const ResourceTitle = styled.h3`
-  margin: 0 0 10px 0;
-  color: #222222;
-  font-size: 1.15rem;
-  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #1a1a1a;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+  
+  ${ResourceCardLink}:hover &, ${ResourceCard}:hover & {
+    color: #D50F25;
+  }
 `;
 
 const ResourceDescription = styled.p`
   margin: 0;
-  color: #666666;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  color: #555555;
+  line-height: 1.65;
+  font-size: 1rem;
 `;
 
 const ServiceGrid = styled.div`
@@ -208,24 +233,38 @@ const SocialGrid = styled.div`
 `;
 
 const SocialButton = styled.a`
-  padding: 14px 22px;
+  padding: 16px 24px;
   background: ${({ $bg }) => $bg || '#333'};
   color: white;
-  border-radius: 10px;
-  min-width: 130px;
-  text-align: center;
+  border-radius: 12px;
+  min-width: 160px;
   text-decoration: none;
-  transition: all 0.3s ease;
-  display: block;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
   &:hover {
-    opacity: 0.85;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px ${({ $bg }) => $bg ? `${$bg}66` : 'rgba(0,0,0,0.2)'};
   }
 `;
 
-const SocialName = styled.h4`margin: 0 0 4px 0; font-size: 1rem;`;
-const SocialSub = styled.p`margin: 0; font-size: 0.85rem; opacity: 0.9;`;
+const SocialIconContainer = styled.div`
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SocialTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const SocialName = styled.h4`margin: 0 0 2px 0; font-size: 1.05rem; font-weight: 600;`;
+const SocialSub = styled.p`margin: 0; font-size: 0.85rem; opacity: 0.9; font-weight: 500;`;
 
 const More = () => {
   const location = useLocation();
@@ -240,12 +279,12 @@ const More = () => {
     : `Explore local resources and information for interior design in ${pageTitle.replace(' Resources', '')}.`;
 
   const resources = [
-    { title: 'Cost Calculator', description: 'Estimate the cost of your interior design project. Get detailed breakdowns for different rooms and materials.', icon: '💰', bg: '#D50F25', link: '/price-calculators' },
-    { title: 'Design Gallery', description: 'Browse our curated collection of design ideas and inspiration. Find the perfect style for your home.', icon: '✨', bg: '#5485EE', link: '/design-gallery' },
-    { title: 'Design Guides', description: 'Expert modular kitchen and wardrobe guides with layouts, materials, and cost insights tailored for Indian homes.', icon: '📖', bg: '#559944', link: '/guides/modular-kitchen-guide' },
-    { title: 'Contact & Support', description: 'Reach out to our team for questions, project inquiries, and customer support.', icon: '💬', bg: '#F5A623', link: '/support' },
-    { title: 'Reviews', description: 'Read what our satisfied customers say about their Universal Interiors experience.', icon: '⭐', bg: '#7B61FF', link: '/reviews' },
-    { title: 'Book Consultation', description: 'Schedule a free design consultation with our expert team. Get personalized recommendations.', icon: '📅', bg: '#00897B', action: () => setIsConsultationOpen(true) },
+    { title: 'Cost Calculator', description: 'Estimate the cost of your interior design project. Get detailed breakdowns for different rooms and materials.', image: '/images/more/cost_calculator.png', link: '/price-calculators' },
+    { title: 'Design Gallery', description: 'Browse our curated collection of design ideas and inspiration. Find the perfect style for your home.', image: '/images/more/design_gallery.png', link: '/design-gallery' },
+    { title: 'Design Guides', description: 'Expert modular kitchen and wardrobe guides with layouts, materials, and cost insights tailored for Indian homes.', image: '/images/more/design_guides.png', link: '/guides/modular-kitchen-guide' },
+    { title: 'Contact & Support', description: 'Reach out to our team for questions, project inquiries, and customer support.', image: '/images/more/contact_support.png', link: '/support' },
+    { title: 'Reviews', description: 'Read what our satisfied customers say about their Universal Interiors experience.', image: '/images/more/customer_reviews.png', link: '/reviews' },
+    { title: 'Book Consultation', description: 'Schedule a free design consultation with our expert team. Get personalized recommendations.', image: '/images/more/book_consultation.png', action: () => setIsConsultationOpen(true) },
   ];
 
   const additionalServices = [
@@ -263,10 +302,10 @@ const More = () => {
   ];
 
   const socials = [
-    { name: 'Facebook', sub: 'Follow Us', bg: '#1877f2', href: 'https://www.facebook.com/universal.Interiors.che/' },
-    { name: 'Instagram', sub: 'Follow Us', bg: '#e4405f', href: 'https://www.instagram.com/universal_interiors_chennai/' },
-    { name: 'LinkedIn', sub: 'Follow Us', bg: '#0077b5', href: 'https://www.linkedin.com/in/universal-interiors-8a52b4256/' },
-    { name: 'YouTube', sub: 'Subscribe', bg: '#ff0000', href: 'https://www.youtube.com/@universalInteriorr' },
+    { name: 'Facebook', sub: 'Follow Us', icon: <FaFacebook />, bg: '#1877f2', href: 'https://www.facebook.com/universal.Interiors.che/' },
+    { name: 'Instagram', sub: 'Follow Us', icon: <FaInstagram />, bg: '#e4405f', href: 'https://www.instagram.com/universal_interiors_chennai/' },
+    { name: 'LinkedIn', sub: 'Follow Us', icon: <FaLinkedin />, bg: '#0077b5', href: 'https://www.linkedin.com/in/universal-interiors-8a52b4256/' },
+    { name: 'YouTube', sub: 'Subscribe', icon: <FaYoutube />, bg: '#ff0000', href: 'https://www.youtube.com/@universalInteriorr' },
   ];
 
   return (
@@ -282,15 +321,23 @@ const More = () => {
             {resources.map((r, i) =>
               r.link ? (
                 <ResourceCardLink key={i} to={r.link}>
-                  <ResourceIcon $bg={r.bg}>{r.icon}</ResourceIcon>
-                  <ResourceTitle>{r.title}</ResourceTitle>
-                  <ResourceDescription>{r.description}</ResourceDescription>
+                  <ResourceImageContainer>
+                    <ResourceImage src={r.image} alt={r.title} className="resource-image" />
+                  </ResourceImageContainer>
+                  <ResourceContent>
+                    <ResourceTitle>{r.title}</ResourceTitle>
+                    <ResourceDescription>{r.description}</ResourceDescription>
+                  </ResourceContent>
                 </ResourceCardLink>
               ) : (
                 <ResourceCard key={i} onClick={r.action}>
-                  <ResourceIcon $bg={r.bg}>{r.icon}</ResourceIcon>
-                  <ResourceTitle>{r.title}</ResourceTitle>
-                  <ResourceDescription>{r.description}</ResourceDescription>
+                  <ResourceImageContainer>
+                    <ResourceImage src={r.image} alt={r.title} className="resource-image" />
+                  </ResourceImageContainer>
+                  <ResourceContent>
+                    <ResourceTitle>{r.title}</ResourceTitle>
+                    <ResourceDescription>{r.description}</ResourceDescription>
+                  </ResourceContent>
                 </ResourceCard>
               )
             )}
@@ -329,8 +376,11 @@ const More = () => {
           <SocialGrid>
             {socials.map((s, i) => (
               <SocialButton key={i} href={s.href} target="_blank" rel="noopener noreferrer" $bg={s.bg}>
-                <SocialName>{s.name}</SocialName>
-                <SocialSub>{s.sub}</SocialSub>
+                <SocialIconContainer>{s.icon}</SocialIconContainer>
+                <SocialTextContainer>
+                  <SocialName>{s.name}</SocialName>
+                  <SocialSub>{s.sub}</SocialSub>
+                </SocialTextContainer>
               </SocialButton>
             ))}
           </SocialGrid>
