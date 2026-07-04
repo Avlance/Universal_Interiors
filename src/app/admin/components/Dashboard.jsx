@@ -3,13 +3,97 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '@/components/button/js/Button';
+import GalleryManager from './GalleryManager';
 
 // Styled Components
+const AppContainer = styled.div`
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+`;
+
+const Sidebar = styled.div`
+  width: 250px;
+  background: white;
+  border-right: 1px solid #eaeaea;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 80px;
+  }
+`;
+
+const SidebarLogo = styled.div`
+  padding: 0 24px;
+  margin-bottom: 32px;
+  font-family: var(--universal-font-bold);
+  font-size: 20px;
+  color: #111;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 0 12px;
+    text-align: center;
+  }
+`;
+
+const SidebarNav = styled.nav`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px;
+`;
+
+const NavItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: ${props => props.$active ? '#fff0f0' : 'transparent'};
+  color: ${props => props.$active ? '#D50F25' : '#666'};
+  font-family: var(--universal-font-medium);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+
+  &:hover {
+    background: ${props => props.$active ? '#fff0f0' : '#f8f9fa'};
+    color: ${props => props.$active ? '#D50F25' : '#111'};
+  }
+
+  svg {
+    flex-shrink: 0;
+    stroke: currentColor;
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    span {
+      display: none;
+    }
+  }
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`;
+
 const DashboardContainer = styled.div`
   padding: 32px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  overflow-y: auto;
+  flex: 1;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -249,6 +333,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [selectedPhones, setSelectedPhones] = useState(new Set());
   const [activeTab, setActiveTab] = useState('All');
+  const [activeView, setActiveView] = useState('leads'); // 'leads' or 'gallery'
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -395,15 +480,42 @@ export default function Dashboard() {
   });
 
   if (loading) {
-    return <DashboardContainer>Loading dashboard...</DashboardContainer>;
+    return (
+      <AppContainer>
+        <MainContent>
+          <DashboardContainer>Loading dashboard...</DashboardContainer>
+        </MainContent>
+      </AppContainer>
+    );
   }
 
   return (
-    <DashboardContainer>
-      <Header>
-        <Title>Leads Management</Title>
-        <Button secondary onClick={handleLogout}>Logout</Button>
-      </Header>
+    <AppContainer>
+      <Sidebar>
+        <SidebarLogo>Universal Admin</SidebarLogo>
+        <SidebarNav>
+          <NavItem $active={activeView === 'leads'} onClick={() => setActiveView('leads')}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Leads</span>
+          </NavItem>
+          <NavItem $active={activeView === 'gallery'} onClick={() => setActiveView('gallery')}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span>Gallery Manager</span>
+          </NavItem>
+        </SidebarNav>
+      </Sidebar>
+
+      <MainContent>
+        {activeView === 'leads' ? (
+          <DashboardContainer>
+            <Header>
+              <Title>Leads Management</Title>
+              <Button secondary onClick={handleLogout}>Logout</Button>
+            </Header>
 
       <MetricsRow>
         <MetricCard>
@@ -572,6 +684,13 @@ export default function Dashboard() {
         </ModalOverlay>
       )}
 
-    </DashboardContainer>
+          </DashboardContainer>
+        ) : (
+          <DashboardContainer>
+            <GalleryManager />
+          </DashboardContainer>
+        )}
+      </MainContent>
+    </AppContainer>
   );
 }
