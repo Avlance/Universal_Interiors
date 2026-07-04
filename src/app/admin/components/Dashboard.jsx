@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '@/components/button/js/Button';
 import GalleryManager from './GalleryManager';
+import LeadProfileDrawer from './LeadProfileDrawer';
 
 // Styled Components
 const AppContainer = styled.div`
@@ -226,6 +227,14 @@ const Table = styled.table`
   border-collapse: collapse;
 `;
 
+const Tr = styled.tr`
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #fafafa;
+  }
+`;
+
 const Th = styled.th`
   text-align: left;
   padding: 16px;
@@ -341,6 +350,8 @@ export default function Dashboard() {
   const [messageChannel, setMessageChannel] = useState('whatsapp');
   const [isSending, setIsSending] = useState(false);
   const [targetPhones, setTargetPhones] = useState([]); // Array of phones
+
+  const [selectedLeadForDrawer, setSelectedLeadForDrawer] = useState(null);
 
   useEffect(() => {
     fetchLeads();
@@ -514,7 +525,19 @@ export default function Dashboard() {
           <DashboardContainer>
             <Header>
               <Title>Leads Management</Title>
-              <Button secondary onClick={handleLogout}>Logout</Button>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <Button secondary onClick={fetchLeads} disabled={loading}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    Refresh
+                  </span>
+                </Button>
+                <Button secondary onClick={handleLogout}>Logout</Button>
+              </div>
             </Header>
 
       <MetricsRow>
@@ -589,8 +612,8 @@ export default function Dashboard() {
           </thead>
           <tbody>
             {filteredLeads.map((lead) => (
-              <tr key={lead._id + lead.source}>
-                <Td>
+              <Tr key={lead._id + lead.source} onClick={() => setSelectedLeadForDrawer(lead)}>
+                <Td onClick={e => e.stopPropagation()}>
                   <input 
                     type="checkbox" 
                     checked={selectedPhones.has(lead.phone)} 
@@ -616,7 +639,7 @@ export default function Dashboard() {
                   )}
                 </Td>
                 <Td style={{ textTransform: 'capitalize' }}>{lead.source.replace('_', ' ')}</Td>
-                <Td>
+                <Td onClick={e => e.stopPropagation()}>
                   <Select 
                     value={lead.status} 
                     onChange={(e) => handleStatusChange(lead._id, lead.source, e.target.value)}
@@ -627,7 +650,7 @@ export default function Dashboard() {
                     <option value="Turned as customer">Turned as customer</option>
                   </Select>
                 </Td>
-                <Td>
+                <Td onClick={e => e.stopPropagation()}>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <Button 
                       secondary 
@@ -647,12 +670,12 @@ export default function Dashboard() {
                     </button>
                   </div>
                 </Td>
-              </tr>
+              </Tr>
             ))}
             {filteredLeads.length === 0 && (
-              <tr>
+              <Tr>
                 <Td colSpan={10} style={{ textAlign: 'center', padding: '40px' }}>No leads found in this category.</Td>
-              </tr>
+              </Tr>
             )}
           </tbody>
         </Table>
@@ -696,6 +719,13 @@ export default function Dashboard() {
           </ModalContent>
         </ModalOverlay>
       )}
+
+      <LeadProfileDrawer 
+        isOpen={!!selectedLeadForDrawer} 
+        onClose={() => setSelectedLeadForDrawer(null)}
+        leadId={selectedLeadForDrawer?._id}
+        source={selectedLeadForDrawer?.source}
+      />
 
           </DashboardContainer>
         ) : (

@@ -46,6 +46,19 @@ const PreviewImage = styled.img`
   object-fit: cover;
 `;
 
+const PdfPreview = styled.div`
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-family: var(--universal-font-medium);
+  font-size: 14px;
+`;
+
 const RemoveButton = styled.button`
   position: absolute;
   top: 8px;
@@ -118,15 +131,22 @@ export default function ImageUploader({ onUploadSuccess, onUploadError }) {
   };
 
   const handleFile = async (file) => {
-    if (!file.type.startsWith('image/')) {
-      if (onUploadError) onUploadError('Please select an image file');
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+
+    if (!isImage && !isPdf) {
+      if (onUploadError) onUploadError('Please select an image or PDF file');
       return;
     }
 
     // Create a local preview immediately
-    const reader = new FileReader();
-    reader.onload = (e) => setPreview(e.target.result);
-    reader.readAsDataURL(file);
+    if (isImage) {
+      const reader = new FileReader();
+      reader.onload = (e) => setPreview({ type: 'image', url: e.target.result });
+      reader.readAsDataURL(file);
+    } else {
+      setPreview({ type: 'pdf', name: file.name });
+    }
 
     setIsUploading(true);
     setProgress(20);
@@ -179,13 +199,26 @@ export default function ImageUploader({ onUploadSuccess, onUploadError }) {
         type="file" 
         ref={fileInputRef} 
         onChange={handleChange} 
-        accept="image/*" 
+        accept="image/*,application/pdf" 
         style={{ display: 'none' }} 
       />
       
       {preview ? (
         <PreviewContainer>
-          <PreviewImage src={preview} alt="Preview" />
+          {preview.type === 'image' ? (
+            <PreviewImage src={preview.url} alt="Preview" />
+          ) : (
+            <PdfPreview>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D50F25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8 }}>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              {preview.name}
+            </PdfPreview>
+          )}
           {!isUploading && (
             <RemoveButton onClick={handleRemove}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -212,8 +245,8 @@ export default function ImageUploader({ onUploadSuccess, onUploadError }) {
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D50F25" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line>
           </svg>
-          <UploadText>Click or drag image to upload</UploadText>
-          <UploadSubText>Supports JPG, PNG, WEBP (Max 5MB)</UploadSubText>
+          <UploadText>Click or drag file to upload</UploadText>
+          <UploadSubText>Supports JPG, PNG, WEBP, PDF (Max 5MB)</UploadSubText>
         </DropZone>
       )}
     </div>

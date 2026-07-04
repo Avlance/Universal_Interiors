@@ -8,6 +8,7 @@ import { showSuccessToast, showFailureToast } from '../../components/toast/js/To
 import { freeConsultation, sendOTP, verifyOTP, submitEstimation } from './homeHttpRequest.js';
 import Loader from '../../components/Loader.jsx';
 import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
+import SuccessModal from '../../components/ui/SuccessModal';
 
 const Form = styled.form`
   display: flex;
@@ -480,6 +481,7 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
   const [consultationPayload, setConsultationPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [consentChecked, setConsentChecked] = useState(true);
   const [form, setForm] = useState({
     name: '',
@@ -593,14 +595,13 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
         }
 
         if (result?.status === 'CREATED' || result?.success || result?.message) {
-          // Instead of immediate close, show success UI
-          setIsSuccessScreen(true);
+          setIsSuccessModalOpen(true);
           setOtpMode(false);
           setOtp(new Array(6).fill(''));
           setConsultationPayload(null);
           
           setTimeout(() => {
-            setIsSuccessScreen(false);
+            setIsSuccessModalOpen(false);
             resetFormState();
             if (onSuccess) {
               onSuccess();
@@ -651,38 +652,13 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
     setChannelMode(true);
   };
 
-
-  if (isSuccessScreen) {
-    return (
-      <ModalWrapper style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '400px' }}>
-        <div style={{
-          width: '80px',
-          height: '80px',
-          borderRadius: '50%',
-          background: '#4caf50',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto 24px auto'
-        }}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#333', marginBottom: '16px' }}>
-          {isEstimation ? 'Estimation Request Sent!' : 'Consultation Booked!'}
-        </h2>
-        <p style={{ fontSize: '16px', color: '#666', lineHeight: '1.5' }}>
-          Thank you for contacting us.<br/>
-          Our team will reach out to you shortly.
-        </p>
-      </ModalWrapper>
-    );
-  }
-
   return (
     <ModalWrapper>
       <ContentWrapper>
+        <SuccessModal 
+          isOpen={isSuccessModalOpen} 
+          onClose={() => setIsSuccessModalOpen(false)} 
+        />
         <ImageSection backgroundImage={backgroundImages[currentImageIndex]}>
           <BottomLeftContent>
             <BottomImageTitle className="universal-fs-h6 universal-font-extra-bold">Your Sofa Called —</BottomImageTitle>

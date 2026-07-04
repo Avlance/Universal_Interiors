@@ -12,7 +12,7 @@ import ConfirmationAlert from '../../../components/ConfirmationAlert.jsx';
 import Tooltip from '../../../components/tooltip/js/Tooltip.jsx';
 import Loader from '../../../components/Loader.jsx';
 import { FaWhatsapp, FaSms } from 'react-icons/fa';
-
+import SuccessModal from '../../../components/ui/SuccessModal';
 
 const TestimonialsContainer = styled.section`
   margin-bottom: 80px;
@@ -704,8 +704,6 @@ const StepTwo = ({ scopeOfWorkItems, counts, setCounts, onNext, onBack, step, st
 
 // Step 3 Component
 const StepThree = ({
-  showAnimatedSvg,
-  AnimatedSvgWrapper,
   countries,
   form,
   handleInputChange,
@@ -731,9 +729,6 @@ const StepThree = ({
   <StepThreeContainer>
     <ProgressBar currentStep={step} stepLabels={stepLabels} />
 
-    <AnimatedSvgWrapper className={showAnimatedSvg ? 'show' : ''}>
-      <svg width="232" height="232" viewBox="0 0 232 232" fill="none"> <circle cx="116" cy="116" r="115.91" fill="white" fillOpacity="0.3" /> <circle cx="116" cy="116" r="86.9325" fill="white" fillOpacity="0.6" /> <circle cx="115.955" cy="116.045" r="57.955" fill="white" /> <g clipPath="url(#clip0_233_2238)"> <path d="M87.9678 119.45L101.466 132.949L104.871 129.52L91.3968 116.045M140.683 100.542L115.134 126.115L105.089 116.045L101.635 119.45L115.134 132.949L144.112 103.971M130.444 103.971L127.039 100.542L111.705 115.876L115.134 119.281L130.444 103.971Z" fill="#D50F25" /> </g> <defs> <clipPath id="clip0_233_2238"> <rect width="57.955" height="57.955" fill="white" transform="translate(86.9778 87.0675)" /> </clipPath> </defs> </svg>
-    </AnimatedSvgWrapper>
     <StepTwoContent>
       <ResponsiveH4 className='universal-font-bold' style={{ marginBottom: "8px" }}>
         {channelMode ? "Verification" : "Contact Information"}
@@ -858,8 +853,6 @@ const StepThree = ({
 );
 
 const StepFour = ({
-  showAnimatedSvg,
-  AnimatedSvgWrapper,
   otp,
   setOtp,
   handleOtpSubmit,
@@ -872,10 +865,7 @@ const StepFour = ({
 }) => (
   <StepThreeContainer>
     <ProgressBar currentStep={step} stepLabels={stepLabels} />
-
-    <AnimatedSvgWrapper className={showAnimatedSvg ? 'show' : ''}>
-      <svg width="232" height="232" viewBox="0 0 232 232" fill="none"> <circle cx="116" cy="116" r="115.91" fill="white" fillOpacity="0.3" /> <circle cx="116" cy="116" r="86.9325" fill="white" fillOpacity="0.6" /> <circle cx="115.955" cy="116.045" r="57.955" fill="white" /> <g clipPath="url(#clip0_233_2238)"> <path d="M87.9678 119.45L101.466 132.949L104.871 129.52L91.3968 116.045M140.683 100.542L115.134 126.115L105.089 116.045L101.635 119.45L115.134 132.949L144.112 103.971M130.444 103.971L127.039 100.542L111.705 115.876L115.134 119.281L130.444 103.971Z" fill="#D50F25" /> </g> <defs> <clipPath id="clip0_233_2238"> <rect width="57.955" height="57.955" fill="white" transform="translate(86.9778 87.0675)" /> </clipPath> </defs> </svg>
-    </AnimatedSvgWrapper>
+    
     
     <form onSubmit={handleOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24 }}>
       <h4 className='universal-font-bold universal-fs-h5' style={{ marginBottom: "8px" }}>OTP Verification</h4>
@@ -934,7 +924,8 @@ const CostEstimator = forwardRef((props, ref) => {
     falseCeiling: 0,
     painting: 0,
   });
-  const [showAnimatedSvg, setShowAnimatedSvg] = useState(false);
+  
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const svgTimeoutRef = useRef();
 
   const [channelMode, setChannelMode] = useState(false);
@@ -1046,10 +1037,10 @@ const CostEstimator = forwardRef((props, ref) => {
         setEstimationPayload(null);
         
         // Show success animation
-        setShowAnimatedSvg(true);
+        setIsSuccessModalOpen(true);
         clearTimeout(svgTimeoutRef.current);
         svgTimeoutRef.current = setTimeout(() => {
-          setShowAnimatedSvg(false);
+          setIsSuccessModalOpen(false);
           setStep(1);
           setForm({ name: '', phone: '', email: '', city: '', purpose: '' });
           setCounts({
@@ -1170,8 +1161,6 @@ const CostEstimator = forwardRef((props, ref) => {
           )}
           {step === 3 && (
             <StepThree
-              showAnimatedSvg={showAnimatedSvg}
-              AnimatedSvgWrapper={AnimatedSvgWrapper}
               countries={countries}
               form={form}
               handleInputChange={handleInputChange}
@@ -1199,8 +1188,6 @@ const CostEstimator = forwardRef((props, ref) => {
           )}
           {step === 4 && (
             <StepFour
-              showAnimatedSvg={showAnimatedSvg}
-              AnimatedSvgWrapper={AnimatedSvgWrapper}
               otp={otp}
               setOtp={setOtp}
               handleOtpSubmit={handleOtpSubmit}
@@ -1224,6 +1211,11 @@ const CostEstimator = forwardRef((props, ref) => {
         onCancel={hideAlert}
         confirmText="OK"
         showCancel={false}
+      />
+      
+      <SuccessModal 
+        isOpen={isSuccessModalOpen} 
+        onClose={() => setIsSuccessModalOpen(false)} 
       />
     </TestimonialsContainer >
   );

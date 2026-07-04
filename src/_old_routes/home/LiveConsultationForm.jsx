@@ -10,6 +10,7 @@ import { showSuccessToast, showFailureToast, showWarningToast } from '../../comp
 import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
 import Loader from '../../components/Loader.jsx';
 import { FaWhatsapp, FaSms } from 'react-icons/fa';
+import SuccessModal from '../../components/ui/SuccessModal.jsx';
 
 const Form = styled.form`
   display: flex;
@@ -551,6 +552,7 @@ const LiveConsultationForm = () => {
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   // const [otpError, setOtpError] = useState('');
 
   // Reset all form values, consent, and image index
@@ -665,8 +667,8 @@ const LiveConsultationForm = () => {
       setOtpMode(false);
       setOtp('');
       resetFormState();
-      const message = liveConsultationResult?.message || 'Live consultation booked successfully!';
-      showSuccessToast(message);
+      // Show the beautiful success modal instead of a small toast
+      setIsSuccessModalOpen(true);
     } catch (errorMessage) {
       const message = errorMessage || 'OTP verification failed. Please try again.';
       showFailureToast(message, 4000);
@@ -851,6 +853,11 @@ const LiveConsultationForm = () => {
           </ContentSection>
         </ModalWrapper>
       </Modal >
+      <SuccessModal 
+        isOpen={isSuccessModalOpen} 
+        onClose={() => setIsSuccessModalOpen(false)} 
+        title="Consultation Booked!"
+      />
     </>
   );
 };
