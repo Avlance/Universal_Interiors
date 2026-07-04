@@ -3,26 +3,17 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 20px;
+  width: 100%;
+  padding: 20px 0;
 `;
 
 const ModalContent = styled.div`
   background: #ffffff;
   border-radius: 0.5rem;
-  width: 50%;
-  max-width: 900px;
-  max-height: 90vh;
-  overflow-y: auto;
+  width: 100%;
+  max-width: 1200px;
   position: relative;
 `;
 
@@ -46,7 +37,7 @@ const ModalSubtitle = styled.p`
 
 const TabsContainer = styled.div`
   display: flex;
-  margin: 0px 20px 15px 220px;
+  margin: 0px auto 15px auto;
   width: fit-content;
   padding: 8px;
   gap: 10px;
@@ -54,6 +45,12 @@ const TabsContainer = styled.div`
   border-radius: 0.5rem;
   background-color: #f0f0f0;
   border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 `;
 
 const Tab = styled.button`
@@ -76,6 +73,11 @@ const ModalBody = styled.div`
   padding: 24px;
   display: flex;
   gap: 32px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 16px;
+  }
 `;
 
 const LeftSection = styled.div`
@@ -102,6 +104,11 @@ const RadioOption = styled.label`
   padding: 5px 0px 0 130px;
   cursor: pointer;
   transition: all 0.2s;
+
+  @media (max-width: 768px) {
+    padding: 10px 0px;
+    justify-content: center;
+  }
 `;
 
 const RadioInput = styled.input`
@@ -128,6 +135,13 @@ const DiagramContainer = styled.div`
   margin-left: -80px;
   background: #ffffff;
   text-align: center;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 10px;
+  }
 `;
 
 const DiagramTitle = styled.h4`
@@ -163,6 +177,14 @@ const WardrobeDimensionRow = styled.div`
   gap: 2px;
   margin-top: -50px;
   margin-left: -60px;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
 `;
 const WardrobeDimensionRow2 = styled.div`
   display: flex;
@@ -170,6 +192,14 @@ const WardrobeDimensionRow2 = styled.div`
   gap: 40px;
   margin-top: -50px;
   margin-left: -120px;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
 `;
 
 const WardrobeDimensionLabel = styled.label`
@@ -179,6 +209,10 @@ const WardrobeDimensionLabel = styled.label`
   min-width: 100px;
   padding-top: 6px;
   margin-top: 27px;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+  }
 `;
 
 const WardrobeDimensionInputs = styled.div`
@@ -195,10 +229,10 @@ const WardrobeDimensionSelect = styled.select`
   color: #8692a6;
   width: 80px;
 
-  appearance: none; /* removes native arrow */
+  appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238692A6' strokeWidth='1.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center; /* pushes arrow inward */
+  background-position: right 12px center;
   background-size: 10px 6px;
 `;
 
@@ -243,11 +277,16 @@ const ProceedButton = styled.button`
   color: white;
   border: none;
   padding: 12px 24px;
-  margin: 0 0 -10px 450px;
+  margin: 0 0 0 auto;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease;
+
+  @media (max-width: 768px) {
+    margin: 0 auto;
+    width: 100%;
+  }
 `;
 
 const CustomizeModal = ({ onClose, onProceed }) => {
@@ -346,8 +385,8 @@ const CustomizeModal = ({ onClose, onProceed }) => {
   };
 
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalOverlay>
+      <ModalContent>
         <ModalHeader>
           <ModalTitle>Customize Your Interiors Before Estimation</ModalTitle>
           <ModalSubtitle>
@@ -554,9 +593,17 @@ const CustomizeModal = ({ onClose, onProceed }) => {
             Your custom selections have been saved. Click to view estimated
             cost.
           </FooterText>
-          <ProceedButton onClick={onProceed}>
-            Proceed to Estimation
-          </ProceedButton>
+          <div style={{ display: 'flex', gap: '16px', marginTop: '10px', flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+            <button 
+              onClick={onClose} 
+              style={{ padding: '12px 24px', background: 'transparent', border: '2px solid #d50f25', color: '#d50f25', borderRadius: '0.5rem', fontWeight: '600', cursor: 'pointer', flex: '1', minWidth: '150px', maxWidth: '250px' }}
+            >
+              Back
+            </button>
+            <ProceedButton onClick={onProceed} style={{ margin: '0', flex: '1', minWidth: '150px', maxWidth: '250px' }}>
+              Proceed to Estimation
+            </ProceedButton>
+          </div>
         </ModalFooter>
       </ModalContent>
     </ModalOverlay>
