@@ -5,10 +5,12 @@ import { FaWhatsapp, FaSms } from 'react-icons/fa';
 import Input from '../../components/input/js/Input.jsx';
 import { inputValidation, selectValidation } from '../../utils/js/InputValidation.jsx';
 import { showSuccessToast, showFailureToast } from '../../components/toast/js/ToastMessage.jsx';
-import { freeConsultation, sendOTP, verifyOTP, submitEstimation } from './homeHttpRequest.js';
+import { freeConsultation, submitEstimation } from './homeHttpRequest.js';
 import Loader from '../../components/Loader.jsx';
 import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
 import SuccessModal from '../../components/ui/SuccessModal';
+import { auth } from '../../lib/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const Form = styled.form`
   display: flex;
@@ -479,6 +481,7 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
   const [otpChannel, setOtpChannel] = useState('whatsapp'); // 'sms' | 'whatsapp'
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [consultationPayload, setConsultationPayload] = useState(null);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -518,6 +521,14 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (!window.recaptchaVerifierConsultation) {
+      window.recaptchaVerifierConsultation = new RecaptchaVerifier(auth, 'recaptcha-container-consultation', {
+        size: 'invisible'
+      });
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -548,14 +559,16 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const sendOtpResult = await sendOTP({ phone: form.phone, channel: otpChannel });
+      const formattedPhone = `+91${consultationPayload?.phone || form.phone}`;
+      const appVerifier = window.recaptchaVerifierConsultation;
+      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+      setConfirmationResult(result);
       setChannelMode(false);
       setOtpMode(true);
-      const message = sendOtpResult?.message || 'OTP sent successfully!';
-      showSuccessToast(message);
-    } catch (errorMessage) {
-      const message = errorMessage || 'Failed to send OTP. Please try again.';
-      showFailureToast(message, 4000);
+      showSuccessToast('OTP sent successfully!');
+    } catch (error) {
+      console.error("Firebase send OTP error:", error);
+      showFailureToast('Failed to send OTP. Please try again.', 4000);
     } finally {
       setIsLoading(false);
     }
@@ -563,11 +576,7 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    
-    // Prevent multiple API calls
-    if (isOtpLoading) {
-      return;
-    }
+    if (isOtpLoading) return;
     
     const otpValue = otp.join("");
     if (otpValue.length < 6) {
@@ -576,14 +585,19 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
     }
 
     setIsOtpLoading(true);
-
     try {
-      const verifyPayload = {
-        phone: form.phone,
-        otp: otpValue
-      };
+      const userCredential = await confirmationResult.confirm(otpValue);
+      const idToken = await userCredential.user.getIdToken();
       
-      await verifyOTP(verifyPayload);
+      const verifyRes = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (!verifyRes.ok) {
+        throw new Error("Backend verification failed");
+      }
       
       // OTP verified successfully, now submit consultation
       if (consultationPayload) {
@@ -599,6 +613,7 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
           setOtpMode(false);
           setOtp(new Array(6).fill(''));
           setConsultationPayload(null);
+          setConfirmationResult(null);
           
           setTimeout(() => {
             setIsSuccessModalOpen(false);
@@ -611,9 +626,9 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
           showFailureToast('Failed to submit request. Please try again.');
         }
       }
-    } catch (errorMessage) {
-      const message = errorMessage || 'OTP verification failed. Please try again.';
-      showFailureToast(message, 4000);
+    } catch (error) {
+      console.error('OTP Verification Error:', error);
+      showFailureToast('OTP verification failed. Please try again.', 4000);
     } finally {
       setIsOtpLoading(false);
     }
@@ -678,6 +693,7 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
             <div>You <span style={{ color: "#5485EE" }}>Relax</span></div>
             <div>First Session's On <span style={{ color: "#559944" }}>Us.</span></div>
           </ModalTitle>
+          <div id="recaptcha-container-consultation"></div>
           {channelMode && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
               <span className="universal-fs-h4 universal-font-semibold" style={{ color: '#111' }}>How would you like to receive your OTP?</span>

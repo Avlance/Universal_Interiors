@@ -1,6 +1,5 @@
 import { getDb } from '@/lib/mongodb';
 import { apiCreated, apiBadRequest, apiError } from '@/lib/api-response';
-import { sendBookingConfirmationWhatsApp } from '@/lib/twilio';
 
 export async function POST(request) {
   try {
@@ -24,16 +23,9 @@ export async function POST(request) {
 
     await db.collection('book_consultations').insertOne(consultation);
 
-    // ── WhatsApp marketing message (opt-in only) ───────────────────────────
-    // Marketing / promotional messages are sent via WhatsApp ONLY — no SMS.
+    // Marketing / promotional messages will be integrated with WhatsApp Business API later.
     if (whatsappUpdates) {
-      try {
-        await sendBookingConfirmationWhatsApp(phone, name);
-        console.log(`[Twilio] WhatsApp booking confirmation sent to +91${phone}`);
-      } catch (msgErr) {
-        // Non-fatal — booking is already saved; just log the error
-        console.error('[Twilio] Failed to send WhatsApp confirmation:', msgErr.message);
-      }
+      console.log(`[WhatsApp Sync Pending] User opted-in for updates: +91${phone}`);
     }
 
     return apiCreated("Consultation booked successfully");

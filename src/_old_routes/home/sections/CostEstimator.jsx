@@ -3,7 +3,7 @@ import React, { forwardRef, useState, useRef } from 'react';
 import styled from 'styled-components';
 import Button from "../../../components/button/js/Button.jsx";
 import { inputValidation, selectValidation } from '../../../utils/js/InputValidation.jsx';
-import { submitEstimation, sendOTP, verifyOTP } from "../homeHttpRequest.js";
+import { submitEstimation } from "../homeHttpRequest.js";
 import { showSuccessToast, showFailureToast } from "../../../components/toast/js/ToastMessage.jsx";
 import ProgressBar from '../../../components/ProgressBar.jsx';
 import ToggleSwitch from "../../../components/input/js/ToggleSwitch.jsx";
@@ -13,6 +13,8 @@ import Tooltip from '../../../components/tooltip/js/Tooltip.jsx';
 import Loader from '../../../components/Loader.jsx';
 import { FaWhatsapp, FaSms } from 'react-icons/fa';
 import SuccessModal from '../../../components/ui/SuccessModal';
+import { auth } from '../../../lib/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 const TestimonialsContainer = styled.section`
   margin-bottom: 80px;
@@ -936,6 +938,7 @@ const CostEstimator = forwardRef((props, ref) => {
   const [estimationPayload, setEstimationPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   
   // Alert state
   const [alertConfig, setAlertConfig] = useState({
@@ -957,6 +960,14 @@ const CostEstimator = forwardRef((props, ref) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
+  React.useEffect(() => {
+    if (!window.recaptchaVerifierEstimator) {
+      window.recaptchaVerifierEstimator = new RecaptchaVerifier(auth, 'recaptcha-container-estimator', {
+        size: 'invisible'
+      });
+    }
+  }, []);
 
   // Alert helper functions
   const showAlert = (title, message, onConfirm) => {
@@ -987,20 +998,17 @@ const CostEstimator = forwardRef((props, ref) => {
     setIsLoading(true);
     
     try {
-      const otpPayload = {
-        phone: form.phone,
-        channel: otpChannel
-      };
-      
-      const sendOtpResult = await sendOTP(otpPayload);
+      const formattedPhone = `+91${form.phone}`;
+      const appVerifier = window.recaptchaVerifierEstimator;
+      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+      setConfirmationResult(result);
       setOtp(''); // Reset OTP input value
       setChannelMode(false);
       setStep(4);
-      const message = sendOtpResult?.message || 'OTP sent successfully!';
-      showSuccessToast(message);
-    } catch (errorMessage) {
-      const message = errorMessage || 'Failed to send OTP. Please try again.';
-      showFailureToast(message, 4000);
+      showSuccessToast('OTP sent successfully!');
+    } catch (error) {
+      console.error("Firebase send OTP error:", error);
+      showFailureToast('Failed to send OTP. Please try again.', 4000);
     } finally {
       setIsLoading(false);
     }
@@ -1023,18 +1031,25 @@ const CostEstimator = forwardRef((props, ref) => {
     setIsOtpLoading(true);
 
     try {
-      const verifyPayload = {
-        phone: form.phone,
-        otp: otp
-      };
+      const userCredential = await confirmationResult.confirm(otp);
+      const idToken = await userCredential.user.getIdToken();
       
-      await verifyOTP(verifyPayload);
+      const verifyRes = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (!verifyRes.ok) {
+        throw new Error("Backend verification failed");
+      }
       
       // OTP verified successfully, now submit estimation
       if (estimationPayload) {
         await submitEstimation(estimationPayload);
         setOtp('');
         setEstimationPayload(null);
+        setConfirmationResult(null);
         
         // Show success animation
         setIsSuccessModalOpen(true);
@@ -1057,9 +1072,9 @@ const CostEstimator = forwardRef((props, ref) => {
           setOtpChannel('whatsapp');
         }, 2000);
       }
-    } catch (errorMessage) {
-      const message = errorMessage || 'OTP verification failed. Please try again.';
-      showFailureToast(message, 4000);
+    } catch (error) {
+      console.error('OTP Verification Error:', error);
+      showFailureToast('OTP verification failed. Please try again.', 4000);
     } finally {
       setIsOtpLoading(false);
     }
@@ -1118,6 +1133,7 @@ const CostEstimator = forwardRef((props, ref) => {
             </SectionDescription>
           </SectionHeader>
 
+          <div id="recaptcha-container-estimator"></div>
 
           {step === 1 && (
             <StepOne
