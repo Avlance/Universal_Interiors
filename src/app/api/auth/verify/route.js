@@ -5,7 +5,19 @@ import { getAuth } from 'firebase-admin/auth';
 // Initialize Admin SDK only if not already initialized
 try {
   if (!getApps().length) {
-    const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    let privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY || '';
+    
+    // Remove accidental surrounding quotes if pasted into hosting dashboard
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
+    }
+    if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+      privateKey = privateKey.slice(1, -1);
+    }
+    
+    // Handle both literal newlines and escaped string newlines
+    privateKey = privateKey.replace(/\\n/g, '\n');
+
     if (privateKey && privateKey.includes('BEGIN PRIVATE KEY')) {
       initializeApp({
         credential: cert({
