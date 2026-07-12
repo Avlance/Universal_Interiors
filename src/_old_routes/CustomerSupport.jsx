@@ -182,13 +182,13 @@ const CustomerSupport = () => {
       title: 'Phone Support',
       description: 'Call us for immediate assistance',
       icon: '📞',
-      details: '+91 98765 43210'
+      details: '+91 94444 03550'
     },
     {
       title: 'Email Support',
       description: 'Send us your queries via email',
       icon: '✉️',
-      details: 'support@universalinteriors.com'
+      details: 'universalinteriorr@gmail.com'
     },
     {
       title: 'Live Chat',
@@ -200,7 +200,7 @@ const CustomerSupport = () => {
       title: 'WhatsApp',
       description: 'Quick support on WhatsApp',
       icon: '📱',
-      details: '+91 98765 43210'
+      details: '+91 94444 03550'
     }
   ];
 

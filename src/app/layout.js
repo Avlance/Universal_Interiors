@@ -4,6 +4,11 @@ import RootLayout from "@/components/layout/RootLayout";
 export const metadata = {
   title: "Universal Interiors - Transform Your Space",
   description: "Expert interior design services for homes and offices. Get free consultation and transform your space today.",
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 import StyledComponentsRegistry from "@/lib/registry";

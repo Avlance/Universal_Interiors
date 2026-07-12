@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
+import YouTubeReviews from './home/sections/YouTubeReviews';
 import styled from 'styled-components';
 
 const PageContent = styled.div`
@@ -305,6 +306,8 @@ const Reviews = () => {
             </ContentSection>
           </>
         )}
+
+        <YouTubeReviews />
 
         <ContentSection>
           <h2>Why Choose Universal Interiors?</h2>
