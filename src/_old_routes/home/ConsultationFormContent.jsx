@@ -527,6 +527,13 @@ const ConsultationFormContent = ({ onSuccess, isEstimation = false, extraData = 
         size: 'invisible'
       });
     }
+
+    return () => {
+      if (window.recaptchaVerifierConsultation) {
+        window.recaptchaVerifierConsultation.clear();
+        window.recaptchaVerifierConsultation = null;
+      }
+    };
   }, []);
 
   const handleInputChange = (e) => {

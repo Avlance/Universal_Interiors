@@ -580,8 +580,6 @@ const LiveConsultationForm = () => {
   };
 
   useEffect(() => {
-    if (!open) return;
-
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) =>
         (prevIndex + 1) % backgroundImages.length
@@ -594,7 +592,13 @@ const LiveConsultationForm = () => {
       });
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (window.recaptchaVerifierLive) {
+        window.recaptchaVerifierLive.clear();
+        window.recaptchaVerifierLive = null;
+      }
+    };
   }, [open]);
 
   const handleInputChange = (e) => {

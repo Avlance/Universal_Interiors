@@ -967,6 +967,13 @@ const CostEstimator = forwardRef((props, ref) => {
         size: 'invisible'
       });
     }
+
+    return () => {
+      if (window.recaptchaVerifierEstimator) {
+        window.recaptchaVerifierEstimator.clear();
+        window.recaptchaVerifierEstimator = null;
+      }
+    };
   }, []);
 
   // Alert helper functions
