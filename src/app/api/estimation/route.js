@@ -41,6 +41,11 @@ export async function POST(request) {
       { upsert: true }
     );
 
+    // Marketing / promotional messages will be integrated with WhatsApp Business API later.
+    if (whatsappUpdates || whatsappQuote) {
+      console.log(`[WhatsApp Sync Pending] User opted-in for updates: +91${phone}`);
+    }
+
     return apiCreated("Estimation request submitted successfully");
   } catch (err) {
     console.error('Error saving quote estimation:', err);

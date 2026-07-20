@@ -19,11 +19,40 @@ export async function POST(request) {
 
     const results = { successful: 0, failed: 0, errors: [] };
 
-    // Send messages in parallel (WhatsApp Sync Pending)
+    const WHATSAPP_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+    const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+    // Send messages in parallel
     const promises = phones.map(async (phone) => {
       try {
-        // WhatsApp Business integration goes here.
-        console.log(`[WhatsApp Sync Pending] Message to ${phone}: ${message}`);
+        if (!WHATSAPP_TOKEN || !PHONE_NUMBER_ID) {
+          console.log(`[WhatsApp Sync Pending] Simulated message to ${phone}: ${message}`);
+          results.successful++;
+          return;
+        }
+
+        const metaRes = await fetch(`https://graph.facebook.com/v17.0/${PHONE_NUMBER_ID}/messages`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            to: phone.replace('+', ''),
+            type: "text",
+            text: {
+              body: message
+            }
+          })
+        });
+
+        const metaData = await metaRes.json();
+        
+        if (!metaRes.ok) {
+          throw new Error(metaData?.error?.message || "Meta API Error");
+        }
+
         results.successful++;
       } catch (err) {
         console.error(`Failed to send message to ${phone}:`, err.message);

@@ -11,8 +11,7 @@ import ToggleSwitch from '../../components/input/js/ToggleSwitch.jsx';
 import Loader from '../../components/Loader.jsx';
 import { FaWhatsapp, FaSms } from 'react-icons/fa';
 import SuccessModal from '../../components/ui/SuccessModal.jsx';
-import { auth } from '../../lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import OTPModal from '../../components/ui/OTPModal.jsx';
 
 const Form = styled.form`
   display: flex;
@@ -433,10 +432,6 @@ const countryFlagSvgs = {
 const PincodeInputParent = styled.div`
   border-radius: 8px;
   width: 100%;
-  
-  @media (max-width: 768px) {
-    // Additional mobile styles if needed
-  }
 `;
 
 const ChannelPickerWrapper = styled.div`
@@ -548,15 +543,10 @@ const LiveConsultationForm = () => {
     city: '',
     pincode: ''
   });
-  const [otpMode, setOtpMode] = useState(false);
-  const [channelMode, setChannelMode] = useState(false);
-  const [otpChannel, setOtpChannel] = useState('whatsapp');
-  const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState(null);
-  // const [otpError, setOtpError] = useState('');
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [pendingPayload, setPendingPayload] = useState(null);
 
   // Reset all form values, consent, and image index
   const resetFormState = () => {
@@ -570,13 +560,7 @@ const LiveConsultationForm = () => {
     });
     setConsentChecked(true);
     setCurrentImageIndex(0);
-    setOtpMode(false);
-    setChannelMode(false);
-    setOtpChannel('whatsapp');
-    setOtp('');
     setIsLoading(false);
-    setIsOtpLoading(false);
-    // setOtpError('');
   };
 
   useEffect(() => {
@@ -586,18 +570,8 @@ const LiveConsultationForm = () => {
       );
     }, 1500);
 
-    if (open && !window.recaptchaVerifierLive) {
-      window.recaptchaVerifierLive = new RecaptchaVerifier(auth, 'recaptcha-container-live', {
-        size: 'invisible'
-      });
-    }
-
     return () => {
       clearInterval(interval);
-      if (window.recaptchaVerifierLive) {
-        window.recaptchaVerifierLive.clear();
-        window.recaptchaVerifierLive = null;
-      }
     };
   }, [open]);
 
@@ -610,7 +584,6 @@ const LiveConsultationForm = () => {
     e.preventDefault();
     if (isLoading) return;
 
-    // Validate directly from React state — no DOM queries needed since this is a button onClick
     if (!form.phone || !/^[6-9]\d{9}$/.test(form.phone)) {
       showFailureToast('Please enter a valid 10-digit mobile number.', 4000);
       return;
@@ -620,81 +593,46 @@ const LiveConsultationForm = () => {
       return;
     }
 
-    // Show channel picker (step 2)
-    setChannelMode(true);
+    const payload = {
+      phone: form.phone,
+      whatsappUpdates: consentChecked,
+      pinCode: form.pincode
+    };
+
+    setPendingPayload(payload);
+    setIsOtpModalOpen(true);
   };
 
+  const handleOtpSuccess = async () => {
+    setIsOtpModalOpen(false);
+    if (!pendingPayload) return;
 
-
-  const handleSendOTP = async () => {
-    if (isLoading) return;
     setIsLoading(true);
     try {
-      const formattedPhone = `+91${form.phone}`;
-      const appVerifier = window.recaptchaVerifierLive;
-      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(result);
-      setChannelMode(false);
-      setOtpMode(true);
-      showSuccessToast('OTP sent successfully!');
-    } catch (error) {
-      console.error("Firebase send OTP error:", error);
-      showFailureToast('Failed to send OTP. Please try again.', 4000);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Prevent multiple API calls
-    if (isOtpLoading) {
-      return;
-    }
-    
-    const otpInput = document.querySelector('input[name="otp"]');
-    const isOtpValid = inputValidation(otpInput);
-    if (!isOtpValid) {
-      return;
-    }
-
-    setIsOtpLoading(true);
-
-    try {
-      const userCredential = await confirmationResult.confirm(otp.join(""));
-      const idToken = await userCredential.user.getIdToken();
-      
-      const verifyRes = await fetch('/api/auth/verify', {
+      const response = await fetch('/api/live-consultation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
+        body: JSON.stringify(pendingPayload)
       });
 
-      if (!verifyRes.ok) {
-        throw new Error("Backend verification failed");
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSuccessModalOpen(true);
+        setTimeout(() => {
+          setIsSuccessModalOpen(false);
+          resetFormState();
+          setOpen(false);
+        }, 3000);
+      } else {
+        showFailureToast(data.error || 'Failed to book live consultation.');
       }
-
-      // Step 3: Call liveConsultation API after successful OTP verification
-      const liveConsultationPayload = {
-        phone: form.phone,
-        whatsappUpdates: consentChecked,
-        pinCode: form.pincode
-      };
-
-      await liveConsultation(liveConsultationPayload);
-      setOpen(false);
-      setOtpMode(false);
-      setOtp('');
-      setConfirmationResult(null);
-      resetFormState();
-      // Show the beautiful success modal instead of a small toast
-      setIsSuccessModalOpen(true);
     } catch (error) {
-      console.error('OTP Verification Error:', error);
-      showFailureToast('OTP verification failed. Please try again.', 4000);
+      console.error('Submission Error:', error);
+      showFailureToast('An error occurred. Please try again.');
     } finally {
-      setIsOtpLoading(false);
+      setIsLoading(false);
+      setPendingPayload(null);
     }
   };
 
@@ -724,46 +662,9 @@ const LiveConsultationForm = () => {
               <div>You <span style={{ color: "#5485EE" }}>Relax</span></div>
               <div>First Session's On <span style={{ color: "#559944" }}>Us.</span></div>
             </ModalTitle>
-            <div id="recaptcha-container-live"></div>
-            {channelMode && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
-                <span className="universal-fs-h4 universal-font-semibold" style={{ color: '#111' }}>How would you like to receive your OTP?</span>
-                <span className="universal-fs-h3 universal-font" style={{ color: '#8692A6' }}>Sending to +91 {form.phone}</span>
-                <ChannelPickerWrapper>
-                  <ChannelOption type="button" $selected={otpChannel === 'whatsapp'} onClick={() => setOtpChannel('whatsapp')}>
-                    <ChannelIcon><FaWhatsapp color="#25D366" /></ChannelIcon>
-                    <ChannelInfo>
-                      <ChannelTitle>WhatsApp</ChannelTitle>
-                      <ChannelDesc>Receive code on WhatsApp</ChannelDesc>
-                    </ChannelInfo>
-                    <ChannelRadio $selected={otpChannel === 'whatsapp'} />
-                  </ChannelOption>
-                  <ChannelOption type="button" $selected={otpChannel === 'sms'} onClick={() => setOtpChannel('sms')}>
-                    <ChannelIcon><FaSms color="#4A90E2" /></ChannelIcon>
-                    <ChannelInfo>
-                      <ChannelTitle>SMS</ChannelTitle>
-                      <ChannelDesc>Receive code as a text message</ChannelDesc>
-                    </ChannelInfo>
-                    <ChannelRadio $selected={otpChannel === 'sms'} />
-                  </ChannelOption>
-                </ChannelPickerWrapper>
-                <SubmitButton type="button" onClick={handleSendOTP} disabled={isLoading}>
-                  {isLoading ? (
-                    <Loader type="button" text="Sending OTP..." textColor="#ffffff" fontSize="14px" mobileFontSize="13px" smallMobileFontSize="12px" buttonSpinnerSize="16px" buttonSpinnerMobileSize="14px" buttonSpinnerSmallMobileSize="12px" />
-                  ) : (
-                    <ButtonText className="universal-fs-h4 universal-font-semibold">Send OTP</ButtonText>
-                  )}
-                </SubmitButton>
-                <span
-                  onClick={() => setChannelMode(false)}
-                  style={{ textAlign: 'center', color: '#5485EE', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--universal-font)' }}
-                >← Back</span>
-              </div>
-            )}
-            {!otpMode && !channelMode && (
-              <Form>
-                <div>
-                  <CountryPhoneRow>
+            <Form onSubmit={handleSubmit}>
+              <div>
+                <CountryPhoneRow>
                     <CountryCodeLabel>+91</CountryCodeLabel>
                     <PhoneInput
                       name="phone"
@@ -835,54 +736,32 @@ const LiveConsultationForm = () => {
                   By proceeding, you consent to our <ConsentLinkInstruction>Terms</ConsentLinkInstruction> and acknowledge our <ConsentLink>Privacy Policy</ConsentLink>
                 </ConsentLabelInstruction>
               </Form>
-            )}
-            {otpMode && !channelMode && (
-              <form onSubmit={handleOtpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24 }}>
-                <span style={{ textAlign: "left", color: "#8692A6" }} className="universal-fs-h3 universal-font">We've sent a verification code to your registered mobile number.</span>
-                <div>
-                  <Input
-                    name="otp"
-                    type="text"
-                    placeholder="Enter verification code*"
-                    value={otp}
-                    onChange={e => setOtp(e.target.value)}
-                    maxLength={6}
-                    style={{ width: '100%' }}
-                    className="universal-fs-h3 universal-font"
-                    autoFocus
-                  />
-                </div>
-                {/* {otpError && <span style={{ color: '#DB4437', fontSize: '0.95em', marginTop: 4 }}>{otpError}</span>} */}
-                <SubmitButton type="submit" disabled={isOtpLoading}>
-                  {isOtpLoading ? (
-                    <Loader 
-                      type="button" 
-                      text="Verifying..." 
-                      textColor="#ffffff"
-                      fontSize="14px"
-                      mobileFontSize="13px"
-                      smallMobileFontSize="12px"
-                      buttonSpinnerSize="16px"
-                      buttonSpinnerMobileSize="14px"
-                      buttonSpinnerSmallMobileSize="12px"
-                    />
-                  ) : (
-                    <ButtonText className="universal-fs-h4 universal-font-semibold">Verify OTP</ButtonText>
-                  )}
-                </SubmitButton>
-              </form>
-            )}
           </ContentSection>
         </ModalWrapper>
       </Modal >
-      <SuccessModal 
-        isOpen={isSuccessModalOpen} 
-        onClose={() => setIsSuccessModalOpen(false)} 
-        title="Consultation Booked!"
-      />
+      {open && (
+        <Overlay 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
+        >
+          <OTPModal 
+            isOpen={isOtpModalOpen}
+            onClose={() => setIsOtpModalOpen(false)}
+            phone={pendingPayload?.phone || ''}
+            onVerifySuccess={handleOtpSuccess}
+          />
+          <SuccessModal 
+            isOpen={isSuccessModalOpen} 
+            onClose={() => setIsSuccessModalOpen(false)} 
+            title="Consultation Booked!"
+          />
+        </Overlay>
+      )}
     </>
   );
 };
 
-export default LiveConsultationForm; 
+export default LiveConsultationForm;
+
 

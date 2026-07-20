@@ -13,9 +13,7 @@ import Tooltip from '../../../components/tooltip/js/Tooltip.jsx';
 import Loader from '../../../components/Loader.jsx';
 import { FaWhatsapp, FaSms } from 'react-icons/fa';
 import SuccessModal from '../../../components/ui/SuccessModal';
-import { auth } from '../../../lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-
+import OTPModal from '../../../components/ui/OTPModal.jsx';
 const TestimonialsContainer = styled.section`
   margin-bottom: 80px;
   padding: 0;
@@ -930,15 +928,9 @@ const CostEstimator = forwardRef((props, ref) => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const svgTimeoutRef = useRef();
 
-  const [channelMode, setChannelMode] = useState(false);
-  const [otpChannel, setOtpChannel] = useState('whatsapp');
-
-  // OTP state management
-  const [otp, setOtp] = useState('');
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [estimationPayload, setEstimationPayload] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isOtpLoading, setIsOtpLoading] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState(null);
   
   // Alert state
   const [alertConfig, setAlertConfig] = useState({
@@ -961,20 +953,6 @@ const CostEstimator = forwardRef((props, ref) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  React.useEffect(() => {
-    if (!window.recaptchaVerifierEstimator) {
-      window.recaptchaVerifierEstimator = new RecaptchaVerifier(auth, 'recaptcha-container-estimator', {
-        size: 'invisible'
-      });
-    }
-
-    return () => {
-      if (window.recaptchaVerifierEstimator) {
-        window.recaptchaVerifierEstimator.clear();
-        window.recaptchaVerifierEstimator = null;
-      }
-    };
-  }, []);
 
   // Alert helper functions
   const showAlert = (title, message, onConfirm) => {
@@ -996,94 +974,38 @@ const CostEstimator = forwardRef((props, ref) => {
   };
 
   // OTP functions
-  const handleSendOTP = async () => {
-    // Prevent multiple API calls
-    if (isLoading) {
-      return;
-    }
-    
+  const handleOtpSuccess = async () => {
+    setIsOtpModalOpen(false);
+    if (!estimationPayload) return;
+
     setIsLoading(true);
-    
     try {
-      const formattedPhone = `+91${form.phone}`;
-      const appVerifier = window.recaptchaVerifierEstimator;
-      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(result);
-      setOtp(''); // Reset OTP input value
-      setChannelMode(false);
-      setStep(4);
-      showSuccessToast('OTP sent successfully!');
+      await submitEstimation(estimationPayload);
+      setEstimationPayload(null);
+      
+      // Show success animation
+      setIsSuccessModalOpen(true);
+      clearTimeout(svgTimeoutRef.current);
+      svgTimeoutRef.current = setTimeout(() => {
+        setIsSuccessModalOpen(false);
+        setStep(1);
+        setForm({ name: '', phone: '', email: '', city: '', purpose: '' });
+        setCounts({
+          modularKitchen: 0,
+          wardrobe: 0,
+          entertainmentUnit: 0,
+          looseFurniture: 0,
+          falseCeiling: 0,
+          painting: 0,
+        });
+        setSelectedPropertyType(null);
+        setSelectedPurposeType(null);
+      }, 2000);
     } catch (error) {
-      console.error("Firebase send OTP error:", error);
-      showFailureToast('Failed to send OTP. Please try again.', 4000);
+      console.error('Submission Error:', error);
+      showFailureToast('Failed to submit estimation. Please try again.', 4000);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Prevent multiple API calls
-    if (isOtpLoading) {
-      return;
-    }
-    
-    const otpInput = document.querySelector('input[name="otp"]');
-    const isOtpValid = inputValidation(otpInput);
-    if (!isOtpValid) {
-      return;
-    }
-
-    setIsOtpLoading(true);
-
-    try {
-      const userCredential = await confirmationResult.confirm(otp);
-      const idToken = await userCredential.user.getIdToken();
-      
-      const verifyRes = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
-      });
-
-      if (!verifyRes.ok) {
-        throw new Error("Backend verification failed");
-      }
-      
-      // OTP verified successfully, now submit estimation
-      if (estimationPayload) {
-        await submitEstimation(estimationPayload);
-        setOtp('');
-        setEstimationPayload(null);
-        setConfirmationResult(null);
-        
-        // Show success animation
-        setIsSuccessModalOpen(true);
-        clearTimeout(svgTimeoutRef.current);
-        svgTimeoutRef.current = setTimeout(() => {
-          setIsSuccessModalOpen(false);
-          setStep(1);
-          setForm({ name: '', phone: '', email: '', city: '', purpose: '' });
-          setCounts({
-            modularKitchen: 0,
-            wardrobe: 0,
-            entertainmentUnit: 0,
-            looseFurniture: 0,
-            falseCeiling: 0,
-            painting: 0,
-          });
-          setSelectedPropertyType(null);
-          setSelectedPurposeType(null);
-          setChannelMode(false);
-          setOtpChannel('whatsapp');
-        }, 2000);
-      }
-    } catch (error) {
-      console.error('OTP Verification Error:', error);
-      showFailureToast('OTP verification failed. Please try again.', 4000);
-    } finally {
-      setIsOtpLoading(false);
     }
   };
 
@@ -1123,9 +1045,9 @@ const CostEstimator = forwardRef((props, ref) => {
       whatsappQuote: consentChecked,
     };
 
-    // Store the payload and show channel picker (step 3.5)
+    // Store the payload and show OTP modal
     setEstimationPayload(payload);
-    setChannelMode(true);
+    setIsOtpModalOpen(true);
   };
   return (
     <TestimonialsContainer ref={ref}>
@@ -1140,7 +1062,12 @@ const CostEstimator = forwardRef((props, ref) => {
             </SectionDescription>
           </SectionHeader>
 
-          <div id="recaptcha-container-estimator"></div>
+          <OTPModal 
+            isOpen={isOtpModalOpen}
+            onClose={() => setIsOtpModalOpen(false)}
+            phone={estimationPayload?.phone || ''}
+            onVerifySuccess={handleOtpSuccess}
+          />
 
           {step === 1 && (
             <StepOne
