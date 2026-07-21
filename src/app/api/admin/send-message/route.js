@@ -7,7 +7,7 @@ export async function POST(request) {
   }
 
   try {
-    const { phones, message, channel } = await request.json();
+    const { phones, message, channel, documentUrl } = await request.json();
 
     if (!phones || !Array.isArray(phones) || phones.length === 0) {
       return NextResponse.json({ error: 'Phones array is required' }, { status: 400 });
@@ -31,20 +31,30 @@ export async function POST(request) {
           return;
         }
 
+        let payload = {
+          messaging_product: "whatsapp",
+          to: phone.replace('+', '')
+        };
+
+        if (documentUrl) {
+          payload.type = "document";
+          payload.document = {
+            link: documentUrl,
+            caption: message,
+            filename: "Universal_Interiors_Quotation.pdf"
+          };
+        } else {
+          payload.type = "text";
+          payload.text = { body: message };
+        }
+
         const metaRes = await fetch(`https://graph.facebook.com/v17.0/${PHONE_NUMBER_ID}/messages`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            messaging_product: "whatsapp",
-            to: phone.replace('+', ''),
-            type: "text",
-            text: {
-              body: message
-            }
-          })
+          body: JSON.stringify(payload)
         });
 
         const metaData = await metaRes.json();

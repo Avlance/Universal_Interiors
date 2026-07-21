@@ -384,9 +384,16 @@ export default function LeadProfileDrawer({ isOpen, onClose, leadId, source }) {
                           <FileImage src={doc.url} />
                         )}
                         <FileInfo>
-                          <a href={doc.url} target="_blank" rel="noreferrer" style={{ color: '#5485EE', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
-                            View
-                          </a>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', maxWidth: '70%', overflow: 'hidden' }}>
+                            <a href={doc.url} target="_blank" rel="noreferrer" style={{ color: '#5485EE', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              View
+                            </a>
+                            {doc.quotationData && (
+                              <a href={`/admin/quotations/create?leadId=${leadId}&docId=${doc.id}`} style={{ color: '#F5B400', textDecoration: 'none', fontSize: '12px', fontWeight: 700, borderLeft: '1px solid #ddd', paddingLeft: '8px' }}>
+                                Edit Quote
+                              </a>
+                            )}
+                          </div>
                           <DeleteBtn onClick={() => handleDeleteFile(doc.id, 'document')}>Del</DeleteBtn>
                         </FileInfo>
                       </FileCard>
