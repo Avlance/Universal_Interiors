@@ -14,6 +14,7 @@ const Input = ({ label, ...props }) => (
 );
 
 export default function QuotationMaker() {
+  const [mounted, setMounted] = useState(false);
   const [templateType, setTemplateType] = useState('corporate');
   const [leads, setLeads] = useState([]);
   const [selectedLeadId, setSelectedLeadId] = useState('');
@@ -71,6 +72,7 @@ export default function QuotationMaker() {
           }
         } 
       } catch (err) { console.error(err); }
+      finally { setMounted(true); }
     };
     fetchLeads();
   }, []);
@@ -162,6 +164,14 @@ export default function QuotationMaker() {
 
   const cd = templateType === 'normal' ? normalData : corporateData;
   const setF = (f, v) => { if (templateType === 'normal') setNormalData(p => ({ ...p, [f]: v })); else setCorporateData(p => ({ ...p, [f]: v })); };
+
+  if (!mounted) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', color: '#666', fontSize: '14px' }}>
+        Loading Quotation Maker...
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f3f4f6', display: 'flex' }}>

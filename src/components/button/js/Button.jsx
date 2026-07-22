@@ -67,7 +67,7 @@ const StyledButton = styled.button`
 
 const Button = ({ primary, className = "universal-fs-h3 universal-font primary-button", children, ...rest }) => {
   return (
-    <StyledButton $primary={primary} className={className} {...rest}>
+    <StyledButton $primary={primary} className={className} suppressHydrationWarning={true} {...rest}>
       {children}
     </StyledButton>
   );
